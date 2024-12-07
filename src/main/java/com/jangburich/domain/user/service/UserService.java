@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import com.jangburich.domain.owner.domain.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.point.domain.PointTransaction;
+import com.jangburich.domain.point.domain.TransactionType;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.store.domain.Store;
 import com.jangburich.domain.store.repository.StoreRepository;
@@ -179,16 +180,20 @@ public class UserService {
 		List<PointTransaction> transactions = pointTransactionRepository.findByUser(user);
 
 		List<PurchaseHistory> purchaseHistories = transactions.stream()
+			.filter(transaction -> transaction.getTransactionType() != TransactionType.FOOD_PURCHASE)
 			.sorted(Comparator.comparing(PointTransaction::getCreatedAt).reversed())
 			.map(transaction -> new PurchaseHistory(
 				transaction.getCreatedAt().format(DateTimeFormatter.ofPattern("MM.dd")),
-				transaction.getTransactionedPoint(),
+				transaction.getTransactionType() == TransactionType.PREPAY
+					? -transaction.getTransactionedPoint()
+					: transaction.getTransactionedPoint(),
 				transaction.getStore() != null ? transaction.getStore().getName() : "장부리치 지갑",
 				transaction.getTransactionType().getDisplayName()))
 			.toList();
 
 		return new WalletResponse(user.getPoint(), purchaseHistories);
 	}
+
 
 	public UserHomeResponse getUserHome(String userId) {
 		User user = userRepository.findByProviderId(userId)
