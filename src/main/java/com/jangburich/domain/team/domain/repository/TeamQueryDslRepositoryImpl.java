@@ -245,7 +245,6 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
                     .leftJoin(store).on(storeTeam.store.id.eq(store.id))
                     .leftJoin(team).on(team.id.eq(storeTeam.team.id))
                     .leftJoin(pointTransaction).on(pointTransaction.store.id.eq(storeTeam.store.id),
-                            pointTransaction.transactionType.eq(TransactionType.FOOD_PURCHASE),
                             pointTransaction.user.userId.eq(userId))
                     .where(storeTeam.store.id.eq(storeId),
                             storeTeam.team.id.eq(teamId))
@@ -299,7 +298,6 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
                 .leftJoin(store).on(storeTeam.store.id.eq(store.id))
                 .leftJoin(team).on(team.id.eq(storeTeam.team.id))
                 .leftJoin(pointTransaction).on(pointTransaction.store.id.eq(storeTeam.store.id),
-                        pointTransaction.transactionType.eq(TransactionType.POINT_PURCHASE),
                         pointTransaction.user.userId.eq(userId))
                 .where(storeTeam.store.id.eq(storeId),
                         storeTeam.team.id.eq(teamId))
