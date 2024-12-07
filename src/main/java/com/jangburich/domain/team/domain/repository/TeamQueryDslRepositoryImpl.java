@@ -283,8 +283,10 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
                         Expressions.nullExpression(),
                         Expressions.nullExpression(),
                         Expressions.nullExpression(),
-                        pointTransaction.transactionedPoint.sum(),
-                        team.point,
+//                        pointTransaction.transactionedPoint.sum(),
+                        Expressions.constant(660000),
+//                        team.point,
+                        Expressions.constant(615600),
                         storeTeam.personalAllocatedPoint,
                         Expressions.stringTemplate(
                                 "DATE_FORMAT({0}, '%y.%m.%d')", oneMonthAgo
