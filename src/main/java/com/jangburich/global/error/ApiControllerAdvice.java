@@ -3,6 +3,7 @@ package com.jangburich.global.error;
 import com.jangburich.global.payload.ApiResponse;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.ErrorResponse;
+import jakarta.persistence.OptimisticLockException;
 import javax.security.sasl.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class ApiControllerAdvice {
+
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<ApiResponse> handleOptimisticLockException(OptimisticLockException e) {
+        final ErrorResponse response = ErrorResponse
+                .builder()
+                .status(HttpStatus.CONFLICT.value())
+                .code("OPTIMISTIC_LOCK")
+                .message("동시 처리 중 충돌이 발생했습니다. 다시 시도해주세요.")
+                .build();
+        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<?> handleHttpRequestMethodNotSupportedException(

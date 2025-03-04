@@ -3,6 +3,7 @@ package com.jangburich.domain.order.application;
 import com.jangburich.domain.point.domain.PointTransaction;
 import com.jangburich.domain.point.domain.TransactionType;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import jakarta.persistence.OptimisticLockException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,11 @@ public class OrderService {
 
 		if (optionalCart.isPresent()) {
 			Cart existingCart = optionalCart.get();
-			existingCart.updateQuantity(existingCart.getQuantity() + addCartRequest.quantity());
+			try {
+				existingCart.updateQuantity(existingCart.getQuantity() + addCartRequest.quantity());
+			} catch (OptimisticLockException e) {
+				throw new IllegalStateException("중복 요청입니다. 이전 요청이 처리 중입니다.");
+			}
 
 			return Message.builder()
 				.message("장바구니에 상품을 추가했습니다.")
@@ -240,7 +245,11 @@ public class OrderService {
 			.team(team)
 			.orderStatus(OrderStatus.RECEIVED)
 			.build();
-		return ordersRepository.save(orders);
+		try {
+			return ordersRepository.save(orders);
+		} catch (OptimisticLockException e) {
+		throw new IllegalStateException("중복 요청입니다. 이전 요청이 처리 중입니다.");
+	}
 	}
 
 	@Transactional
