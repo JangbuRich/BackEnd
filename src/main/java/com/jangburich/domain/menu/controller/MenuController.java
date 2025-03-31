@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Menu", description = "Menu API")
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/api/v1/menu")
 @RequiredArgsConstructor
 public class MenuController {
 

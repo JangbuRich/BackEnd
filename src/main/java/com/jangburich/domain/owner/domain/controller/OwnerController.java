@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Owner", description = "Owner API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/owner")
+@RequestMapping("/api/v1/owner")
 public class OwnerController {
 
 	private final OwnerService ownerService;
