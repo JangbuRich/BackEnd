@@ -2,22 +2,15 @@ package com.jangburich.domain.owner.domain;
 
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.user.domain.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import java.time.LocalDate;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Owner extends BaseEntity {
 
@@ -47,8 +40,16 @@ public class Owner extends BaseEntity {
 
 	public static Owner create(User user) {
 		Owner newOwner = new Owner();
-		newOwner.setUser(user);
+		newOwner.user = user;
 		return newOwner;
 	}
 
+
+    public void register(String name, String registrationNumber, String businessName, LocalDate openingDate, String phoneNumber) {
+        this.name = name;
+        this.businessName = businessName;
+        this.businessRegistrationNumber = registrationNumber;
+        this.openingDate = openingDate;
+        this.phoneNumber = phoneNumber; // TODO 암호화
+    }
 }

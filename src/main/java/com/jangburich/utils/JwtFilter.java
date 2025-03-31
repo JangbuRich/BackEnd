@@ -23,83 +23,85 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-	@Value("${test.jwt.permanentUserToken}")
-	private String permanentUserToken;
+    @Value("${test.jwt.permanentUserToken}")
+    private String permanentUserToken;
 
-	@Value("${test.jwt.permanentOwnerToken}")
-	private String permanentOwnerToken;
+    @Value("${test.jwt.permanentOwnerToken}")
+    private String permanentOwnerToken;
 
-	private final JwtUtil jwtUtil;
+    private final JwtManager jwtManager;
 
-	public JwtFilter(JwtUtil jwtUtil) {
-		this.jwtUtil = jwtUtil;
-	}
+    public JwtFilter(JwtManager jwtManager) {
+        this.jwtManager = jwtManager;
+    }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response,
-		@NonNull FilterChain filterChain) throws ServletException, IOException {
-		String authorizationHeader = request.getHeader("Authorization");
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String authorizationHeader = request.getHeader("Authorization");
 
-		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-			filterChain.doFilter(request, response);
-			return;
-		}
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-		String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰 추출
+        String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰 추출
 
-		try {
-			if (token.equals(permanentUserToken)) {
-				log.info("Permanent user token detected. Skipping validation.");
-				setPermanentAuthentication("test-user", "ROLE_USER");
-				filterChain.doFilter(request, response);
-				return;
-			}
+        try {
+            if (token.equals(permanentUserToken)) {
+                log.info("Permanent user token detected. Skipping validation.");
+                setPermanentAuthentication("test-user", "ROLE_USER");
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-			if (token.equals(permanentOwnerToken)) {
-				log.info("Permanent owner token detected. Skipping validation.");
-				setPermanentAuthentication("test-owner", "ROLE_OWNER");
-				filterChain.doFilter(request, response);
-				return;
-			}
+            if (token.equals(permanentOwnerToken)) {
+                log.info("Permanent owner token detected. Skipping validation.");
+                setPermanentAuthentication("test-owner", "ROLE_OWNER");
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-			// 일반 토큰 처리
-			if (jwtUtil.isTokenExpired(token)) {
-				filterChain.doFilter(request, response);
-				return;
-			}
+            // 일반 토큰 처리
+            if (jwtManager.isTokenExpired(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-			String userId = jwtUtil.getUserId(token);
-			String role = jwtUtil.getRole(token);
+            String userId = jwtManager.getUserId(token);
+            String role = jwtManager.getRole(token);
 
-			OAuthUserDTO userDTO = new OAuthUserDTO();
-			userDTO.setUserId(userId);
-			userDTO.setRole(role);
+            OAuthUserDTO userDTO = OAuthUserDTO.builder()
+                .userId(userId)
+                .role(role)
+                .build();
 
-			CustomOAuthUser customOAuth2User = new CustomOAuthUser(userDTO);
+            CustomOAuthUser customOAuth2User = new CustomOAuthUser(userDTO);
 
-			Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
-				customOAuth2User.getAuthorities());
-			SecurityContextHolder.getContext().setAuthentication(authToken);
+            Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
+                customOAuth2User.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authToken);
 
-		} catch (Exception e) {
-			SecurityContextHolder.clearContext();
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-			return;
-		}
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            return;
+        }
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 
-	private void setPermanentAuthentication(String userId, String role) {
-		OAuthUserDTO userDTO = new OAuthUserDTO();
-		userDTO.setUserId(userId);
-		userDTO.setRole(role);
+    private void setPermanentAuthentication(String userId, String role) {
+        OAuthUserDTO userDTO = OAuthUserDTO.builder()
+            .userId(userId)
+            .role(role)
+            .build();
 
-		CustomOAuthUser customOAuth2User = new CustomOAuthUser(userDTO);
+        CustomOAuthUser customOAuth2User = new CustomOAuthUser(userDTO);
 
-		Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
-			customOAuth2User.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(authToken);
-	}
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
+            customOAuth2User.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+    }
 
 }

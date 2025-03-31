@@ -1,16 +1,13 @@
 package com.jangburich.domain.team.dto.response;
 
+import com.jangburich.domain.common.Status;
+import com.jangburich.domain.team.domain.TeamType;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.jangburich.domain.common.Status;
-import com.jangburich.domain.team.domain.TeamType;
-
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
 @Getter
 public class TeamCodeResponse {
 	private String teamName;

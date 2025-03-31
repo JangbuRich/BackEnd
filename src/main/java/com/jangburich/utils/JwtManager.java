@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.Cookie;
 
 @Component
-public class JwtUtil {
+public class JwtManager {
 
     private final SecretKey secretKey;
 
@@ -24,7 +23,7 @@ public class JwtUtil {
     @Value("${spring.jwt.refresh.expiration}")
     private long refreshTokenExpiration;
 
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
+    public JwtManager(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -52,16 +51,16 @@ public class JwtUtil {
         return Jwts.builder()
             .claim("userId", userId)
             .claim("role", role)
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
             .signWith(secretKey)
             .compact();
     }
 
     public String createRefreshToken() {
         return Jwts.builder()
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
             .signWith(secretKey)
             .compact();
     }

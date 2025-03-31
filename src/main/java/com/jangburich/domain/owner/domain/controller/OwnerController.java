@@ -1,10 +1,7 @@
 package com.jangburich.domain.owner.domain.controller;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jangburich.domain.owner.domain.OwnerCreateReqDTO;
 import com.jangburich.domain.owner.domain.OwnerGetResDTO;
@@ -29,7 +26,7 @@ public class OwnerController {
 	@PostMapping("/register")
 	public ResponseCustom<Message> registerOwner(
 		Authentication authentication,
-		OwnerCreateReqDTO ownerCreateReqDTO) {
+		@RequestBody OwnerCreateReqDTO ownerCreateReqDTO) {
 		ownerService.registerOwner(AuthenticationParser.parseUserId(authentication), ownerCreateReqDTO);
 		return ResponseCustom.OK(Message.builder()
 			.message("success")

@@ -1,13 +1,10 @@
 package com.jangburich.domain.order.domain;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@Setter
+import java.time.LocalDate;
+
 @Getter
 @RequiredArgsConstructor
 public class OrderResponse {

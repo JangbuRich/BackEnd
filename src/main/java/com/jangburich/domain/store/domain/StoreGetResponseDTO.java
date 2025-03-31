@@ -1,20 +1,15 @@
 package com.jangburich.domain.store.domain;
 
-import java.time.DayOfWeek;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.jangburich.domain.menu.domain.MenuResponse;
-
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+
+import java.time.DayOfWeek;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class StoreGetResponseDTO {
 	private Long id;
@@ -37,7 +32,6 @@ public class StoreGetResponseDTO {
 	private String dayOfWeek;
 	private String openTime;
 	private String closeTime;
-	private List<MenuResponse> menuResponses;
 
 	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -46,7 +40,7 @@ public class StoreGetResponseDTO {
 		String introduction,
 		Double latitude, Double longitude, String address, String location, String dayOfWeek,
 		String openTime,
-		String closeTime, List<MenuResponse> menuResponses) {
+		String closeTime) {
 		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
@@ -64,7 +58,6 @@ public class StoreGetResponseDTO {
 		this.dayOfWeek = dayOfWeek;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
-		this.menuResponses = menuResponses;
 	}
 
 	private String convertDayOfWeekToKorean(DayOfWeek dayOfWeek) {
@@ -80,7 +73,7 @@ public class StoreGetResponseDTO {
 		};
 	}
 
-	public StoreGetResponseDTO of(Store store, List<MenuResponse> menuResponses) {
+	public StoreGetResponseDTO of(Store store) {
 		String dayOfWeekString = store.getWorkDays().stream()
 			.map(this::convertDayOfWeekToKorean)
 			.collect(Collectors.joining(", "));
@@ -102,8 +95,7 @@ public class StoreGetResponseDTO {
 			store.getLocation(),
 			dayOfWeekString,
 			store.getOpenTime().format(TIME_FORMATTER),
-			store.getCloseTime().format(TIME_FORMATTER),
-			menuResponses
+			store.getCloseTime().format(TIME_FORMATTER)
 		);
 	}
 }

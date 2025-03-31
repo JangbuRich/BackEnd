@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DayOfWeekConverter {
+	private DayOfWeekConverter() {
+
+	}
 
 	public static DayOfWeek convertKoreanToDayOfWeek(String koreanDay) {
 		return switch (koreanDay.trim()) {
@@ -20,8 +23,8 @@ public class DayOfWeekConverter {
 		};
 	}
 
-	public static List<DayOfWeek> convertStringToDayOfWeekList(String daysString) {
-		return Arrays.stream(daysString.split(","))
+	public static List<DayOfWeek> convertStringToDayOfWeekList(String days) {
+		return Arrays.stream(days.split(","))
 			.map(DayOfWeekConverter::convertKoreanToDayOfWeek)
 			.collect(Collectors.toList());
 	}

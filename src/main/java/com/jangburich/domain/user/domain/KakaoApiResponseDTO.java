@@ -2,10 +2,8 @@ package com.jangburich.domain.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class KakaoApiResponseDTO {
 	private Long id;
 
@@ -18,7 +16,6 @@ public class KakaoApiResponseDTO {
 	private KakaoAccount kakaoAccount;
 
 	@Getter
-	@Setter
 	public static class Properties {
 		private String nickname;
 
@@ -30,7 +27,6 @@ public class KakaoApiResponseDTO {
 	}
 
 	@Getter
-	@Setter
 	public static class KakaoAccount {
 
 		@JsonProperty("profile_nickname_needs_agreement")
@@ -56,7 +52,6 @@ public class KakaoApiResponseDTO {
 		private String email;
 
 		@Getter
-		@Setter
 		public static class Profile {
 			private String nickname;
 

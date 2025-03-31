@@ -12,6 +12,7 @@ import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class OwnerService {
 	private final OwnerRepository ownerRepository;
 	private final UserRepository userRepository;
 
+	@Transactional
 	public void registerOwner(String customOAuthUser, OwnerCreateReqDTO ownerCreateReqDTO) {
 		User user = userRepository.findByProviderId(customOAuthUser)
 			.orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
@@ -28,12 +30,13 @@ public class OwnerService {
 			.orElseThrow(() -> new DefaultNullPointerException(
 				ErrorCode.INVALID_AUTHENTICATION));
 
-		owner.setName(ownerCreateReqDTO.getName());
-		owner.setBusinessRegistrationNumber(ownerCreateReqDTO.getBusinessRegistrationNumber());
-		owner.setBusinessName(ownerCreateReqDTO.getBusinessName());
-		owner.setPhoneNumber(ownerCreateReqDTO.getPhoneNumber());
-		owner.setOpeningDate(ownerCreateReqDTO.getOpeningDate());
-		ownerRepository.save(owner);
+		owner.register(
+			ownerCreateReqDTO.getName(),
+			ownerCreateReqDTO.getBusinessRegistrationNumber(),
+			owner.getBusinessName(),
+			owner.getOpeningDate(),
+			owner.getPhoneNumber()
+		);
 	}
 
 	public OwnerGetResDTO getOwnerInfo(String customOAuthUser) {
