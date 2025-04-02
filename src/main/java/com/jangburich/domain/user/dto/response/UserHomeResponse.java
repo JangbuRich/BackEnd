@@ -8,20 +8,17 @@ public record UserHomeResponse(
         String currentDate,
         String userName,
         List<TeamsResponse> teams,
-        int usablePoint,
         int joinedTeamCount,
         int reservationCount
 ) {
 
     @QueryProjection
     public UserHomeResponse(Long userId, String currentDate, String userName, List<TeamsResponse> teams,
-                            int usablePoint,
                             int joinedTeamCount, int reservationCount) {
         this.userId = userId;
         this.currentDate = currentDate;
         this.userName = userName;
         this.teams = teams;
-        this.usablePoint = usablePoint;
         this.joinedTeamCount = joinedTeamCount;
         this.reservationCount = reservationCount;
     }

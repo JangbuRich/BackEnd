@@ -23,111 +23,165 @@ import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "owner_id")
-	private Owner owner;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private Owner owner;
 
-	@Column(name = "name")
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "category")
-	private Category category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
+    private Category category;
 
-	@Column(name = "representative_image")
-	private String representativeImage;
+    @Column(name = "representative_image")
+    private String representativeImage;
 
-	@Column(name = "reservation_available")
-	private Boolean reservationAvailable;
+    @Column(name = "reservation_available")
+    private Boolean reservationAvailable;
 
-	@Column(name = "max_reservation")
-	private Long maxReservation;
+    @Column(name = "max_reservation")
+    private Long maxReservation;
 
-	@Column(name = "min_prepayment")
-	private Long minPrepayment;
+    @Column(name = "min_prepayment")
+    private Long minPrepayment;
 
-	@Column(name = "prepayment_duration")
-	private Long prepaymentDuration;
+    @Column(name = "prepayment_duration")
+    private Long prepaymentDuration;
 
-	@Column(name = "introduction")
-	private String introduction;
+    @Column(name = "introduction")
+    private String introduction;
 
-	@Column(name = "latitude")
-	private Double latitude;
+    @Column(name = "latitude")
+    private Double latitude;
 
-	@Column(name = "longitude")
-	private Double longitude;
+    @Column(name = "longitude")
+    private Double longitude;
 
-	@Column(name = "address")
-	private String address;
+    @Column(name = "address")
+    private String address;
 
-	@Column(name = "location")
-	private String location;
+    @Column(name = "location")
+    private String location;
 
-	@ElementCollection(targetClass = DayOfWeek.class)
-	@Enumerated(EnumType.STRING)
-	@CollectionTable(name = "work_days", joinColumns = @JoinColumn(name = "work_schedule_id"))
-	@Column(name = "day_of_week")
-	private List<DayOfWeek> workDays;
+    @ElementCollection(targetClass = DayOfWeek.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "work_days", joinColumns = @JoinColumn(name = "work_schedule_id"))
+    @Column(name = "day_of_week")
+    private List<DayOfWeek> workDays;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-	@Column(name = "open_time")
-	private LocalTime openTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Column(name = "open_time")
+    private LocalTime openTime;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-	@Column(name = "close_time")
-	private LocalTime closeTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Column(name = "close_time")
+    private LocalTime closeTime;
 
-	@Column(name = "contact_number")
-	private String contactNumber;
+    @Column(name = "contact_number")
+    private String contactNumber;
 
-	public static Store create(Owner owner) {
-		Store newOwner = new Store();
-		newOwner.setOwner(owner);
-		return newOwner;
-	}
+    public static Store create(Owner owner) {
+        Store newOwner = new Store();
+        newOwner.owner = owner;
+        return newOwner;
+    }
 
-	public static Store of(Owner owner, StoreCreateRequestDTO storeCreateRequestDTO, List<DayOfWeek> dayOfWeeks) {
-		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    public void additionalInfo(
+        Boolean reservationAvailable,
+        Long maxReservation,
+        Long minPrepayment,
+        Long prepaymentDuration
+    ) {
+        this.reservationAvailable = reservationAvailable;
+        this.maxReservation = maxReservation;
+        this.minPrepayment = minPrepayment;
+        this.prepaymentDuration = prepaymentDuration;
+    }
 
-		Store newStore = new Store();
-		newStore.setOwner(owner);
-		newStore.setName(storeCreateRequestDTO.getStoreName());
-		newStore.setCategory(storeCreateRequestDTO.getCategory());
-		newStore.setIntroduction(storeCreateRequestDTO.getIntroduction());
-		newStore.setLatitude(storeCreateRequestDTO.getLatitude());
-		newStore.setLongitude(storeCreateRequestDTO.getLongitude());
-		newStore.setAddress(storeCreateRequestDTO.getAddress());
-		newStore.setLocation(storeCreateRequestDTO.getLocation());
-		newStore.setWorkDays(dayOfWeeks);
-		newStore.setOpenTime(
-			storeCreateRequestDTO.getOpenTime() != null
-				? LocalTime.parse(storeCreateRequestDTO.getOpenTime(), timeFormatter)
-				: null
-		);
-		newStore.setCloseTime(
-			storeCreateRequestDTO.getCloseTime() != null
-				? LocalTime.parse(storeCreateRequestDTO.getCloseTime(), timeFormatter)
-				: null
-		);
-		newStore.setContactNumber(storeCreateRequestDTO.getPhoneNumber());
-		newStore.setReservationAvailable(storeCreateRequestDTO.getReservationAvailable());
-		newStore.setMaxReservation(storeCreateRequestDTO.getMaxReservation());
-		newStore.setMinPrepayment(storeCreateRequestDTO.getMinPrepayment());
-		newStore.setPrepaymentDuration(storeCreateRequestDTO.getPrepaymentDuration());
-		return newStore;
-	}
+    public static Store of(Owner owner, StoreCreateRequestDTO storeCreateRequestDTO, List<DayOfWeek> dayOfWeeks, String imageUrl) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        Store newStore = new Store();
+        newStore.owner = owner;
+        newStore.name = storeCreateRequestDTO.getStoreName();
+        newStore.category = storeCreateRequestDTO.getCategory();
+        newStore.introduction = storeCreateRequestDTO.getIntroduction();
+        newStore.latitude = storeCreateRequestDTO.getLatitude();
+        newStore.longitude = storeCreateRequestDTO.getLongitude();
+        newStore.address = storeCreateRequestDTO.getAddress();
+        newStore.location = storeCreateRequestDTO.getLocation();
+        newStore.workDays = dayOfWeeks;
+        newStore.openTime = storeCreateRequestDTO.getOpenTime() != null
+            ? LocalTime.parse(storeCreateRequestDTO.getOpenTime(), timeFormatter)
+            : null
+        ;
+        newStore.closeTime = storeCreateRequestDTO.getCloseTime() != null
+            ? LocalTime.parse(storeCreateRequestDTO.getCloseTime(), timeFormatter)
+            : null;
+
+        newStore.contactNumber = storeCreateRequestDTO.getPhoneNumber();
+        newStore.reservationAvailable = storeCreateRequestDTO.getReservationAvailable();
+        newStore.maxReservation = storeCreateRequestDTO.getMaxReservation();
+        newStore.minPrepayment = storeCreateRequestDTO.getMinPrepayment();
+        newStore.prepaymentDuration = storeCreateRequestDTO.getPrepaymentDuration();
+        newStore.representativeImage = imageUrl;
+        return newStore;
+    }
+
+    public void update(StoreUpdateRequestDTO dto) {
+        if (dto.getCategory() != null) {
+            this.category = dto.getCategory();
+        }
+        if (dto.getReservationAvailable() != null) {
+            this.reservationAvailable = dto.getReservationAvailable();
+        }
+        if (dto.getRepresentativeImage() != null) {
+            this.representativeImage = dto.getRepresentativeImage();
+        }
+        if (dto.getMaxReservation() != null) {
+            this.maxReservation = dto.getMaxReservation();
+        }
+        if (dto.getMinPrepayment() != null) {
+            this.minPrepayment = dto.getMinPrepayment();
+        }
+        if (dto.getPrepaymentDuration() != null) {
+            this.prepaymentDuration = dto.getPrepaymentDuration();
+        }
+        if (dto.getIntroduction() != null) {
+            this.introduction = dto.getIntroduction();
+        }
+        if (dto.getLatitude() != null) {
+            this.latitude = dto.getLatitude();
+        }
+        if (dto.getLongitude() != null) {
+            this.longitude = dto.getLongitude();
+        }
+        if (dto.getAddress() != null) {
+            this.address = dto.getAddress();
+        }
+        if (dto.getLocation() != null) {
+            this.location = dto.getLocation();
+        }
+        if (dto.getDayOfWeek() != null) {
+            this.workDays = dto.getDayOfWeek();
+        }
+        if (dto.getOpenTime() != null) {
+            this.openTime = dto.getOpenTime();
+        }
+        if (dto.getCloseTime() != null) {
+            this.closeTime = dto.getCloseTime();
+        }
+    }
 }

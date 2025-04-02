@@ -2,11 +2,9 @@ package com.jangburich.global.payload;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
 
-@ToString
-@Data
+@Getter
 public class ApiResponse {
 
     @Schema(type = "boolean", example = "true", description = "올바르게 로직을 처리했으면 True, 아니면 False를 반환합니다.")

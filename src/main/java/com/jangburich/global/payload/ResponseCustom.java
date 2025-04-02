@@ -5,13 +5,10 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
 import org.springframework.http.HttpStatus;
 
 @Getter
-@Setter
-@ToString
 @NoArgsConstructor
 public class ResponseCustom<T> {
     private T data;

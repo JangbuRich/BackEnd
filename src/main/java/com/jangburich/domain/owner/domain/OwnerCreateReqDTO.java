@@ -1,13 +1,11 @@
 package com.jangburich.domain.owner.domain;
 
-import java.time.LocalDate;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class OwnerCreateReqDTO {
 	private String businessName;

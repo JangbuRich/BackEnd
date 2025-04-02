@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.jangburich.utils.JwtFilter;
-import com.jangburich.utils.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 

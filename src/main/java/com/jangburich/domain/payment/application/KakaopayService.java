@@ -103,7 +103,6 @@ public class KakaopayService implements PaymentService {
 
 		User user = userRepository.findByProviderId(userId)
 			.orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-		user.setPoint(user.getPoint() + Integer.parseInt(payRequest.totalAmount()));
 
 		PointTransaction pointTransaction = PointTransaction.builder()
 			.user(user)

@@ -58,7 +58,6 @@ public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
                         Expressions.constant(formattedDate),
                         user.name,
                         Expressions.constant(teamsResponses),
-                        user.point,
                         userTeam.count().intValue(),
                         Expressions.constant(2)
                 ))

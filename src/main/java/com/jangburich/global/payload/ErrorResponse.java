@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.validation.FieldError;
 
-@Data
+@Getter
 public class ErrorResponse {
 
     private LocalDateTime timestamp = LocalDateTime.now();

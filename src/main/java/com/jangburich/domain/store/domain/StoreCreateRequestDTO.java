@@ -1,20 +1,15 @@
 package com.jangburich.domain.store.domain;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import com.jangburich.domain.menu.domain.MenuCreateRequestDTO;
-
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class StoreCreateRequestDTO {
 
@@ -39,8 +34,6 @@ public class StoreCreateRequestDTO {
 	private String dayOfWeek;
 	private String openTime;
 	private String closeTime;
-
-	private List<MenuCreateRequestDTO> menuCreateRequestDTOS;
 
 	private Long minPrepayment;
 	private Long prepaymentDuration;

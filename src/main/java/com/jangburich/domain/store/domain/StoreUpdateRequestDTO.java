@@ -1,17 +1,15 @@
 package com.jangburich.domain.store.domain;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.List;
-
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.List;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class StoreUpdateRequestDTO {
 	@Enumerated(EnumType.STRING)

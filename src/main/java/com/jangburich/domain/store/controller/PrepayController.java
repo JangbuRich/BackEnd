@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Prepay", description = "Prepay API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/prepay")
+@RequestMapping("/api/v1/prepay")
 public class PrepayController {
 
 	private final PrepayService prepayService;
