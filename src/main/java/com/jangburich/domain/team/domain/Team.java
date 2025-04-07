@@ -55,8 +55,8 @@ public class Team extends BaseEntity {
         this.teamType = teamType;
     }
 
-    public void validateIsTeamLeader(Long userId, Long userId1) {
-        if (!userId.equals(userId1)) {
+    public void validateTeamLeader(Long userId) {
+        if (!this.teamLeader.getLeaderId().equals(userId)) {
             throw new IllegalArgumentException("팀의 리더가 아닌 사람은 선결제를 할 수 없습니다.");
         }
     }

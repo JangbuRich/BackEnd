@@ -45,7 +45,7 @@ public class PrepayService {
         Store store = storeRepository.findById(prepayRequest.storeId())
             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 가게 id 입니다."));
 
-        team.validateIsTeamLeader(team.getTeamLeader().getLeaderId(), user.getUserId());
+        team.validateTeamLeader(user.getUserId());
 
         if (!team.getTeamLeader().getLeaderId().equals(user.getUserId())) {
             return Message.builder()
