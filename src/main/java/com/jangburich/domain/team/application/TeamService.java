@@ -99,7 +99,7 @@ public class TeamService {
         List<MyTeamResponse> myTeamResponses = new ArrayList<>();
 
         for (Team team : teams) {
-            boolean isMeLeader = team.getTeamLeader().getUser_id().equals(user.getUserId());
+            boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
 
             int peopleCount = userTeamRepository.countByTeam(team);
 
@@ -137,7 +137,7 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
             .orElseThrow(() -> new IllegalArgumentException("해당 팀을 찾을 수 없습니다."));
 
-        if (!team.getTeamLeader().getUser_id().equals(user.getUserId())) {
+        if (!team.getTeamLeader().getLeaderId().equals(user.getUserId())) {
             // 일반 구성원
             return teamRepository.findMyTeamDetailsAsMember(user.getUserId(),
                 teamId);
@@ -165,7 +165,7 @@ public class TeamService {
                     teamMember.getUserId(),
                     teamMember.getName(),
                     teamMember.getUserId().equals(user.getUserId()),
-                    team.getTeamLeader().getUser_id().equals(teamMember.getUserId()),
+                    team.getTeamLeader().getLeaderId().equals(teamMember.getUserId()),
                     Optional.ofNullable(teamMember.getProfileImageUrl()).orElse(DEFAULT_PROFILE_IMAGE_URL)
                 );
             })
@@ -204,7 +204,7 @@ public class TeamService {
         Store store = storeRepository.findById(storeId)
             .orElseThrow(() -> new IllegalArgumentException("해당하는 가게를 찾을 수 없습니다."));
 
-        boolean isMeLeader = team.getTeamLeader().getUser_id().equals(user.getUserId());
+        boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
 
         IndividualStoreDetailsResponse individualStoreDetails = teamRepository.findIndividualStoreDetails(
             user.getUserId(), team.getId(), store.getId(), isMeLeader);

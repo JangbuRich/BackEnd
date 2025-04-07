@@ -188,7 +188,7 @@ public class StoreService {
         Team team = teamRepository.findById(teamId)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_PARAMETER));
 
-        User teamLeader = userRepository.findById(team.getTeamLeader().getUser_id())
+        User teamLeader = userRepository.findById(team.getTeamLeader().getLeaderId())
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_PARAMETER));
 
         StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(store.getId(), team.getId())

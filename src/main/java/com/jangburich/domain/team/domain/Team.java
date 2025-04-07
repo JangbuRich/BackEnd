@@ -1,18 +1,8 @@
 package com.jangburich.domain.team.domain;
 
-import java.util.UUID;
-
 import com.jangburich.domain.common.BaseEntity;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
+import com.jangburich.utils.SecretNumberGenerator;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -60,7 +50,7 @@ public class Team extends BaseEntity {
 	@PrePersist
 	private void generateSecretCode() {
 		if (this.secretCode == null) {
-			this.secretCode = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+			this.secretCode = SecretNumberGenerator.generateSecretNumber();
 		}
 	}
 

@@ -1,25 +1,26 @@
 package com.jangburich.domain.team.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Embeddable
 @Getter
 @NoArgsConstructor
 public class TeamLeader {
-    private Long user_id;
+    @Column(name = "user_id")
+    private Long leaderId;
+
+    @Column(name = "account_number")
     private String accountNumber;
+
+    @Column(name = "bank_name")
     private String bankName;
 
-    public TeamLeader(Long user_id, String accountNumber, String bankName) {
-        this.user_id = user_id;
+    public TeamLeader(Long leaderId, String accountNumber, String bankName) {
+        this.leaderId = leaderId;
         this.accountNumber = accountNumber;
         this.bankName = bankName;
-    }
-
-    public boolean isSameLeader(Long userId) {
-        return this.user_id.equals(userId);
     }
 }
