@@ -13,33 +13,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
+    private Long id;
 
-	@Column(name = "name")
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name = "description")
-	private String description;
+    @Column(name = "description")
+    private String description;
 
-	@Column(name = "secret_code", updatable = false, unique = true)
-	private String secretCode;
+    @Column(name = "secret_code", updatable = false, unique = true)
+    private String secretCode;
 
-	@Embedded
-	private TeamLeader teamLeader;
+    @Embedded
+    private TeamLeader teamLeader;
 
-	@Column(name = "point")
-	private Integer point;
-
-	@Enumerated(EnumType.STRING)
-	@Column(name = "team_type")
-	private TeamType teamType;
-
-	public void updatePoint(Integer point) {
-		this.point += point;
-	}
+    @Enumerated(EnumType.STRING)
+    @Column(name = "team_type")
+    private TeamType teamType;
 
     public void validateJoinCode(String joinCode) {
         if (!this.secretCode.equals(joinCode)) {
@@ -47,26 +40,24 @@ public class Team extends BaseEntity {
         }
     }
 
-	@PrePersist
-	private void generateSecretCode() {
-		if (this.secretCode == null) {
-			this.secretCode = SecretNumberGenerator.generateSecretNumber();
-		}
-	}
+    @PrePersist
+    private void generateSecretCode() {
+        if (this.secretCode == null) {
+            this.secretCode = SecretNumberGenerator.generateSecretNumber();
+        }
+    }
 
-	@Builder
-	public Team(String name, String description, TeamLeader teamLeader, Integer point,
-		TeamType teamType) {
-		this.name = name;
-		this.description = description;
-		this.teamLeader = teamLeader;
-		this.point = point;
-		this.teamType = teamType;
-	}
+    @Builder
+    public Team(String name, String description, TeamLeader teamLeader, TeamType teamType) {
+        this.name = name;
+        this.description = description;
+        this.teamLeader = teamLeader;
+        this.teamType = teamType;
+    }
 
-	public void validateIsTeamLeader(Long userId, Long userId1) {
-		if (!userId.equals(userId1)) {
-			throw new IllegalArgumentException("팀의 리더가 아닌 사람은 선결제를 할 수 없습니다.");
-		}
-	}
+    public void validateIsTeamLeader(Long userId, Long userId1) {
+        if (!userId.equals(userId1)) {
+            throw new IllegalArgumentException("팀의 리더가 아닌 사람은 선결제를 할 수 없습니다.");
+        }
+    }
 }
