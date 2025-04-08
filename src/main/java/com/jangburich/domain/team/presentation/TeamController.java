@@ -2,7 +2,6 @@ package com.jangburich.domain.team.presentation;
 
 import com.jangburich.domain.team.dto.response.IndividualStoreDetailsResponse;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +54,14 @@ public class TeamController {
 		return ResponseCustom.OK(teamService.joinTeam(AuthenticationParser.parseUserId(authentication), joinCode));
 	}
 
+	@Operation(summary = "그룹 유형 조회", description = "그룹 유형을 조회한다.")
+	@GetMapping("/categories")
+	public ResponseCustom<?> getCategories() {
+		// TODO 개발 예정
+		return null;
+	}
+
+
 	@Operation(summary = "내가 속한 그룹 조회", description = "내가 속한 그룹을 카테고리(ALL, LEADER, MEMBER) 별로 조회한다.")
 	@GetMapping
 	public ResponseCustom<List<MyTeamResponse>> getMyTeamByCategory(
@@ -73,6 +80,16 @@ public class TeamController {
 	) {
 		return ResponseCustom.OK(
 			teamService.getTeamDetailsById(AuthenticationParser.parseUserId(authentication), teamId));
+	}
+
+	@Operation(summary = "해당 그룹의 환불 가능 금액 조회", description = "해당 그룹의 환불 가능 금액을 조회합니다.")
+	@GetMapping("/{teamId}/available-refund-amount")
+	public ResponseCustom<?> getAvailableRefundAmount(
+		Authentication authentication,
+		@PathVariable Long teamId
+	) {
+		// TODO 그룹 삭제할 때 보여지는 환불 가능 금액 조회
+		return null;
 	}
 
 	@Operation(summary = "그룹 상세 조회에서 개별 매장 상세 조회", description = "그룹 상세 조회에서 한 매장을 선택 시 조회되는 정보.")

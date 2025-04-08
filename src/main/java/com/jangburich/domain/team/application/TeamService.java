@@ -103,7 +103,7 @@ public class TeamService {
             boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
 
             // TODO 반복문 내에 repository 접근은 리팩터링 필수
-            int peopleCount = userTeamRepository.countByTeam(team);
+            int memberCount = userTeamRepository.countByTeam(team);
 
             List<String> profileImageUrls = userTeamRepository.findAllByTeam(team).stream()
                 .map(userTeam -> Optional.ofNullable(userTeam.getUser().getProfileImageUrl())
@@ -117,13 +117,12 @@ public class TeamService {
                 MyTeamResponse response = new MyTeamResponse(
                     team.getId(),
                     team.getName(),
-                    "진행중",
-                    team.getCreatedAt().toLocalDate(),
                     team.getTeamType().getDescription(),
                     false, // isLiked는 임의로 false로 설정
-                    peopleCount,
+                    memberCount,
                     isMeLeader,
-                    profileImageUrls
+                    profileImageUrls,
+                    0 // TODO 그룹의 남은 돈
                 );
                 myTeamResponses.add(response);
             }
