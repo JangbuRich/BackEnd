@@ -1,8 +1,11 @@
 package com.jangburich.domain.team.dto.response;
 
+import lombok.Builder;
+
 import java.time.LocalDate;
 import java.util.List;
 
+@Builder
 public record MyTeamResponse(
         Long teamId,
         String teamName,

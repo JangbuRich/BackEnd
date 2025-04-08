@@ -2,6 +2,7 @@ package com.jangburich.domain.team.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ public class TeamLeader {
     @Column(name = "bank_name")
     private String bankName;
 
+    @Builder
     public TeamLeader(Long leaderId, String accountNumber, String bankName) {
         this.leaderId = leaderId;
         this.accountNumber = accountNumber;
