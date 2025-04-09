@@ -2,7 +2,7 @@ package com.jangburich.domain.team.application;
 
 import com.jangburich.domain.store.domain.Store;
 import com.jangburich.domain.store.repository.StoreRepository;
-import com.jangburich.domain.team.dto.response.IndividualStoreDetailsResponse;
+import com.jangburich.domain.team.dto.response.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,7 @@ import com.jangburich.domain.team.domain.UserTeam;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.team.domain.repository.UserTeamRepository;
 import com.jangburich.domain.team.dto.request.RegisterTeamRequest;
-import com.jangburich.domain.team.dto.response.MyTeamDetailsResponse;
-import com.jangburich.domain.team.dto.response.MyTeamResponse;
-import com.jangburich.domain.team.dto.response.TeamCodeResponse;
-import com.jangburich.domain.team.dto.response.TeamMemberResponse;
-import com.jangburich.domain.team.dto.response.TeamSecretCodeResponse;
+import com.jangburich.domain.team.dto.response.MyTeamDetailResponse;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.global.payload.Message;
@@ -131,7 +127,7 @@ public class TeamService {
         return myTeamResponses;
     }
 
-    public MyTeamDetailsResponse getTeamDetailsById(String userId, Long teamId) {
+    public MyTeamDetailResponse getTeamDetailsById(String userId, Long teamId) {
         User user = userRepository.findByProviderId(userId)
             .orElseThrow(() -> new NullPointerException("사용자를 찾을 수 없습니다."));
 

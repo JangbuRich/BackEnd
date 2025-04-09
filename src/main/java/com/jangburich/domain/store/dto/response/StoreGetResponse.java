@@ -1,5 +1,7 @@
-package com.jangburich.domain.store.domain;
+package com.jangburich.domain.store.dto.response;
 
+import com.jangburich.domain.store.domain.Category;
+import com.jangburich.domain.store.domain.Store;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public class StoreGetResponseDTO {
+public class StoreGetResponse {
 	private Long id;
 	private String ownerId;
 	private String name;
@@ -35,12 +37,12 @@ public class StoreGetResponseDTO {
 
 	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-	public StoreGetResponseDTO(Long id, String ownerId, String name, Category category, String representativeImage,
-		Boolean reservationAvailable, Long maxReservation, Long minPrepayment, Long prepaymentDuration,
-		String introduction,
-		Double latitude, Double longitude, String address, String location, String dayOfWeek,
-		String openTime,
-		String closeTime) {
+	public StoreGetResponse(Long id, String ownerId, String name, Category category, String representativeImage,
+							Boolean reservationAvailable, Long maxReservation, Long minPrepayment, Long prepaymentDuration,
+							String introduction,
+							Double latitude, Double longitude, String address, String location, String dayOfWeek,
+							String openTime,
+							String closeTime) {
 		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
@@ -73,12 +75,12 @@ public class StoreGetResponseDTO {
 		};
 	}
 
-	public StoreGetResponseDTO of(Store store) {
+	public StoreGetResponse of(Store store) {
 		String dayOfWeekString = store.getWorkDays().stream()
 			.map(this::convertDayOfWeekToKorean)
 			.collect(Collectors.joining(", "));
 
-		return new StoreGetResponseDTO(
+		return new StoreGetResponse(
 			store.getId(),
 			store.getOwner().getUser().getProviderId(),
 			store.getName(),

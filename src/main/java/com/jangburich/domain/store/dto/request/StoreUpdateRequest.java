@@ -1,5 +1,6 @@
-package com.jangburich.domain.store.domain;
+package com.jangburich.domain.store.dto.request;
 
+import com.jangburich.domain.store.domain.Category;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class StoreUpdateRequestDTO {
+public class StoreUpdateRequest {
 	@Enumerated(EnumType.STRING)
 	private Category category;
 	private String representativeImage;

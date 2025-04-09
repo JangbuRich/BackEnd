@@ -1,7 +1,6 @@
-package com.jangburich.domain.favorite.domain;
+package com.jangburich.domain.team.domain;
 
 import com.jangburich.domain.common.BaseEntity;
-import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

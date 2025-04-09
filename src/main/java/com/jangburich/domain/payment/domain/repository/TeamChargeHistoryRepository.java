@@ -8,10 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.jangburich.domain.payment.domain.TeamChargeHistory;
-import com.jangburich.domain.payment.domain.TeamChargeHistoryResponse;
 import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.domain.StoreChargeHistoryResponse;
-import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.store.dto.response.StoreChargeHistoryResponse;
 
 @Repository
 public interface TeamChargeHistoryRepository extends JpaRepository<TeamChargeHistory, Long> {
