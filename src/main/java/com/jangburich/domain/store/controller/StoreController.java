@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jangburich.domain.store.domain.Category;
-import com.jangburich.domain.store.domain.StoreCreateRequestDTO;
-import com.jangburich.domain.store.domain.StoreGetResponseDTO;
-import com.jangburich.domain.store.domain.StoreUpdateRequestDTO;
+import com.jangburich.domain.store.dto.request.StoreCreateRequest;
+import com.jangburich.domain.store.dto.response.StoreGetResponse;
+import com.jangburich.domain.store.dto.request.StoreUpdateRequest;
 import com.jangburich.domain.store.dto.response.OrderDetailResponse;
 import com.jangburich.domain.store.dto.response.OrderGetResponse;
 import com.jangburich.domain.store.dto.response.OrderTodayResponse;
@@ -89,10 +89,10 @@ public class StoreController {
 	public ResponseCustom<Message> createStore(
 		Authentication authentication,
 		@Parameter(name = "image", description = "업로드 사진 데이터") @RequestPart(value = "image") MultipartFile image,
-		@RequestPart(value = "store") StoreCreateRequestDTO storeCreateRequestDTO,
+		@RequestPart(value = "store") StoreCreateRequest storeCreateRequest,
 		@RequestPart(value = "menuImages", required = false) List<MultipartFile> menuImages) {
 
-		storeService.createStore(AuthenticationParser.parseUserId(authentication), storeCreateRequestDTO, image,
+		storeService.createStore(AuthenticationParser.parseUserId(authentication), storeCreateRequest, image,
 			menuImages);
 		return ResponseCustom.OK(Message.builder().message("success").build());
 	}
@@ -100,14 +100,14 @@ public class StoreController {
 	@Operation(summary = "가게 정보 수정", description = "가게 정보를 수정합니다.")
 	@PatchMapping("/update")
 	public ResponseCustom<Message> updateStore(Authentication authentication,
-		@RequestBody StoreUpdateRequestDTO storeUpdateRequestDTO) {
-		storeService.updateStore(AuthenticationParser.parseUserId(authentication), storeUpdateRequestDTO);
+		@RequestBody StoreUpdateRequest storeUpdateRequest) {
+		storeService.updateStore(AuthenticationParser.parseUserId(authentication), storeUpdateRequest);
 		return ResponseCustom.OK(Message.builder().message("success").build());
 	}
 
 	@Operation(summary = "가게 정보 조회", description = "가게 상세 정보를 조회합니다.")
 	@GetMapping("")
-	public ResponseCustom<StoreGetResponseDTO> getStoreInfo(Authentication authentication) {
+	public ResponseCustom<StoreGetResponse> getStoreInfo(Authentication authentication) {
 		return ResponseCustom.OK(storeService.getStoreInfo(AuthenticationParser.parseUserId(authentication)));
 	}
 

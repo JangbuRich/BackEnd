@@ -1,11 +1,11 @@
-package com.jangburich.domain.store.domain;
+package com.jangburich.domain.store.dto.request;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class StoreAdditionalInfoCreateRequestDTO {
+public class StoreAdditionalInfoCreateRequest {
 	private Boolean reservationAvailable;
 	private Long maxReservation;
 	private Long minPrepayment;

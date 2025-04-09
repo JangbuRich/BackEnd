@@ -10,6 +10,9 @@ import com.jangburich.domain.payment.domain.repository.TeamChargeHistoryReposito
 import com.jangburich.domain.point.domain.TransactionType;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.store.domain.*;
+import com.jangburich.domain.store.dto.request.StoreAdditionalInfoCreateRequest;
+import com.jangburich.domain.store.dto.request.StoreCreateRequest;
+import com.jangburich.domain.store.dto.request.StoreUpdateRequest;
 import com.jangburich.domain.store.dto.response.*;
 import com.jangburich.domain.store.exception.OrdersNotFoundException;
 import com.jangburich.domain.store.repository.StoreRepository;
@@ -62,7 +65,7 @@ public class StoreService {
     private final PointTransactionRepository pointTransactionRepository;
 
     @Transactional
-    public void createStore(String authentication, StoreCreateRequestDTO storeCreateRequestDTO, MultipartFile image,
+    public void createStore(String authentication, StoreCreateRequest storeCreateRequest, MultipartFile image,
                             List<MultipartFile> menuImages) {
 
         User user = userRepository.findByProviderId(authentication)
@@ -72,16 +75,16 @@ public class StoreService {
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         List<DayOfWeek> dayOfWeeks = DayOfWeekConverter.convertStringToDayOfWeekList(
-            storeCreateRequestDTO.getDayOfWeek());
+            storeCreateRequest.getDayOfWeek());
 
         String imageUrl = s3Service.uploadImageToS3(image);
 
-        storeRepository.save(Store.of(owner, storeCreateRequestDTO, dayOfWeeks, imageUrl));
+        storeRepository.save(Store.of(owner, storeCreateRequest, dayOfWeeks, imageUrl));
     }
 
     @Transactional
     public void createAdditionalInfo(String authentication,
-                                     StoreAdditionalInfoCreateRequestDTO storeAdditionalInfoCreateRequestDTO) {
+                                     StoreAdditionalInfoCreateRequest storeAdditionalInfoCreateRequest) {
         User user = userRepository.findByProviderId(authentication)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
@@ -92,15 +95,15 @@ public class StoreService {
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         store.additionalInfo(
-            storeAdditionalInfoCreateRequestDTO.getReservationAvailable(),
-            storeAdditionalInfoCreateRequestDTO.getMinPrepayment(),
-            storeAdditionalInfoCreateRequestDTO.getMaxReservation(),
-            storeAdditionalInfoCreateRequestDTO.getPrepaymentDuration()
+            storeAdditionalInfoCreateRequest.getReservationAvailable(),
+            storeAdditionalInfoCreateRequest.getMinPrepayment(),
+            storeAdditionalInfoCreateRequest.getMaxReservation(),
+            storeAdditionalInfoCreateRequest.getPrepaymentDuration()
         );
     }
 
     @Transactional
-    public void updateStore(String userId, StoreUpdateRequestDTO storeUpdateRequestDTO) {
+    public void updateStore(String userId, StoreUpdateRequest storeUpdateRequest) {
         User user = userRepository.findByProviderId(userId)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
@@ -114,16 +117,16 @@ public class StoreService {
             throw new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION);
         }
 
-        storeRepository.save(updateStore(store, storeUpdateRequestDTO));
+        storeRepository.save(updateStore(store, storeUpdateRequest));
     }
 
     @Transactional
-    public Store updateStore(Store store, StoreUpdateRequestDTO storeUpdateRequestDTO) {
-        store.update(storeUpdateRequestDTO);
+    public Store updateStore(Store store, StoreUpdateRequest storeUpdateRequest) {
+        store.update(storeUpdateRequest);
         return store;
     }
 
-    public StoreGetResponseDTO getStoreInfo(String authentication) {
+    public StoreGetResponse getStoreInfo(String authentication) {
         User user = userRepository.findByProviderId(authentication)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
@@ -138,7 +141,7 @@ public class StoreService {
         }
 
 
-        return new StoreGetResponseDTO().of(store);
+        return new StoreGetResponse().of(store);
     }
 
     public List<StoreTeamResponse> getPaymentGroup(String userId) {

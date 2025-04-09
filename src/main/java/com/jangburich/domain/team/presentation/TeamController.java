@@ -1,6 +1,7 @@
 package com.jangburich.domain.team.presentation;
 
-import com.jangburich.domain.team.dto.response.IndividualStoreDetailsResponse;
+import com.jangburich.domain.team.dto.response.*;
+
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -14,11 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jangburich.domain.team.application.TeamService;
 import com.jangburich.domain.team.dto.request.RegisterTeamRequest;
-import com.jangburich.domain.team.dto.response.MyTeamDetailsResponse;
-import com.jangburich.domain.team.dto.response.MyTeamResponse;
-import com.jangburich.domain.team.dto.response.TeamCodeResponse;
-import com.jangburich.domain.team.dto.response.TeamMemberResponse;
-import com.jangburich.domain.team.dto.response.TeamSecretCodeResponse;
+import com.jangburich.domain.team.dto.response.MyTeamDetailResponse;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;
@@ -74,7 +71,7 @@ public class TeamController {
 
 	@Operation(summary = "그룹(팀) 상세 조회", description = "내가 속한 팀의 정보를 상세 조회합니다.")
 	@GetMapping("/{teamId}")
-	public ResponseCustom<MyTeamDetailsResponse> getTeamDetailsById(
+	public ResponseCustom<MyTeamDetailResponse> getTeamDetailsById(
 		Authentication authentication,
 		@PathVariable Long teamId
 	) {
@@ -93,7 +90,7 @@ public class TeamController {
 	}
 
 	@Operation(summary = "그룹 상세 조회에서 개별 매장 상세 조회", description = "그룹 상세 조회에서 한 매장을 선택 시 조회되는 정보.")
-	@GetMapping("/{teamId}/{storeId}")
+	@GetMapping("/{teamId}/stores/{storeId}")
 	public ResponseCustom<IndividualStoreDetailsResponse> getIndividualStoreDetails(
 			Authentication authentication,
 			@PathVariable Long teamId,

@@ -21,8 +21,6 @@ import static com.jangburich.domain.team.domain.QTeam.team;
 import static com.jangburich.domain.team.domain.QUserTeam.userTeam;
 import static com.jangburich.domain.user.domain.QUser.user;
 
-;
-
 @Slf4j
 @RequiredArgsConstructor
 @Repository
@@ -39,7 +37,7 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
     LocalDateTime endOfDay = currentDate.plusDays(1).atStartOfDay().minusNanos(1);
 
     @Override
-    public MyTeamDetailsResponse findMyTeamDetailsAsMember(Long userId, Long teamId) {
+    public MyTeamDetailResponse findMyTeamDetailsAsMember(Long userId, Long teamId) {
 
         List<PrepayedStore> prepayedStores = queryFactory
             .select(new QPrepayedStore(
@@ -74,7 +72,7 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
             .fetch();
 
         return queryFactory
-            .selectDistinct(new QMyTeamDetailsResponse(
+            .selectDistinct(new QMyTeamDetailResponse(
                 storeTeam.team.id,
                 Expressions.constant(false),
                 storeTeam.store.name,
@@ -101,7 +99,7 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
     }
 
     @Override
-    public MyTeamDetailsResponse findMyTeamDetailsAsLeader(Long userId, Long teamId) {
+    public MyTeamDetailResponse findMyTeamDetailsAsLeader(Long userId, Long teamId) {
 
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.NOON);
@@ -139,7 +137,7 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
             .fetch();
 
         return queryFactory
-            .selectDistinct(new QMyTeamDetailsResponse(
+            .selectDistinct(new QMyTeamDetailResponse(
                 storeTeam.team.id,
                 Expressions.constant(true),
                 storeTeam.store.name,

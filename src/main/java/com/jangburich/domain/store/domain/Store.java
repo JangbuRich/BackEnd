@@ -8,6 +8,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jangburich.domain.owner.domain.Owner;
 
+import com.jangburich.domain.store.dto.request.StoreCreateRequest;
+import com.jangburich.domain.store.dto.request.StoreUpdateRequest;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -110,37 +112,37 @@ public class Store {
         this.prepaymentDuration = prepaymentDuration;
     }
 
-    public static Store of(Owner owner, StoreCreateRequestDTO storeCreateRequestDTO, List<DayOfWeek> dayOfWeeks, String imageUrl) {
+    public static Store of(Owner owner, StoreCreateRequest storeCreateRequest, List<DayOfWeek> dayOfWeeks, String imageUrl) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         Store newStore = new Store();
         newStore.owner = owner;
-        newStore.name = storeCreateRequestDTO.getStoreName();
-        newStore.category = storeCreateRequestDTO.getCategory();
-        newStore.introduction = storeCreateRequestDTO.getIntroduction();
-        newStore.latitude = storeCreateRequestDTO.getLatitude();
-        newStore.longitude = storeCreateRequestDTO.getLongitude();
-        newStore.address = storeCreateRequestDTO.getAddress();
-        newStore.location = storeCreateRequestDTO.getLocation();
+        newStore.name = storeCreateRequest.getStoreName();
+        newStore.category = storeCreateRequest.getCategory();
+        newStore.introduction = storeCreateRequest.getIntroduction();
+        newStore.latitude = storeCreateRequest.getLatitude();
+        newStore.longitude = storeCreateRequest.getLongitude();
+        newStore.address = storeCreateRequest.getAddress();
+        newStore.location = storeCreateRequest.getLocation();
         newStore.workDays = dayOfWeeks;
-        newStore.openTime = storeCreateRequestDTO.getOpenTime() != null
-            ? LocalTime.parse(storeCreateRequestDTO.getOpenTime(), timeFormatter)
+        newStore.openTime = storeCreateRequest.getOpenTime() != null
+            ? LocalTime.parse(storeCreateRequest.getOpenTime(), timeFormatter)
             : null
         ;
-        newStore.closeTime = storeCreateRequestDTO.getCloseTime() != null
-            ? LocalTime.parse(storeCreateRequestDTO.getCloseTime(), timeFormatter)
+        newStore.closeTime = storeCreateRequest.getCloseTime() != null
+            ? LocalTime.parse(storeCreateRequest.getCloseTime(), timeFormatter)
             : null;
 
-        newStore.contactNumber = storeCreateRequestDTO.getPhoneNumber();
-        newStore.reservationAvailable = storeCreateRequestDTO.getReservationAvailable();
-        newStore.maxReservation = storeCreateRequestDTO.getMaxReservation();
-        newStore.minPrepayment = storeCreateRequestDTO.getMinPrepayment();
-        newStore.prepaymentDuration = storeCreateRequestDTO.getPrepaymentDuration();
+        newStore.contactNumber = storeCreateRequest.getPhoneNumber();
+        newStore.reservationAvailable = storeCreateRequest.getReservationAvailable();
+        newStore.maxReservation = storeCreateRequest.getMaxReservation();
+        newStore.minPrepayment = storeCreateRequest.getMinPrepayment();
+        newStore.prepaymentDuration = storeCreateRequest.getPrepaymentDuration();
         newStore.representativeImage = imageUrl;
         return newStore;
     }
 
-    public void update(StoreUpdateRequestDTO dto) {
+    public void update(StoreUpdateRequest dto) {
         if (dto.getCategory() != null) {
             this.category = dto.getCategory();
         }
