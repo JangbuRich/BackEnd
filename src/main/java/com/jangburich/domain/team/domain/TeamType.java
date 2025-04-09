@@ -1,5 +1,8 @@
 package com.jangburich.domain.team.domain;
 
+import lombok.Getter;
+
+@Getter
 public enum TeamType {
     INDIVIDUAL("개인"),
     GATHERING("모임"),
@@ -16,7 +19,4 @@ public enum TeamType {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

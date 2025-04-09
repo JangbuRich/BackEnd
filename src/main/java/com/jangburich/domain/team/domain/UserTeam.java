@@ -25,7 +25,6 @@ public class UserTeam extends BaseEntity {
     @Column(name = "id", updatable = false)
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -33,7 +32,6 @@ public class UserTeam extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
-
 
     public UserTeam(User user, Team team) {
         this.user = user;

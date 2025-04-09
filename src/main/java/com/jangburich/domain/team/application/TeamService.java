@@ -35,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeamService {
 
-    private static final int ZERO = 0;
     private static final String DEFAULT_PROFILE_IMAGE_URL = "https://github.com/user-attachments/assets/56565343-51f4-48b5-bf87-7585011d8de6";
 
     private final TeamRepository teamRepository;
@@ -46,14 +45,18 @@ public class TeamService {
     @Transactional
     public TeamSecretCodeResponse registerTeam(String userId, RegisterTeamRequest registerTeamRequest) {
         User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new NullPointerException());
+            .orElseThrow(NullPointerException::new);
 
         Team team = Team.builder()
             .name(registerTeamRequest.teamName())
             .description(registerTeamRequest.description())
-            .teamLeader(new TeamLeader(user.getUserId(), registerTeamRequest.teamLeaderAccountNumber(),
-                registerTeamRequest.bankName()))
-            .point(ZERO)
+            .teamLeader(
+                TeamLeader.builder()
+                    .leaderId(user.getUserId())
+                    .accountNumber(registerTeamRequest.teamLeaderAccountNumber())
+                    .bankName(registerTeamRequest.bankName())
+                    .build()
+            )
             .teamType(TeamType.valueOf(registerTeamRequest.teamType()))
             .build();
 
@@ -74,8 +77,6 @@ public class TeamService {
             .orElseThrow(() -> new IllegalArgumentException("Team not found"));
 
         team.validateJoinCode(joinCode);
-
-        int currentMemberCount = userTeamRepository.countByTeam(team);
 
         if (userTeamRepository.existsByUserAndTeam(user, team)) {
             throw new IllegalStateException("유저는 이미 해당 팀에 속해 있습니다.");
@@ -99,9 +100,10 @@ public class TeamService {
         List<MyTeamResponse> myTeamResponses = new ArrayList<>();
 
         for (Team team : teams) {
-            boolean isMeLeader = team.getTeamLeader().getUser_id().equals(user.getUserId());
+            boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
 
-            int peopleCount = userTeamRepository.countByTeam(team);
+            // TODO 반복문 내에 repository 접근은 리팩터링 필수
+            int memberCount = userTeamRepository.countByTeam(team);
 
             List<String> profileImageUrls = userTeamRepository.findAllByTeam(team).stream()
                 .map(userTeam -> Optional.ofNullable(userTeam.getUser().getProfileImageUrl())
@@ -115,13 +117,12 @@ public class TeamService {
                 MyTeamResponse response = new MyTeamResponse(
                     team.getId(),
                     team.getName(),
-                    "진행중",
-                    team.getCreatedAt().toLocalDate(),
                     team.getTeamType().getDescription(),
                     false, // isLiked는 임의로 false로 설정
-                    peopleCount,
+                    memberCount,
                     isMeLeader,
-                    profileImageUrls
+                    profileImageUrls,
+                    0 // TODO 그룹의 남은 돈
                 );
                 myTeamResponses.add(response);
             }
@@ -137,7 +138,7 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
             .orElseThrow(() -> new IllegalArgumentException("해당 팀을 찾을 수 없습니다."));
 
-        if (!team.getTeamLeader().getUser_id().equals(user.getUserId())) {
+        if (!team.getTeamLeader().getLeaderId().equals(user.getUserId())) {
             // 일반 구성원
             return teamRepository.findMyTeamDetailsAsMember(user.getUserId(),
                 teamId);
@@ -165,7 +166,7 @@ public class TeamService {
                     teamMember.getUserId(),
                     teamMember.getName(),
                     teamMember.getUserId().equals(user.getUserId()),
-                    team.getTeamLeader().getUser_id().equals(teamMember.getUserId()),
+                    team.getTeamLeader().getLeaderId().equals(teamMember.getUserId()),
                     Optional.ofNullable(teamMember.getProfileImageUrl()).orElse(DEFAULT_PROFILE_IMAGE_URL)
                 );
             })
@@ -204,7 +205,7 @@ public class TeamService {
         Store store = storeRepository.findById(storeId)
             .orElseThrow(() -> new IllegalArgumentException("해당하는 가게를 찾을 수 없습니다."));
 
-        boolean isMeLeader = team.getTeamLeader().getUser_id().equals(user.getUserId());
+        boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
 
         IndividualStoreDetailsResponse individualStoreDetails = teamRepository.findIndividualStoreDetails(
             user.getUserId(), team.getId(), store.getId(), isMeLeader);
