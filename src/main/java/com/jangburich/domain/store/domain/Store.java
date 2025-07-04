@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.jangburich.domain.owner.domain.Owner;
+import com.jangburich.domain.owner.domain.entity.Owner;
 
 import com.jangburich.domain.store.dto.request.StoreCreateRequest;
 import com.jangburich.domain.store.dto.request.StoreUpdateRequest;

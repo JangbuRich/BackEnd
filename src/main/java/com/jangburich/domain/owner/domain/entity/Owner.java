@@ -1,4 +1,4 @@
-package com.jangburich.domain.owner.domain;
+package com.jangburich.domain.owner.domain.entity;
 
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.user.domain.User;
@@ -34,7 +34,7 @@ public class Owner extends BaseEntity {
     @Column(name = "opening_date")
     private LocalDate openingDate;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
