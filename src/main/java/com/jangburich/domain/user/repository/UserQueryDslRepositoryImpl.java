@@ -28,8 +28,7 @@ public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
     public UserHomeResponse findUserHomeData(Long userId) {
 
         LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = currentDate.format(formatter);
+        String formattedDate = currentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         List<TeamsResponse> teamsResponses = queryFactory
                 .selectDistinct(new QTeamsResponse(

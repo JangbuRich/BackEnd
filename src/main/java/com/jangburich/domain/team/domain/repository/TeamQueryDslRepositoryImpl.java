@@ -28,10 +28,8 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-
     LocalDate currentDate = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    String formattedDate = currentDate.format(formatter);
+    String formattedDate = currentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
     LocalDateTime startOfDay = currentDate.atStartOfDay();
     LocalDateTime endOfDay = currentDate.plusDays(1).atStartOfDay().minusNanos(1);
@@ -200,7 +198,7 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
                     pointTransaction.createdAt.between(oneMonthAgo, now))
                 .fetchOne();
 
-            System.out.println("totalPrice = " + totalPrice);
+            log.info("totalPrice: {}", totalPrice);
 
             return queryFactory
                 .selectDistinct(new QIndividualStoreDetailsResponse(
