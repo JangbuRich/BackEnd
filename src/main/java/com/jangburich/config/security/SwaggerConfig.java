@@ -1,4 +1,4 @@
-package com.jangburich.global.config.security;
+package com.jangburich.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -7,15 +7,17 @@ import com.baroservice.ws.TaxInvoice;
 import com.baroservice.ws.TaxInvoiceStateEX;
 import com.baroservice.ws.TaxInvoiceTradeLineItem;
 import com.jangburich.domain.barobill.dto.request.GetCertificateRegistURLRequest;
-import com.jangburich.domain.barobill.dto.request.RegistAndReverseIssueTaxInvoiceRequest;
 import com.jangburich.domain.barobill.dto.request.RegistCorpRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,11 +34,11 @@ public class BarobillService {
                 registCorpRequest.addr2(), registCorpRequest.memberName(), registCorpRequest.juminNum(), registCorpRequest.id(), registCorpRequest.pwd(), registCorpRequest.grade(),
                 registCorpRequest.tel(), registCorpRequest.hp(), registCorpRequest.email());
 
-        if (result < 0) { // 호출 실패
-            System.out.println(result);
-        } else { // 호출 성공
-            System.out.println(result);
-        }
+        
+        if (result < 0) // 호출 실패  
+            log.info("호출 실패 : {}", result);
+        else // 호출 성공 
+            log.info("호출 성공 : {}", result);
     }
 
     public void getCertificateRegistURL(GetCertificateRegistURLRequest getCertificateRegistURLRequest) {
@@ -45,42 +47,31 @@ public class BarobillService {
                 getCertificateRegistURLRequest.pwd());
 
         if (Pattern.compile("^-[0-9]{5}").matcher(result).matches()) { // 호출 실패
-            System.out.println(result);
+            log.info(result);
         } else { // 호출 성공
-            System.out.println(result);
+            log.info(result);
         }
     }
 
     @Transactional
     public void procTaxInvoice() {
-        String certKey = CERT_KEY;
         String corpNum = "7542401719";
         String mgtKey = "000001-E";
         String procType = "CANCEL";
         String memo = "test";
 
-        int result = barobillApiService.taxInvoice.procTaxInvoice(certKey, corpNum, mgtKey, procType, memo);
+        int result = barobillApiService.taxInvoice.procTaxInvoice(CERT_KEY, corpNum, mgtKey, procType, memo);
 
-        if (result < 0) { // 호출 실패
-            System.out.println(result);
-        } else { // 호출 성공
-            System.out.println(result);
-        }
+        log.info("Result : {}", result);
     }
 
     public void getTaxInvoiceStateEX() {
-        String certKey = CERT_KEY;
         String corpNum = "7493500897";
         String mgtKey = "000001-R";
 
-        TaxInvoiceStateEX result = barobillApiService.taxInvoice.getTaxInvoiceStateEX(certKey, corpNum, mgtKey);
+        TaxInvoiceStateEX result = barobillApiService.taxInvoice.getTaxInvoiceStateEX(CERT_KEY, corpNum, mgtKey);
 
-        if (result.getBarobillState() < 0) { // 호출 실패
-            System.out.println(result.getBarobillState());
-        } else { // 호출 성공
-            // 필드정보는 레퍼런스를 참고해주세요.
-            System.out.println(result.getBarobillState());
-        }
+        log.info("BarobillState : {}", result.getBarobillState());
     }
 
     @Transactional
@@ -203,24 +194,19 @@ public class BarobillService {
         if (result < 0) { // API 호출 실패
             // 오류코드 내용에 따라 파라메터를 수정하여 다시 실행해주세요.
             String errMessage = barobillApiService.taxInvoice.getErrString(CERT_KEY, result);
-            System.out.println(errMessage);
+            log.info(errMessage);
         } else { // 성공
             // 파트너 프로그램의 후 처리
-            System.out.println("성공");
+            log.info("성공");
         }
     }
 
     public void deleteTaxInvoice() {
-        String certKey = CERT_KEY;
         String corpNum = "7493500897";
         String mgtKey = "000001-R";
 
-        int result = barobillApiService.taxInvoice.deleteTaxInvoice(certKey, corpNum, mgtKey);
+        int result = barobillApiService.taxInvoice.deleteTaxInvoice(CERT_KEY, corpNum, mgtKey);
 
-        if (result < 0) { // 호출 실패
-            System.out.println(result);
-        } else { // 호출 성공
-            System.out.println(result);
-        }
+        log.info("result : {}", result);
     }
 }

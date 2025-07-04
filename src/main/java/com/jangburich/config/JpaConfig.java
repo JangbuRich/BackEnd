@@ -1,4 +1,4 @@
-package com.jangburich.global.config;
+package com.jangburich.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
