@@ -1,4 +1,4 @@
-package com.jangburich.global.config.s3;
+package com.jangburich.config.s3;
 
 import java.lang.reflect.Type;
 

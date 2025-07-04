@@ -1,4 +1,4 @@
-package com.jangburich.global.config.s3;
+package com.jangburich.config.s3;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

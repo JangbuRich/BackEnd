@@ -1,4 +1,4 @@
-package com.jangburich.global.config;
+package com.jangburich.config;
 
 import java.util.TimeZone;
 import org.springframework.context.annotation.Bean;
