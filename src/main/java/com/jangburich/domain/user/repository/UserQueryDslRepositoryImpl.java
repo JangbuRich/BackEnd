@@ -42,7 +42,8 @@ public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
                         storeTeam.team.name,
                         storeTeam.store.name,
                         storeTeam.point,
-                        storeTeam.remainPoint
+                        storeTeam.remainPoint,
+                        storeTeam.createdAt
                 ))
                 .from(userTeam)
                 .leftJoin(team).on(team.id.eq(userTeam.team.id))
@@ -57,8 +58,8 @@ public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
                         Expressions.constant(formattedDate),
                         user.name,
                         Expressions.constant(teamsResponses),
-                        userTeam.count().intValue(),
-                        Expressions.constant(2)
+                        Expressions.constant(""),
+                        userTeam.count().intValue()
                 ))
                 .from(user)
                 .leftJoin(userTeam).on(userTeam.user.eq(user))

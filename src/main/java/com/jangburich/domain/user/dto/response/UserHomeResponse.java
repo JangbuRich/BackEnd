@@ -8,18 +8,18 @@ public record UserHomeResponse(
         String currentDate,
         String userName,
         List<TeamsResponse> teams,
-        int joinedTeamCount,
-        int reservationCount
+        String lastVisitedStore,
+        int joinedTeamCount
 ) {
 
     @QueryProjection
     public UserHomeResponse(Long userId, String currentDate, String userName, List<TeamsResponse> teams,
-                            int joinedTeamCount, int reservationCount) {
+                            String lastVisitedStore, int joinedTeamCount) {
         this.userId = userId;
         this.currentDate = currentDate;
         this.userName = userName;
         this.teams = teams;
+        this.lastVisitedStore = lastVisitedStore;
         this.joinedTeamCount = joinedTeamCount;
-        this.reservationCount = reservationCount;
     }
 }
