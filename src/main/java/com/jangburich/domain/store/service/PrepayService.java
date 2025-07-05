@@ -6,7 +6,7 @@ import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.store.domain.Store;
 import com.jangburich.domain.store.domain.StoreTeam;
 import com.jangburich.domain.store.dto.request.PrepayRequest;
-import com.jangburich.domain.store.dto.response.PrepaymentInfoResponse;
+import com.jangburich.domain.store.dto.response.payment.PrepaymentInfoResponse;
 import com.jangburich.domain.store.repository.StoreRepository;
 import com.jangburich.domain.store.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;

@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.response;
+package com.jangburich.domain.store.dto.response.store;
 
 import java.time.LocalDateTime;
 
