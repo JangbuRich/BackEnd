@@ -1,6 +1,6 @@
 package com.jangburich.domain.user.service.impl;
 
-import com.jangburich.domain.owner.domain.Owner;
+import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.store.domain.Store;
 import com.jangburich.domain.store.repository.StoreRepository;
@@ -15,10 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
-
-import static com.jangburich.domain.user.domain.QUser.user;
 
 @Service
 @Profile("local")

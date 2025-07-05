@@ -1,6 +1,6 @@
 package com.jangburich.domain.user.service.impl;
 
-import com.jangburich.domain.owner.domain.Owner;
+import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.store.domain.Store;
 import com.jangburich.domain.store.repository.StoreRepository;
