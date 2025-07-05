@@ -1,4 +1,4 @@
-package com.jangburich.domain.owner.domain;
+package com.jangburich.domain.owner.domain.controller.dto.req;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

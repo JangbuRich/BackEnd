@@ -12,7 +12,7 @@
 // import com.jangburich.domain.oauth.domain.KakaoResponse;
 // import com.jangburich.domain.oauth.domain.OAuth2Response;
 // import com.jangburich.domain.oauth.domain.OAuthUserDTO;
-// import com.jangburich.domain.owner.domain.Owner;
+// import com.jangburich.domain.owner.domain.entity.Owner;
 // import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 // import com.jangburich.domain.user.domain.User;
 // import com.jangburich.domain.user.repository.UserRepository;
