@@ -13,10 +13,20 @@ import com.jangburich.domain.store.domain.*;
 import com.jangburich.domain.store.dto.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.domain.store.dto.request.StoreCreateRequest;
 import com.jangburich.domain.store.dto.request.StoreUpdateRequest;
-import com.jangburich.domain.store.dto.response.*;
+import com.jangburich.domain.store.dto.response.order.OrderDetailResponse;
+import com.jangburich.domain.store.dto.response.order.OrderGetResponse;
+import com.jangburich.domain.store.dto.response.order.OrderTodayResponse;
+import com.jangburich.domain.store.dto.response.payment.PaymentGroupDetailResponse;
+import com.jangburich.domain.store.dto.response.store.SearchStoresResponse;
+import com.jangburich.domain.store.dto.response.store.StoreChargeHistoryResponse;
+import com.jangburich.domain.store.dto.response.store.StoreCreateResponseDto;
+import com.jangburich.domain.store.dto.response.store.StoreGetResponse;
+import com.jangburich.domain.store.dto.response.store.StoreTeamResponse;
+import com.jangburich.domain.store.dto.response.store.StoreTeamResponseDTO;
 import com.jangburich.domain.store.exception.OrdersNotFoundException;
 import com.jangburich.domain.store.repository.StoreRepository;
 import com.jangburich.domain.store.repository.StoreTeamRepository;
+import com.jangburich.domain.store.service.provider.RandomNumberProvider;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
@@ -60,26 +70,42 @@ public class StoreService {
     private final StoreTeamRepository storeTeamRepository;
     private final TeamRepository teamRepository;
     private final TeamChargeHistoryRepository teamChargeHistoryRepository;
-    private final S3Service s3Service;
     private final OrdersRepository ordersRepository;
     private final PointTransactionRepository pointTransactionRepository;
 
+    private final S3Service s3Service;
+
+    private final RandomNumberProvider randomNumberProvider;
+
     @Transactional
-    public void createStore(String authentication, StoreCreateRequest storeCreateRequest, MultipartFile image,
+    public StoreCreateResponseDto createStore(String authentication, StoreCreateRequest storeCreateRequest, MultipartFile image,
                             List<MultipartFile> menuImages) {
 
-        User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        try {
+            User user = userRepository.findByProviderId(authentication)
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+            Owner owner = ownerRepository.findByUser(user)
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
-        List<DayOfWeek> dayOfWeeks = DayOfWeekConverter.convertStringToDayOfWeekList(
-            storeCreateRequest.getDayOfWeek());
+            List<DayOfWeek> dayOfWeeks = DayOfWeekConverter.convertStringToDayOfWeekList(
+                storeCreateRequest.getDayOfWeek());
 
-        String imageUrl = s3Service.uploadImageToS3(image);
+            String imageUrl = s3Service.uploadImageToS3(image);
 
-        storeRepository.save(Store.of(owner, storeCreateRequest, dayOfWeeks, imageUrl));
+            Store store = storeRepository.save(Store.of(owner, storeCreateRequest, dayOfWeeks, imageUrl));
+
+            String issueCode = randomNumberProvider.createFourDigitNumber();
+            store.createUniqueStoreCode(issueCode);
+
+            String storeId = createStoreId();
+            store.createStoreId(storeId);
+
+            return new StoreCreateResponseDto(issueCode, "Success");
+        } catch (Exception e) {
+            return new StoreCreateResponseDto(null, e.getMessage());
+        }
+
     }
 
     @Transactional
@@ -515,5 +541,16 @@ public class StoreService {
                 System.err.println("Workbook 닫는 중 오류 발생: " + e.getMessage());
             }
         }
+    }
+
+    private String createStoreId () {
+        String datePrefix = createDatePrefix();
+        String eightDigitNumber = randomNumberProvider.createEightDigitNumber();
+
+        return datePrefix + eightDigitNumber;
+    }
+
+    private String createDatePrefix () {
+        return LocalDate.parse(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)).toString();
     }
 }
