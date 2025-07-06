@@ -1,9 +1,11 @@
 package com.jangburich.domain.store.domain;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jangburich.domain.owner.domain.entity.Owner;
@@ -94,6 +96,12 @@ public class Store {
     @Column(name = "contact_number")
     private String contactNumber;
 
+    @Column(name = "store_unique_code", nullable = false, columnDefinition = "varchar(4)")
+    private String storeUniqueCode;
+
+    @Column(name="store_id", nullable = false, columnDefinition = "varchar(20)")
+    private String storeId;
+
     public static Store create(Owner owner) {
         Store newOwner = new Store();
         newOwner.owner = owner;
@@ -139,6 +147,7 @@ public class Store {
         newStore.minPrepayment = storeCreateRequest.getMinPrepayment();
         newStore.prepaymentDuration = storeCreateRequest.getPrepaymentDuration();
         newStore.representativeImage = imageUrl;
+
         return newStore;
     }
 
@@ -186,4 +195,13 @@ public class Store {
             this.closeTime = dto.getCloseTime();
         }
     }
+
+    public void createUniqueStoreCode(String storeUniqueCode) {
+        this.storeUniqueCode = storeUniqueCode;
+    }
+
+    public void createStoreId(String storeUniqueId) {
+        this.storeId = storeUniqueId;
+    }
+
 }
