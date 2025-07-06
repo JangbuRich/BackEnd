@@ -25,15 +25,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.jangburich.domain.store.domain.Category;
 import com.jangburich.domain.store.dto.request.StoreCreateRequest;
-import com.jangburich.domain.store.dto.response.StoreGetResponse;
+import com.jangburich.domain.store.dto.response.store.StoreCreateResponseDto;
+import com.jangburich.domain.store.dto.response.store.StoreGetResponse;
 import com.jangburich.domain.store.dto.request.StoreUpdateRequest;
-import com.jangburich.domain.store.dto.response.OrderDetailResponse;
-import com.jangburich.domain.store.dto.response.OrderGetResponse;
-import com.jangburich.domain.store.dto.response.OrderTodayResponse;
-import com.jangburich.domain.store.dto.response.PaymentGroupDetailResponse;
-import com.jangburich.domain.store.dto.response.SearchStoresResponse;
-import com.jangburich.domain.store.dto.response.StoreSearchDetailsResponse;
-import com.jangburich.domain.store.dto.response.StoreTeamResponse;
+import com.jangburich.domain.store.dto.response.order.OrderDetailResponse;
+import com.jangburich.domain.store.dto.response.order.OrderGetResponse;
+import com.jangburich.domain.store.dto.response.order.OrderTodayResponse;
+import com.jangburich.domain.store.dto.response.payment.PaymentGroupDetailResponse;
+import com.jangburich.domain.store.dto.response.store.SearchStoresResponse;
+import com.jangburich.domain.store.dto.response.store.StoreSearchDetailsResponse;
+import com.jangburich.domain.store.dto.response.store.StoreTeamResponse;
 import com.jangburich.domain.store.service.StoreService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
@@ -86,15 +87,19 @@ public class StoreController {
 
 	@Operation(summary = "가게 등록", description = "신규 파트너 가게를 등록합니다.")
 	@PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseCustom<Message> createStore(
+	public ResponseCustom<StoreCreateResponseDto> createStore(
 		Authentication authentication,
 		@Parameter(name = "image", description = "업로드 사진 데이터") @RequestPart(value = "image") MultipartFile image,
 		@RequestPart(value = "store") StoreCreateRequest storeCreateRequest,
 		@RequestPart(value = "menuImages", required = false) List<MultipartFile> menuImages) {
 
-		storeService.createStore(AuthenticationParser.parseUserId(authentication), storeCreateRequest, image,
-			menuImages);
-		return ResponseCustom.OK(Message.builder().message("success").build());
+		StoreCreateResponseDto responseDto = storeService.createStore(
+			AuthenticationParser.parseUserId(authentication),
+			storeCreateRequest, image,
+			menuImages
+		);
+
+		return ResponseCustom.OK(responseDto);
 	}
 
 	@Operation(summary = "가게 정보 수정", description = "가게 정보를 수정합니다.")
