@@ -38,6 +38,10 @@ public class Owner extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="home_mode")
+    private HomeMode homeMode;
+
 	public static Owner create(User user) {
 		Owner newOwner = new Owner();
 		newOwner.user = user;
@@ -51,5 +55,9 @@ public class Owner extends BaseEntity {
         this.businessRegistrationNumber = registrationNumber;
         this.openingDate = openingDate;
         this.phoneNumber = phoneNumber; // TODO 암호화
+    }
+
+    public void update(HomeMode homeMode) {
+        this.homeMode = homeMode;
     }
 }
