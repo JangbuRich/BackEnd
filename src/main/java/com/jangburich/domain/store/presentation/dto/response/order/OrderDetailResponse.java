@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.response.order;
+package com.jangburich.domain.store.presentation.dto.response.order;
 
 import lombok.Builder;
 import lombok.Getter;

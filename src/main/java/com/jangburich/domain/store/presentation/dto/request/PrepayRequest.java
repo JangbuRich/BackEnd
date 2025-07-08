@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.request;
+package com.jangburich.domain.store.presentation.dto.request;
 
 public record PrepayRequest(
         Long storeId,

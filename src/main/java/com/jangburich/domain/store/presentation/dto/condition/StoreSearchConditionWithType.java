@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.condition;
+package com.jangburich.domain.store.presentation.dto.condition;
 
 import com.querydsl.core.annotations.QueryProjection;
 

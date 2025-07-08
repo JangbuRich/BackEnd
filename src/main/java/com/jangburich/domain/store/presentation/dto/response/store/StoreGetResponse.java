@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.response.store;
+package com.jangburich.domain.store.presentation.dto.response.store;
 
 import com.jangburich.domain.store.domain.Category;
 import com.jangburich.domain.store.domain.Store;
@@ -17,6 +17,7 @@ public class StoreGetResponse {
 	private Long id;
 	private String ownerId;
 	private String name;
+	private String uniqueCode;
 
 	@Enumerated(EnumType.STRING)
 	private Category category;
@@ -42,7 +43,7 @@ public class StoreGetResponse {
 							String introduction,
 							Double latitude, Double longitude, String address, String location, String dayOfWeek,
 							String openTime,
-							String closeTime) {
+							String closeTime, String storeUniqueCode) {
 		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
@@ -60,6 +61,7 @@ public class StoreGetResponse {
 		this.dayOfWeek = dayOfWeek;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
+		this.uniqueCode = storeUniqueCode;
 	}
 
 	private String convertDayOfWeekToKorean(DayOfWeek dayOfWeek) {
@@ -97,7 +99,8 @@ public class StoreGetResponse {
 			store.getLocation(),
 			dayOfWeekString,
 			store.getOpenTime().format(TIME_FORMATTER),
-			store.getCloseTime().format(TIME_FORMATTER)
+			store.getCloseTime().format(TIME_FORMATTER),
+			store.getStoreUniqueCode()
 		);
 	}
 }

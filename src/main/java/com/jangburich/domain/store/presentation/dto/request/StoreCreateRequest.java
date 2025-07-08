@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.request;
+package com.jangburich.domain.store.presentation.dto.request;
 
 import com.jangburich.domain.store.domain.Category;
 import jakarta.persistence.EnumType;

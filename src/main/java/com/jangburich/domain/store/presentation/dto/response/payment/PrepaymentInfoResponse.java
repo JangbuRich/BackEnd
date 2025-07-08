@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.dto.response.payment;
+package com.jangburich.domain.store.presentation.dto.response.payment;
 
 import lombok.Builder;
 import lombok.Getter;
