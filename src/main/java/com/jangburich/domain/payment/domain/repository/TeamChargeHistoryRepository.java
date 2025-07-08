@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jangburich.domain.payment.domain.TeamChargeHistory;
 import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.dto.response.store.StoreChargeHistoryResponse;
+import com.jangburich.domain.store.presentation.dto.response.store.StoreChargeHistoryResponse;
 
 @Repository
 public interface TeamChargeHistoryRepository extends JpaRepository<TeamChargeHistory, Long> {

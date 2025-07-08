@@ -1,8 +1,8 @@
 package com.jangburich.domain.store.repository;
 
 import com.jangburich.domain.store.domain.Category;
-import com.jangburich.domain.store.dto.response.store.QSearchStoresResponse;
-import com.jangburich.domain.store.dto.response.store.SearchStoresResponse;
+import com.jangburich.domain.store.presentation.dto.response.store.QSearchStoresResponse;
+import com.jangburich.domain.store.presentation.dto.response.store.SearchStoresResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
