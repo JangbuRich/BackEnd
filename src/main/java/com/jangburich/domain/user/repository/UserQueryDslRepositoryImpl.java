@@ -1,6 +1,6 @@
 package com.jangburich.domain.user.repository;
 
-import static com.jangburich.domain.store.domain.QStoreTeam.storeTeam;
+import static com.jangburich.domain.entity.QStoreTeam.storeTeam;
 import static com.jangburich.domain.team.domain.QTeam.*;
 import static com.jangburich.domain.team.domain.QUserTeam.userTeam;
 import static com.jangburich.domain.user.domain.QUser.user;

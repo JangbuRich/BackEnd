@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Prepay", description = "Prepay API")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/prepay")
 public class PrepayQueryController {
 
     private final PrepayQueryService prepayQueryService;

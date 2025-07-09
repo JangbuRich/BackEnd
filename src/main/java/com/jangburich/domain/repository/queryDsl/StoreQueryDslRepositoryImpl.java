@@ -1,7 +1,6 @@
-package com.jangburich.infrastructure.repository;
+package com.jangburich.domain.repository.queryDsl;
 
 import com.jangburich.domain.entity.Category;
-import com.jangburich.domain.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.domain.store.presentation.dto.response.store.QSearchStoresResponse;
 import com.jangburich.domain.store.presentation.dto.response.store.SearchStoresResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.jangburich.domain.store.domain.QStore.store;
+import static com.jangburich.domain.entity.QStore.store;
 
 @RequiredArgsConstructor
 @Repository
