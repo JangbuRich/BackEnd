@@ -10,8 +10,8 @@ import org.hibernate.annotations.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jangburich.domain.owner.domain.entity.Owner;
 
-import com.jangburich.domain.store.presentation.dto.request.StoreCreateRequest;
-import com.jangburich.domain.store.presentation.dto.request.StoreUpdateRequest;
+import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
+import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;

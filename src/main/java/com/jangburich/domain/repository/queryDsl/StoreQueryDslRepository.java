@@ -1,7 +1,7 @@
 package com.jangburich.domain.repository.queryDsl;
 
 import com.jangburich.domain.entity.Category;
-import com.jangburich.domain.store.presentation.dto.response.store.SearchStoresResponse;
+import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

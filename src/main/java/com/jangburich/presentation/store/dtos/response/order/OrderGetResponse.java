@@ -1,0 +1,21 @@
+package com.jangburich.presentation.store.dtos.response.order;
+
+import com.jangburich.domain.order.domain.OrderStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderGetResponse {
+	private Long id; // order id(sequence)?
+	private OrderStatus orderStatus;
+	private String name;
+	private String teamName;
+	private Integer price;
+
+}
