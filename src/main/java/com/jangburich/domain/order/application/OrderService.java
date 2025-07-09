@@ -6,11 +6,10 @@ import com.jangburich.domain.order.domain.Orders;
 import com.jangburich.domain.order.domain.repository.OrdersRepository;
 import com.jangburich.domain.order.dto.request.OrderRequest;
 import com.jangburich.domain.order.dto.response.OrderResponse;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
-import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.domain.StoreTeam;
-import com.jangburich.domain.store.repository.StoreRepository;
-import com.jangburich.domain.store.repository.StoreTeamRepository;
+import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.entity.StoreTeam;
+import com.jangburich.domain.repository.StoreRepository;
+import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
@@ -58,6 +57,7 @@ public class OrderService {
 			.user(user)
 			.team(team)
 			.orderStatus(OrderStatus.RECEIVED)
+			.orderPrice(orderRequest.price())
 			.build();
 		try {
 			return ordersRepository.save(orders);

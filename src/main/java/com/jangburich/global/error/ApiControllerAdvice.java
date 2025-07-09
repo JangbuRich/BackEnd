@@ -1,5 +1,6 @@
 package com.jangburich.global.error;
 
+import com.jangburich.domain.user.controller.UserController;
 import com.jangburich.global.payload.ApiResponse;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.ErrorResponse;

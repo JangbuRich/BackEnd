@@ -1,8 +1,8 @@
 package com.jangburich.domain.point.domain.repository;
 
 import com.jangburich.domain.point.domain.PointTransaction;
-import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.dto.response.StoreChargeHistoryResponse;
+import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.store.presentation.dto.response.store.StoreChargeHistoryResponse;
 import com.jangburich.domain.user.domain.User;
 import java.util.List;
 

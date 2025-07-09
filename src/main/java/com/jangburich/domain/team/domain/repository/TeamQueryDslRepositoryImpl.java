@@ -15,8 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.jangburich.domain.point.domain.QPointTransaction.pointTransaction;
-import static com.jangburich.domain.store.domain.QStore.store;
-import static com.jangburich.domain.store.domain.QStoreTeam.storeTeam;
+import static com.jangburich.domain.entity.QStore.store;
+import static com.jangburich.domain.entity.QStoreTeam.storeTeam;
 import static com.jangburich.domain.team.domain.QTeam.team;
 import static com.jangburich.domain.team.domain.QUserTeam.userTeam;
 import static com.jangburich.domain.user.domain.QUser.user;

@@ -1,10 +1,13 @@
 package com.jangburich.domain.user.controller;
 
 import com.jangburich.domain.user.domain.AdditionalInfoCreateDTO;
+import com.jangburich.domain.user.domain.SocialLoginProvider;
 import com.jangburich.domain.user.domain.TokenResponseDTO;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.dto.response.UserHomeResponse;
 import com.jangburich.domain.user.dto.response.WalletResponse;
+import com.jangburich.domain.user.service.SocialLoginService;
+import com.jangburich.domain.user.service.SocialLoginServiceFactory;
 import com.jangburich.domain.user.service.UserService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
@@ -26,10 +29,14 @@ import java.util.Map;
 public class UserController {
 
 	private final UserService userService;
+	private final SocialLoginServiceFactory socialLoginServiceFactory;
 
 	@PostMapping("/login")
-	public ResponseCustom<TokenResponseDTO> login(@RequestParam String authorizationHeader) {
-		TokenResponseDTO login = userService.login(authorizationHeader);
+	public ResponseCustom<TokenResponseDTO> login(
+			@RequestParam SocialLoginProvider provider,
+			@RequestParam String authorizationHeader) {
+		SocialLoginService service = socialLoginServiceFactory.getService(provider);
+		TokenResponseDTO login = service.login(authorizationHeader);
 		return ResponseCustom.OK(login);
 	}
 
@@ -40,13 +47,19 @@ public class UserController {
 	}
 
 	@PostMapping("/join/user")
-	public ResponseCustom<TokenResponseDTO> joinUser(@RequestParam String authorizationHeader) {
-		return ResponseCustom.OK(userService.joinUser(authorizationHeader));
+	public ResponseCustom<TokenResponseDTO> joinUser(
+			@RequestParam SocialLoginProvider provider,
+			@RequestParam String authorizationHeader) {
+		SocialLoginService service = socialLoginServiceFactory.getService(provider);
+		return ResponseCustom.OK(service.joinUser(authorizationHeader));
 	}
 
 	@PostMapping("/join/owner")
-	public ResponseCustom<TokenResponseDTO> joinOwner(@RequestParam String authorizationHeader) {
-		return ResponseCustom.OK(userService.joinOwner(authorizationHeader));
+	public ResponseCustom<TokenResponseDTO> joinOwner(
+			@RequestParam SocialLoginProvider provider,
+			@RequestParam String authorizationHeader) {
+		SocialLoginService service = socialLoginServiceFactory.getService(provider);
+		return ResponseCustom.OK(service.joinOwner(authorizationHeader));
 	}
 
 	@PostMapping("/token/reissue")

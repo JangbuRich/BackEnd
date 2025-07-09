@@ -1,7 +1,9 @@
 package com.jangburich.domain.order.domain;
 
+import org.hibernate.annotations.Comment;
+
 import com.jangburich.domain.common.BaseEntity;
-import com.jangburich.domain.store.domain.Store;
+import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.user.domain.User;
 import jakarta.persistence.Column;
@@ -42,20 +44,25 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @Comment("주문상태")
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
+    @Comment("주문 가격")
+    @Column(name="order_price")
+    private Integer orderPrice;
+
     @Version
     private Long version;
 
-
     @Builder
-    public Orders(Store store, User user, Team team, OrderStatus orderStatus) {
+    public Orders(Store store, User user, Team team, OrderStatus orderStatus, Integer orderPrice) {
         this.store = store;
         this.user = user;
         this.team = team;
         this.orderStatus = orderStatus;
+        this.orderPrice = orderPrice;
     }
 
     public void updateOrderStatus(OrderStatus orderStatus) {
