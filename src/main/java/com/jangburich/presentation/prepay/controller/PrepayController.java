@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.presentation.controller;
+package com.jangburich.presentation.prepay.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jangburich.domain.store.presentation.dto.request.PrepayRequest;
+import com.jangburich.presentation.prepay.dto.request.PrepayRequest;
 import com.jangburich.domain.store.service.PrepayService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
