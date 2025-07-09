@@ -11,7 +11,9 @@ public enum ErrorCode {
     INVALID_OPTIONAL_ISPRESENT(400,null,"해당 값이 존재하지 않습니다."),
     INVALID_CHECK(400,null,"해당 값이 유효하지 않습니다."),
     INVALID_AUTHENTICATION(400,null,"잘못된 인증입니다."),
-    INVALID_STORE_ID(400, null, "해당 store가 존재하지 않습니다.");
+    INVALID_STORE_ID(400, null, "해당 store가 존재하지 않습니다."),
+    INVALID_TEAM_ID(400,null,"해당 그룹이 존재하지 않습니다."),
+    INVALID_USER(400, null, "사용자 권한이 없습니다");
 
     private final String code;
     private final String message;

@@ -6,6 +6,7 @@ import com.jangburich.domain.repository.StoreRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.presentation.prepay.dto.response.PrepaymentInfoResponse;
@@ -28,10 +29,10 @@ public class PrepayQueryService {
                 .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(storeId, teamId)
-                .orElse(null);
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_OPTIONAL_ISPRESENT));
 
         Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 가게 id 입니다."));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_ID));
 
         Integer remainPrepay = 0;
         if (storeTeam != null) {
