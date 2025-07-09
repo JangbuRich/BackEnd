@@ -1,6 +1,6 @@
 package com.jangburich.domain.store.presentation.dto.request;
 
-import com.jangburich.domain.store.domain.Category;
+import com.jangburich.domain.entity.Category;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;

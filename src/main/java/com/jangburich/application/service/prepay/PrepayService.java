@@ -1,14 +1,14 @@
-package com.jangburich.domain.store.service;
+package com.jangburich.application.service.prepay;
 
 import com.jangburich.domain.point.domain.PointTransaction;
 import com.jangburich.domain.point.domain.TransactionType;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
-import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.domain.StoreTeam;
+import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.presentation.prepay.dto.request.PrepayRequest;
 import com.jangburich.domain.store.presentation.dto.response.payment.PrepaymentInfoResponse;
-import com.jangburich.domain.store.repository.StoreRepository;
-import com.jangburich.domain.store.repository.StoreTeamRepository;
+import com.jangburich.domain.repository.StoreRepository;
+import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;

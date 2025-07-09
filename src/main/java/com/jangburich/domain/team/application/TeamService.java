@@ -1,7 +1,7 @@
 package com.jangburich.domain.team.application;
 
-import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.repository.StoreRepository;
+import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.repository.StoreRepository;
 import com.jangburich.domain.team.dto.response.*;
 
 import java.util.ArrayList;

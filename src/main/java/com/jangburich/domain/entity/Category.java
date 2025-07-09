@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.domain;
+package com.jangburich.domain.entity;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.repository;
+package com.jangburich.domain.repository.queryDsl;
 
 import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.store.presentation.dto.response.store.SearchStoresResponse;

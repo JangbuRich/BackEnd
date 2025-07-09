@@ -1,6 +1,5 @@
 package com.jangburich.domain.order.dto.response;
 
-import com.jangburich.domain.store.domain.Category;
 import java.util.List;
 
 public record CartResponse(

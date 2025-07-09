@@ -1,4 +1,4 @@
-package com.jangburich.config;
+package com.jangburich.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jangburich.presentation.prepay.dto.request.PrepayRequest;
-import com.jangburich.domain.store.service.PrepayService;
+import com.jangburich.application.service.prepay.PrepayService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;

@@ -1,4 +1,4 @@
-package com.jangburich.domain.store.repository;
+package com.jangburich.domain.repository;
 
 import com.jangburich.domain.team.domain.Team;
 
@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.jangburich.domain.store.domain.Store;
-import com.jangburich.domain.store.domain.StoreTeam;
+import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.domain.store.presentation.dto.response.store.StoreTeamResponseDTO;
 
 public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {

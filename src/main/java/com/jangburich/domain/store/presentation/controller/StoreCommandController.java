@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.jangburich.domain.store.domain.Category;
+import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.store.presentation.dto.request.StoreCreateRequest;
 import com.jangburich.domain.store.presentation.dto.response.store.StoreCreateResponseDto;
 import com.jangburich.domain.store.presentation.dto.request.StoreUpdateRequest;
