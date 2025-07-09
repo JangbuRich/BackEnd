@@ -1,17 +1,17 @@
 package com.jangburich.domain.store.domain;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Random;
+
+import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jangburich.domain.owner.domain.entity.Owner;
 
-import com.jangburich.domain.store.dto.request.StoreCreateRequest;
-import com.jangburich.domain.store.dto.request.StoreUpdateRequest;
+import com.jangburich.domain.store.presentation.dto.request.StoreCreateRequest;
+import com.jangburich.domain.store.presentation.dto.request.StoreUpdateRequest;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -96,9 +96,11 @@ public class Store {
     @Column(name = "contact_number")
     private String contactNumber;
 
+    @Comment("회원가입 완료시 발급되는 ID (4자리)")
     @Column(name = "store_unique_code", nullable = false, columnDefinition = "varchar(4)")
     private String storeUniqueCode;
 
+    @Comment("Store Unique ID")
     @Column(name="store_id", nullable = false, columnDefinition = "varchar(20)")
     private String storeId;
 

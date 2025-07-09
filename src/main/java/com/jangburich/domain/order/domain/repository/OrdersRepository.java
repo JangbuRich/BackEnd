@@ -25,13 +25,13 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
             "WHERE o.store.id = :storeId " +
             "AND o.updatedAt >= :startOfDay " +
             "AND o.updatedAt < :endOfDay " +
-            "AND o.orderStatus = :orderStatus "
-            + "ORDER BY o.createdAt DESC")
+            "AND o.orderStatus in :orderStatus "
+            + "ORDER BY o.createdAt DESC limit 6")
     List<Orders> findOrdersByStoreAndTodayDateAndStatus(
             @Param("storeId") Long storeId,
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay,
-            @Param("orderStatus") OrderStatus orderStatus);
+            @Param("orderStatus") List<OrderStatus> orderStatus);
 
     List<Orders> findAllByTeam(Team team);
 }
