@@ -13,7 +13,6 @@ import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
-import com.jangburich.global.error.InvalidParameterException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.Message;
 import com.jangburich.presentation.prepay.dto.request.PrepayRequest;

@@ -10,7 +10,6 @@ import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.presentation.prepay.dto.response.PrepaymentInfoResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
