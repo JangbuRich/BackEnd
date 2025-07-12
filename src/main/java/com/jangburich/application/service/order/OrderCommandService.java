@@ -16,6 +16,7 @@ import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.Message;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
+import com.jangburich.presentation.order.dto.request.UseTicketRequest;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,28 +62,34 @@ public class OrderCommandService {
     }
 
     @Transactional
-    public Message useMealTicket(String userProviderId, Long orderId) {
+    public void useTicket(String userProviderId, Long orderId, UseTicketRequest useTicketRequest) {
         User user = userRepository.findByProviderId(userProviderId)
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(()->new DefaultException(ErrorCode.INVALID_USER_ID));
 
         Orders orders = ordersRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("식권을 찾을 수 없습니다"));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_ORDER_ID));
+
+        Store store = storeRepository.findById(useTicketRequest.storeId())
+                .orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
+
+        Team team = teamRepository.findById(useTicketRequest.teamId())
+                        .orElseThrow(()-> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        if(store!=orders.getStore() || team!=orders.getTeam()){
+            throw new DefaultException(ErrorCode.INVALID_CHECK);
+        }
+
+        if(!store.getStoreUniqueCode().equals(useTicketRequest.secretCode())){
+            throw new DefaultException(ErrorCode.INVALID_CHECK);
+        }
+
+        StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(store.getId(),
+                        team.getId())
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_TEAM_ID));
 
         orders.validateUser(user);
 
         orders.updateOrderStatus(OrderStatus.TICKET_USED);
-
-        StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(orders.getStore().getId(),
-                        orders.getTeam().getId())
-                .orElseThrow(() -> new RuntimeException("store/team 연관이 없습니다."));
-
-        int price = 0;
-
-        storeTeam.usePoint(price);
-
-        return Message.builder()
-                .message("식권을 사용했습니다.")
-                .build();
     }
 
     private Orders saveOrder(User user, Store store, Team team, OrderRequest orderRequest) {

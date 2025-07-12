@@ -6,6 +6,7 @@ import com.jangburich.global.payload.CommonApiResponse;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
+import com.jangburich.presentation.order.dto.request.UseTicketRequest;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -45,12 +46,20 @@ public class OrderCommandController {
         return ResponseEntity.created(location).build();
     }
 
-    @Operation(summary = "식권 사용", description = "식권을 사용합니다.")
-    @PostMapping("/tickets/{orderId}")
-    public ResponseCustom<Message> useMealTicket(
+    @PostMapping("/{orderId}")
+    @CommonApiResponse
+    @Operation(summary = "User Voucher", description = "Use issued voucher"
+        , responses = {
+            @ApiResponse(responseCode="204", description = "No Content",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
+    public ResponseEntity<Void> useMealTicket(
             Authentication authentication,
-            @PathVariable Long orderId
+            @PathVariable Long orderId,
+            @RequestBody UseTicketRequest useTicketRequest
     ) {
-        return ResponseCustom.OK(orderCommandService.useMealTicket(AuthenticationParser.parseUserId(authentication), orderId));
+        orderCommandService.useTicket(AuthenticationParser.parseUserId(authentication),orderId, useTicketRequest);
+
+        return ResponseEntity.noContent().build();
     }
 }
