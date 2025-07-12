@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.order.domain.QOrders;
+import com.jangburich.domain.entity.QOrders;
 import com.jangburich.domain.repository.CustomOrderRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 

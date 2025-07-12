@@ -1,6 +1,7 @@
 package com.jangburich.presentation.order.controller;
 
 import com.jangburich.application.service.order.OrderCommandService;
+import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
@@ -9,6 +10,7 @@ import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,7 @@ public class OrderCommandController {
 
     @Operation(summary = "Issue Voucher", description = "Issue a voucher")
     @PostMapping
-    public ResponseCustom<Void> order(
+    public ResponseEntity<Void> order(
             Authentication authentication,
             @RequestBody OrderRequest orderRequest
     ) {
@@ -32,7 +34,7 @@ public class OrderCommandController {
 
         URI location= URI.create("/order/"+orderId);
 
-        return ResponseCustom.CREATED(location);
+        return ResponseEntity.created(location).build();
     }
 
     @Operation(summary = "식권 사용", description = "식권을 사용합니다.")

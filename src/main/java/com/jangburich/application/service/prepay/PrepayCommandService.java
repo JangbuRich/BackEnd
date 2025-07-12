@@ -47,7 +47,7 @@ public class PrepayCommandService {
         team.validateTeamLeader(user.getUserId());
 
         if (!team.getTeamLeader().getLeaderId().equals(user.getUserId())) {
-            throw new DefaultException(ErrorCode.INVALID_USER);
+            throw new DefaultException(ErrorCode.INVALID_USER_ID);
         }
 
         PointTransaction pointTransaction = PointTransaction
