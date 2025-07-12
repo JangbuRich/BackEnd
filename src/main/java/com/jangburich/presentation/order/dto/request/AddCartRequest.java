@@ -1,4 +1,4 @@
-package com.jangburich.domain.order.dto.request;
+package com.jangburich.presentation.order.dto.request;
 
 public record AddCartRequest(
         Long storeId,

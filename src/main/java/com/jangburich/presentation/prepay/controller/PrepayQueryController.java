@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Prepay", description = "Prepay API")
+@Tag(name = "Prepay", description = "Prepay Query API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/prepay")

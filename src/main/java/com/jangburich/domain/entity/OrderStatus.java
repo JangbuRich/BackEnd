@@ -1,4 +1,4 @@
-package com.jangburich.domain.order.domain;
+package com.jangburich.domain.entity;
 
 import java.util.List;
 
@@ -12,9 +12,10 @@ public enum OrderStatus {
     USE_CANCELED("사용취소"),
     PAYMENT_CANCELED("결제취소"),
 
-    RECEIVED("주문 접수됨, 식권 발급 완료된 상태"),
+    RECEIVED("식권 발급 완료"),
+    TICKET_ISSUED("금액권 발급 완료"),
     TICKET_USED("식권 사용 완료"),
-    CANCELLED("주문 취소됨")
+    CANCELLED("사용 취소")
     ;
 
     private final String description;

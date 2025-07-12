@@ -1,6 +1,6 @@
 package com.jangburich.domain.store.presentation.dto.response.order;
 
-import com.jangburich.domain.order.domain.OrderStatus;
+import com.jangburich.domain.entity.OrderStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

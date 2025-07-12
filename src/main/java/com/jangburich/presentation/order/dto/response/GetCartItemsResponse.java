@@ -1,4 +1,4 @@
-package com.jangburich.domain.order.dto.response;
+package com.jangburich.presentation.order.dto.response;
 
 public record GetCartItemsResponse(
         Long menuId,
