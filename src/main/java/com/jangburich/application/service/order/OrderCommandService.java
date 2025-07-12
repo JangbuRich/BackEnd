@@ -16,7 +16,6 @@ import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.Message;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
-import com.jangburich.presentation.order.dto.response.OrderResponse;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,24 +45,19 @@ public class OrderCommandService {
         StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(store.getId(), team.getId())
                 .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_TEAM_ID));
 
+        if(storeTeam.getPersonalAllocatedPoint() != null && storeTeam.getPersonalAllocatedPoint() < orderRequest.quantity()){
+            throw new DefaultException(ErrorCode.INVALID_CHECK);
+        }
+
+        if(storeTeam.getRemainPoint() < orderRequest.quantity()){
+            throw new DefaultException(ErrorCode.INVALID_CHECK);
+        }
+
+        storeTeam.setRemainPoint(storeTeam.getRemainPoint() - orderRequest.quantity());
+
         Orders orders = saveOrder(user, store, team, orderRequest);
 
         return orders.getId();
-    }
-
-    private Orders saveOrder(User user, Store store, Team team, OrderRequest orderRequest) {
-        Orders orders = Orders.builder()
-                .store(store)
-                .user(user)
-                .team(team)
-                .orderStatus(OrderStatus.RECEIVED)
-                .orderPrice(orderRequest.quantity())
-                .build();
-        try {
-            return ordersRepository.save(orders);
-        } catch (OptimisticLockException e) {
-            throw new OptimisticLockException();
-        }
     }
 
     @Transactional
@@ -89,5 +83,20 @@ public class OrderCommandService {
         return Message.builder()
                 .message("식권을 사용했습니다.")
                 .build();
+    }
+
+    private Orders saveOrder(User user, Store store, Team team, OrderRequest orderRequest) {
+        Orders orders = Orders.builder()
+                .store(store)
+                .user(user)
+                .team(team)
+                .orderStatus(OrderStatus.RECEIVED)
+                .orderPrice(orderRequest.quantity())
+                .build();
+        try {
+            return ordersRepository.save(orders);
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException();
+        }
     }
 }

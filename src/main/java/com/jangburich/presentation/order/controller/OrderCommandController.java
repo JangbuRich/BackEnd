@@ -2,12 +2,15 @@ package com.jangburich.presentation.order.controller;
 
 import com.jangburich.application.service.order.OrderCommandService;
 import com.jangburich.global.payload.BaseResponse;
+import com.jangburich.global.payload.CommonApiResponse;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
-import com.jangburich.presentation.order.dto.response.OrderResponse;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +27,13 @@ public class OrderCommandController {
 
     private final OrderCommandService orderCommandService;
 
-    @Operation(summary = "Issue Voucher", description = "Issue a voucher")
     @PostMapping
+    @CommonApiResponse
+    @Operation(summary = "Issue Voucher", description = "Issue a voucher"
+    , responses = {
+            @ApiResponse(responseCode = "201", description = "생성 성공",
+            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+    })
     public ResponseEntity<Void> order(
             Authentication authentication,
             @RequestBody OrderRequest orderRequest
