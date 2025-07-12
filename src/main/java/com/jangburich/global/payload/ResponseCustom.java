@@ -32,7 +32,7 @@ public class ResponseCustom<T> {
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.CREATED)
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .data(data)
                 .build();
     }

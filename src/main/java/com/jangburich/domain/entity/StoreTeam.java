@@ -3,16 +3,14 @@ package com.jangburich.domain.entity;
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.team.domain.Team;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 public class StoreTeam extends BaseEntity {
 
     @Id

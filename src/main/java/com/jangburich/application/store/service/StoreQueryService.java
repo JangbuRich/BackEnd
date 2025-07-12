@@ -9,11 +9,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jangburich.domain.order.domain.OrderResponse;
-import com.jangburich.domain.order.domain.OrderStatus;
-import com.jangburich.domain.order.domain.Orders;
-import com.jangburich.domain.order.domain.repository.CustomOrderRepository;
-import com.jangburich.domain.order.domain.repository.OrdersRepository;
+import com.jangburich.domain.entity.OrderResponse;
+import com.jangburich.domain.entity.OrderStatus;
+import com.jangburich.domain.entity.Orders;
+import com.jangburich.domain.repository.CustomOrderRepository;
+import com.jangburich.domain.repository.OrdersRepository;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
