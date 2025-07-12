@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="Prepay",description = "Prepay api")
+@Tag(name="Prepay",description = "Prepay Command Api")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/prepay")
