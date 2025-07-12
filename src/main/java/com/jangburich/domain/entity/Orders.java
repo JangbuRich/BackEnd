@@ -1,9 +1,8 @@
-package com.jangburich.domain.order.domain;
+package com.jangburich.domain.entity;
 
 import org.hibernate.annotations.Comment;
 
 import com.jangburich.domain.common.BaseEntity;
-import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.user.domain.User;
 import jakarta.persistence.Column;

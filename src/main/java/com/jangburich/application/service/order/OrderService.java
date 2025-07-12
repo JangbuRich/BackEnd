@@ -1,11 +1,11 @@
-package com.jangburich.domain.order.application;
+package com.jangburich.application.service.order;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.jangburich.domain.order.domain.OrderStatus;
-import com.jangburich.domain.order.domain.Orders;
-import com.jangburich.domain.order.domain.repository.OrdersRepository;
-import com.jangburich.domain.order.dto.request.OrderRequest;
-import com.jangburich.domain.order.dto.response.OrderResponse;
+import com.jangburich.domain.entity.OrderStatus;
+import com.jangburich.domain.entity.Orders;
+import com.jangburich.domain.repository.OrdersRepository;
+import com.jangburich.presentation.order.dto.request.OrderRequest;
+import com.jangburich.presentation.order.dto.response.OrderResponse;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.domain.repository.StoreRepository;

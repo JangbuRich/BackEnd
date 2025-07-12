@@ -1,4 +1,4 @@
-package com.jangburich.domain.order.domain;
+package com.jangburich.domain.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

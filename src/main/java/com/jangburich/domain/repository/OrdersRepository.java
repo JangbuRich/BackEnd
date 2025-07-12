@@ -1,10 +1,10 @@
-package com.jangburich.domain.order.domain.repository;
+package com.jangburich.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.jangburich.domain.order.domain.OrderStatus;
-import com.jangburich.domain.order.domain.Orders;
+import com.jangburich.domain.entity.OrderStatus;
+import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.team.domain.Team;
 
 import org.springframework.data.jpa.repository.JpaRepository;

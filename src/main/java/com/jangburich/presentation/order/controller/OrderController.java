@@ -1,8 +1,8 @@
-package com.jangburich.domain.order.presentation;
+package com.jangburich.presentation.order.controller;
 
-import com.jangburich.domain.order.application.OrderService;
-import com.jangburich.domain.order.dto.request.OrderRequest;
-import com.jangburich.domain.order.dto.response.OrderResponse;
+import com.jangburich.application.service.order.OrderService;
+import com.jangburich.presentation.order.dto.request.OrderRequest;
+import com.jangburich.presentation.order.dto.response.OrderResponse;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;

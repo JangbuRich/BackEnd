@@ -2,7 +2,7 @@ package com.jangburich.domain.store.service;
 
 import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.domain.order.domain.repository.OrdersRepository;
+import com.jangburich.domain.repository.OrdersRepository;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.payment.domain.repository.TeamChargeHistoryRepository;

@@ -2,7 +2,7 @@ package com.jangburich.domain.store.presentation.dto.response.payment;
 
 import java.util.List;
 
-import com.jangburich.domain.order.domain.OrderResponse;
+import com.jangburich.domain.entity.OrderResponse;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.user.domain.User;
 
