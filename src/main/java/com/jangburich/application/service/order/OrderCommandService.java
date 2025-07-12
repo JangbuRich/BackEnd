@@ -12,6 +12,8 @@ import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.global.error.DefaultException;
+import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.Message;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
 import com.jangburich.presentation.order.dto.response.OrderResponse;
@@ -31,22 +33,22 @@ public class OrderCommandService {
     private final UserRepository userRepository;
 
     @Transactional
-    public OrderResponse order(String userProviderId, OrderRequest orderRequest) {
+    public long order(String userProviderId, OrderRequest orderRequest) {
         User user = userRepository.findByProviderId(userProviderId)
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(()-> new DefaultException(ErrorCode.INVALID_USER_ID));
 
         Store store = storeRepository.findById(orderRequest.storeId())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 가게 id 입니다."));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_ID));
 
         Team team = teamRepository.findById(orderRequest.teamId())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 그룹 id 입니다."));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
 
         StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(store.getId(), team.getId())
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 가게 id와 팀 id 입니다."));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_TEAM_ID));
 
         Orders orders = saveOrder(user, store, team, orderRequest);
 
-        return null; // TODO OrderResponse 구현
+        return orders.getId();
     }
 
     private Orders saveOrder(User user, Store store, Team team, OrderRequest orderRequest) {
@@ -55,12 +57,12 @@ public class OrderCommandService {
                 .user(user)
                 .team(team)
                 .orderStatus(OrderStatus.RECEIVED)
-                .orderPrice(orderRequest.price())
+                .orderPrice(orderRequest.quantity())
                 .build();
         try {
             return ordersRepository.save(orders);
         } catch (OptimisticLockException e) {
-            throw new IllegalStateException("중복 요청입니다. 이전 요청이 처리 중입니다.");
+            throw new OptimisticLockException();
         }
     }
 

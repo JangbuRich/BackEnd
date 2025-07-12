@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @Tag(name = "Order", description = "Order Command Api")
 @RestController
 @RequestMapping("/api/v1/order")
@@ -20,13 +22,17 @@ public class OrderCommandController {
 
     private final OrderCommandService orderCommandService;
 
-    @Operation(summary = "상품 주문", description = "상품을 주문합니다.")
+    @Operation(summary = "Issue Voucher", description = "Issue a voucher")
     @PostMapping
-    public ResponseCustom<OrderResponse> order(
+    public ResponseCustom<Void> order(
             Authentication authentication,
             @RequestBody OrderRequest orderRequest
     ) {
-        return ResponseCustom.OK(orderCommandService.order(AuthenticationParser.parseUserId(authentication), orderRequest));
+        long orderId= orderCommandService.order(AuthenticationParser.parseUserId(authentication), orderRequest);
+
+        URI location= URI.create("/order/"+orderId);
+
+        return ResponseCustom.CREATED(location);
     }
 
     @Operation(summary = "식권 사용", description = "식권을 사용합니다.")
