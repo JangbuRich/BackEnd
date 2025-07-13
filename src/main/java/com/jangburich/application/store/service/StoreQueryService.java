@@ -178,15 +178,14 @@ public class StoreQueryService {
      * @return OrderTodayResponse - 오늘자 주문 내역 DTO
      */
     public StoreHomeResponse.TodayOrder getTodayOrders(String userId) {
-        List<OrderGetResponse> orderGetRespons = new ArrayList<>();
+        List<OrderGetResponse> orderGetResponse = new ArrayList<>();
 
         Store store = storeResolver.getStoreByUserId(userId);
 
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // 오늘 시작
         LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay(); // 내일 시작 (오늘의 끝)
 
-        List<Orders> allByStore = ordersRepository.findOrdersByStoreAndTodayDateAndStatus(store.getId(), startOfDay,
-            endOfDay, OrderStatus.PaymentStatus());
+        List<Orders> allByStore = getTodayOrders(store, startOfDay, endOfDay);
 
         for (Orders orders : allByStore) {
             OrderGetResponse newOrderGetResponse = OrderGetResponse.builder()
@@ -197,34 +196,41 @@ public class StoreQueryService {
                 .price(orders.getOrderPrice())
                 .build();
 
-            orderGetRespons.add(newOrderGetResponse);
+            orderGetResponse.add(newOrderGetResponse);
         }
 
-        return StoreHomeResponse.TodayOrder.of(orderGetRespons);
+        return StoreHomeResponse.TodayOrder.of(orderGetResponse);
     }
 
     /**
      * 지난 주문을 조회한다.
      * @param userId userId
-     * @return
+     * @return LastOrder - 지난 주문 내역
      */
-    public List<OrderGetResponse> getOrdersLast(String userId) {
-        List<OrderGetResponse> orderGetRespons = new ArrayList<>();
+    public StoreHomeResponse.LastOrder getOrdersLast(String userId) {
+        List<OrderGetResponse> orderGetResponseList = new ArrayList<>();
 
         Store store = storeResolver.getStoreByUserId(userId);
 
         LocalDateTime todayStart = LocalDate.now().atStartOfDay();
-        List<Orders> allByStore = ordersRepository.findOrdersByStoreAndDateAndStatusNative(store.getId(), todayStart,
-            OrderStatus.PaymentStatus());
+        List<Orders> lastOrders = getLastOrders(store, todayStart);
 
-        for (Orders orders : allByStore) {
-            orderGetRespons.add(OrderGetResponse.builder()
+        for (Orders orders : lastOrders) {
+            orderGetResponseList.add(OrderGetResponse.builder()
                 .id(orders.getId())
-                .price(0) // TODO 수정 필요
+                .orderStatus(orders.getOrderStatus())
+                .name(orders.getUser().getName())
+                .teamName(orders.getTeam().getName())
+                .price(orders.getOrderPrice())
                 .build());
         }
 
-        return orderGetRespons;
+        return StoreHomeResponse.LastOrder.of(orderGetResponseList);
+    }
+
+    private List<Orders> getLastOrders (Store store, LocalDateTime todayStart) {
+        return ordersRepository.findOrdersByStoreAndDateAndStatusNative(store.getId(), todayStart,
+            OrderStatus.PaymentStatus());
     }
 
     public List<StoreChargeHistoryResponse> getPaymentHistory(String userId) {
@@ -241,4 +247,9 @@ public class StoreQueryService {
             .sum();
     }
 
+    private List<Orders> getTodayOrders (Store store, LocalDateTime startOfDay,
+        LocalDateTime endOfDay) {
+        return ordersRepository.findOrdersByStoreAndTodayDateAndStatus(store.getId(), startOfDay,
+            endOfDay, OrderStatus.PaymentStatus());
+    }
 }

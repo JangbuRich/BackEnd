@@ -14,12 +14,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
-    @Query(value = "SELECT * FROM orders WHERE store_id = :storeId AND updated_at < :updatedAt AND order_status = :orderStatus",
+    @Query(value = "SELECT * FROM orders WHERE store_id = :storeId AND updated_at < :updatedAt AND order_status in :orderStatus order by id desc",
             nativeQuery = true)
     List<Orders> findOrdersByStoreAndDateAndStatusNative(
             @Param("storeId") Long storeId,
             @Param("updatedAt") LocalDateTime updatedAt,
-            @Param("orderStatus") String orderStatus);
+            @Param("orderStatus") List<OrderStatus> orderStatus);
 
     @Query("SELECT o FROM Orders o " +
             "WHERE o.store.id = :storeId " +

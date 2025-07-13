@@ -37,6 +37,16 @@ public class StoreHomeResponse {
 
     @Builder
     @Getter
+    public static class LastOrder {
+        private List<OrderGetResponse> lastOrders;
+
+        public static LastOrder of(List<OrderGetResponse> lastOrders) {
+            return new LastOrder(lastOrders);
+        }
+    }
+
+    @Builder
+    @Getter
     public static class AccountInfo {
         private String today;
         private Integer todayTotalOrderCount;
