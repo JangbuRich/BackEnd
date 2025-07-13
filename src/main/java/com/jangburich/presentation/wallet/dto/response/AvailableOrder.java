@@ -1,6 +1,6 @@
 package com.jangburich.presentation.wallet.dto.response;
 
-public record PurchaseHistory(
+public record AvailableOrder(
         String date,
         Integer amount,
         String transactionTitle,

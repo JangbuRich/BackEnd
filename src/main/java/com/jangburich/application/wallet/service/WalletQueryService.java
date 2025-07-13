@@ -7,7 +7,7 @@ import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
-import com.jangburich.presentation.wallet.dto.response.PurchaseHistory;
+import com.jangburich.presentation.wallet.dto.response.AvailableOrder;
 import com.jangburich.presentation.wallet.dto.response.WalletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,10 +31,10 @@ public class WalletQueryService {
 
         List<PointTransaction> transactions = pointTransactionRepository.findByUser(user);
 
-        List<PurchaseHistory> purchaseHistories = transactions.stream()
+        List<AvailableOrder> purchaseHistories = transactions.stream()
                 .filter(transaction -> transaction.getTransactionType() != TransactionType.FOOD_PURCHASE)
                 .sorted(Comparator.comparing(PointTransaction::getCreatedAt).reversed())
-                .map(transaction -> new PurchaseHistory(
+                .map(transaction -> new AvailableOrder(
                         transaction.getCreatedAt().format(DateTimeFormatter.ofPattern("MM.dd")),
                         transaction.getTransactionType() == TransactionType.PREPAY
                                 ? -transaction.getTransactionedPoint()
