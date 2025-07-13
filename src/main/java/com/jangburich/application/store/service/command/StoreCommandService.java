@@ -17,7 +17,7 @@ import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.infrastructure.config.s3.S3Service;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;

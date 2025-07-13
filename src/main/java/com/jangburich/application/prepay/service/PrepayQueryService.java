@@ -5,7 +5,7 @@ import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.domain.repository.StoreRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;

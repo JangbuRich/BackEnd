@@ -1,4 +1,4 @@
-package com.jangburich.domain.user.dto.response;
+package com.jangburich.presentation.wallet.dto.response;
 
 public record PurchaseHistory(
         String date,

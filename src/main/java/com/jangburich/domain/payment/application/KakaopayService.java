@@ -18,7 +18,7 @@ import com.jangburich.domain.point.domain.PointTransaction;
 import com.jangburich.domain.point.domain.TransactionType;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 
