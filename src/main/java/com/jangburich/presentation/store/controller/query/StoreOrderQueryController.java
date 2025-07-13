@@ -1,4 +1,4 @@
-package com.jangburich.presentation.store.controller;
+package com.jangburich.presentation.store.controller.query;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jangburich.application.store.service.StoreOrderQueryService;
+import com.jangburich.application.store.service.query.StoreOrderQueryService;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.store.dtos.response.order.OrderDetailResponse;

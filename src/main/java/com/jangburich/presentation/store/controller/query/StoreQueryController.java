@@ -1,4 +1,4 @@
-package com.jangburich.presentation.store.controller;
+package com.jangburich.presentation.store.controller.query;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jangburich.presentation.store.dtos.response.payment.PaymentGroupDetailResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreSearchDetailsResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
-import com.jangburich.application.store.service.StoreQueryService;
+import com.jangburich.application.store.service.query.StoreQueryService;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;
 

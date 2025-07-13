@@ -1,4 +1,4 @@
-package com.jangburich.application.store.service;
+package com.jangburich.application.store.service.io;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;

@@ -1,4 +1,4 @@
-package com.jangburich.application.store.service;
+package com.jangburich.application.store.service.command;
 
 import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;

@@ -1,4 +1,4 @@
-package com.jangburich.presentation.store.controller;
+package com.jangburich.presentation.store.controller.command;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponseDto;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
 import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
-import com.jangburich.application.store.service.StoreCommandService;
+import com.jangburich.application.store.service.command.StoreCommandService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;

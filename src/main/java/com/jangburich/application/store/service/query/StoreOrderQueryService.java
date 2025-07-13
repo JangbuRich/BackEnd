@@ -1,4 +1,4 @@
-package com.jangburich.application.store.service;
+package com.jangburich.application.store.service.query;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

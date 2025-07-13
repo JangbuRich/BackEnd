@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jangburich.application.store.service.StoreFileService;
+import com.jangburich.application.store.service.io.StoreFileService;
 import com.jangburich.utils.parser.AuthenticationParser;
 
 import io.swagger.v3.oas.annotations.Operation;
