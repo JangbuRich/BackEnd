@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jangburich.application.store.resolver.StoreResolver;
 import com.jangburich.domain.entity.OrderResponse;
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
@@ -55,20 +56,15 @@ public class StoreQueryService {
     private final PointTransactionRepository pointTransactionRepository;
     private final TeamRepository teamRepository;
 
+    private final StoreResolver storeResolver;
+
     /**
      * Home 화면 결제된 팀을 조회한다.
      * @param userId Authentication ID
      * @return StoreHomeResponse.TodayPaymentTeam
      */
     public List<StoreHomeResponse.TodayPaymentTeam> getPaymentGroup(String userId) {
-        User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         List<StoreTeam> storeIdWithStoreAndTeam = storeTeamRepository.findByStoreIdWithStoreAndTeam(store.getId());
 
@@ -89,14 +85,7 @@ public class StoreQueryService {
      * @return StoreHomeResponse.UniqueCode
      */
     public StoreHomeResponse.UniqueCode getStoreUniqueCode (String authentication) {
-        User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(authentication);
 
         String storeUniqueCode = store.getStoreUniqueCode();
 
@@ -106,57 +95,12 @@ public class StoreQueryService {
     }
 
     /**
-     * Home 화면 오늘자 주문 내역을 보여준다
-     * @param userId : Authentication ID
-     * @return OrderTodayResponse - 오늘자 주문 내역 DTO
-     */
-    public StoreHomeResponse.TodayOrder getTodayOrders(String userId) {
-        List<OrderGetResponse> orderGetRespons = new ArrayList<>();
-
-        User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // 오늘 시작
-        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay(); // 내일 시작 (오늘의 끝)
-
-        List<Orders> allByStore = ordersRepository.findOrdersByStoreAndTodayDateAndStatus(store.getId(), startOfDay,
-            endOfDay, OrderStatus.PaymentStatus());
-
-        for (Orders orders : allByStore) {
-            OrderGetResponse newOrderGetResponse = OrderGetResponse.builder()
-                .id(orders.getId())
-                .name(orders.getUser().getName())
-                .orderStatus(orders.getOrderStatus())
-                .teamName(orders.getTeam().getName())
-                .price(orders.getOrderPrice())
-                .build();
-
-            orderGetRespons.add(newOrderGetResponse);
-        }
-
-        return StoreHomeResponse.TodayOrder.of(orderGetRespons);
-    }
-
-    /**
      * 나의 장부를 보여준다.
      * @param authentication Authentication ID
      * @return StoreHomeResponse.AccountInfo - 장부 DTO
      */
     public StoreHomeResponse.AccountInfo getStoreAccountInfo (String authentication) {
-        User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(authentication);
 
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
@@ -175,14 +119,7 @@ public class StoreQueryService {
     }
 
     public StoreGetResponse getStoreInfo(String authentication) {
-        User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_PARAMETER));
+        Store store = storeResolver.getStoreByUserId(authentication);
 
         if (!store.getOwner().getUser().getProviderId().equals(authentication)) {
             throw new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION);
@@ -192,14 +129,7 @@ public class StoreQueryService {
     }
 
     public PaymentGroupDetailResponse getPaymentGroupDetail(String userId, Long teamId) {
-        User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         Team team = teamRepository.findById(teamId)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_PARAMETER));
@@ -225,19 +155,11 @@ public class StoreQueryService {
             teamLeader, orderResponse);
     }
 
-    private int getTotalOrderPrice (List<Orders> ordersByStoreAndDate) {
-        return ordersByStoreAndDate.stream()
-            .mapToInt(Orders::getOrderPrice)
-            .sum();
-    }
-
     public OrderDetailResponse getOrderDetails(String userId, Long orderId) {
 
-        userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         Orders orders = ordersRepository.findById(orderId).orElseThrow(OrdersNotFoundException::new);
-
 
         return OrderDetailResponse.builder()
             .id(orders.getId())
@@ -250,21 +172,50 @@ public class StoreQueryService {
             .build();
     }
 
+    /**
+     * 오늘자 주문 내역을 보여준다
+     * @param userId : Authentication ID
+     * @return OrderTodayResponse - 오늘자 주문 내역 DTO
+     */
+    public StoreHomeResponse.TodayOrder getTodayOrders(String userId) {
+        List<OrderGetResponse> orderGetRespons = new ArrayList<>();
+
+        Store store = storeResolver.getStoreByUserId(userId);
+
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // 오늘 시작
+        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay(); // 내일 시작 (오늘의 끝)
+
+        List<Orders> allByStore = ordersRepository.findOrdersByStoreAndTodayDateAndStatus(store.getId(), startOfDay,
+            endOfDay, OrderStatus.PaymentStatus());
+
+        for (Orders orders : allByStore) {
+            OrderGetResponse newOrderGetResponse = OrderGetResponse.builder()
+                .id(orders.getId())
+                .name(orders.getUser().getName())
+                .orderStatus(orders.getOrderStatus())
+                .teamName(orders.getTeam().getName())
+                .price(orders.getOrderPrice())
+                .build();
+
+            orderGetRespons.add(newOrderGetResponse);
+        }
+
+        return StoreHomeResponse.TodayOrder.of(orderGetRespons);
+    }
+
+    /**
+     * 지난 주문을 조회한다.
+     * @param userId userId
+     * @return
+     */
     public List<OrderGetResponse> getOrdersLast(String userId) {
         List<OrderGetResponse> orderGetRespons = new ArrayList<>();
 
-        User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         LocalDateTime todayStart = LocalDate.now().atStartOfDay();
         List<Orders> allByStore = ordersRepository.findOrdersByStoreAndDateAndStatusNative(store.getId(), todayStart,
-            "TICKET_USED");
+            OrderStatus.PaymentStatus());
 
         for (Orders orders : allByStore) {
             orderGetRespons.add(OrderGetResponse.builder()
@@ -277,17 +228,17 @@ public class StoreQueryService {
     }
 
     public List<StoreChargeHistoryResponse> getPaymentHistory(String userId) {
-        User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         return pointTransactionRepository.findAllByStore(store).stream()
             .sorted(Comparator.comparing(StoreChargeHistoryResponse::createdAt).reversed()) // 최신순 정렬
             .toList();
     }
+
+    private int getTotalOrderPrice (List<Orders> ordersByStoreAndDate) {
+        return ordersByStoreAndDate.stream()
+            .mapToInt(Orders::getOrderPrice)
+            .sum();
+    }
+
 }
