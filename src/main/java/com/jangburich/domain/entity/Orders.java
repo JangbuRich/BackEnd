@@ -1,10 +1,13 @@
 package com.jangburich.domain.entity;
 
+import java.math.BigDecimal;
+
 import org.hibernate.annotations.Comment;
 
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.user.domain.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,26 +52,31 @@ public class Orders extends BaseEntity {
     private OrderStatus orderStatus;
 
     @Comment("주문 가격")
-    @Column(name="order_price")
+    @Column(name = "order_price", precision = 8)
     private Integer orderPrice;
+
+    @Comment("할인 금액")
+    @Column(name="discount_price", precision = 4, scale = 2)
+    private BigDecimal discountPrice;
 
     @Version
     private Long version;
 
     @Builder
-    public Orders(Store store, User user, Team team, OrderStatus orderStatus, Integer orderPrice) {
+    public Orders (Store store, User user, Team team, OrderStatus orderStatus, Integer orderPrice, BigDecimal discountPrice) {
         this.store = store;
         this.user = user;
         this.team = team;
         this.orderStatus = orderStatus;
         this.orderPrice = orderPrice;
+        this.discountPrice = discountPrice;
     }
 
-    public void updateOrderStatus(OrderStatus orderStatus) {
+    public void updateOrderStatus (OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
-    public void validateUser(User user) {
+    public void validateUser (User user) {
         if (!this.user.equals(user)) {
             throw new IllegalArgumentException("유저 정보가 일치하지 않습니다.");
         }
