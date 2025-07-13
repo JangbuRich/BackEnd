@@ -1,9 +1,11 @@
 package com.jangburich.presentation.wallet.dto.response;
 
+import java.time.LocalDateTime;
+
 public record AvailableOrder(
-        String date,
+        String dateTime,
         Integer amount,
-        String transactionTitle,
-        String transactionType
+        String storeName,
+        String storeCategory
 ) {
 }
