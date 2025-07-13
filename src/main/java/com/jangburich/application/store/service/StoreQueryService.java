@@ -2,7 +2,6 @@ package com.jangburich.application.store.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -11,23 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jangburich.application.store.resolver.StoreResolver;
 import com.jangburich.domain.entity.OrderResponse;
-import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.repository.CustomOrderRepository;
 import com.jangburich.domain.repository.OrdersRepository;
-import com.jangburich.domain.owner.domain.entity.Owner;
-import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.presentation.store.dtos.response.order.OrderDetailResponse;
-import com.jangburich.presentation.store.dtos.response.order.OrderGetResponse;
 import com.jangburich.presentation.store.dtos.response.payment.PaymentGroupDetailResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreGetResponse;
-import com.jangburich.domain.store.exception.OrdersNotFoundException;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
-import com.jangburich.domain.repository.StoreRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
@@ -47,8 +39,6 @@ public class StoreQueryService {
     // Todo: Order 관련 로직들은 Order 패키지로 옮겨져야 하는게 맞음 -> 추후 이동하기.
     // Todo: Team(group) 관련 로직들은 Team 패키지로 옮겨져야 하는게 맞음
 
-    private final StoreRepository storeRepository;
-    private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
     private final StoreTeamRepository storeTeamRepository;
     private final OrdersRepository ordersRepository;
@@ -69,13 +59,11 @@ public class StoreQueryService {
         List<StoreTeam> storeIdWithStoreAndTeam = storeTeamRepository.findByStoreIdWithStoreAndTeam(store.getId());
 
         return storeIdWithStoreAndTeam.stream()
-            .map(storeTeam -> {
-                    return StoreHomeResponse.TodayPaymentTeam.builder()
-                        .teamName(storeTeam.getTeam().getName())
-                        .teamDescription(storeTeam.getTeam().getDescription())
-                        .remainingPrice(storeTeam.getRemainPoint())
-                        .build();
-            }
+            .map(storeTeam -> StoreHomeResponse.TodayPaymentTeam.builder()
+                .teamName(storeTeam.getTeam().getName())
+                .teamDescription(storeTeam.getTeam().getDescription())
+                .remainingPrice(storeTeam.getRemainPoint())
+                .build()
             ).toList();
     }
 
@@ -155,84 +143,6 @@ public class StoreQueryService {
             teamLeader, orderResponse);
     }
 
-    public OrderDetailResponse getOrderDetails(String userId, Long orderId) {
-
-        Store store = storeResolver.getStoreByUserId(userId);
-
-        Orders orders = ordersRepository.findById(orderId).orElseThrow(OrdersNotFoundException::new);
-
-        return OrderDetailResponse.builder()
-            .id(orders.getId())
-            .teamName(orders.getTeam().getName())
-            .teamUserName(orders.getUser().getName())
-            .dateTime(orders.getUpdatedAt())
-            .amount(0) // TODO 수정 필요
-            .totalPrice(0) // TODO 수정 필요
-            .discountPrice(0) // TODO 수정 필요
-            .build();
-    }
-
-    /**
-     * 오늘자 주문 내역을 보여준다
-     * @param userId : Authentication ID
-     * @return OrderTodayResponse - 오늘자 주문 내역 DTO
-     */
-    public StoreHomeResponse.TodayOrder getTodayOrders(String userId) {
-        List<OrderGetResponse> orderGetResponse = new ArrayList<>();
-
-        Store store = storeResolver.getStoreByUserId(userId);
-
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // 오늘 시작
-        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay(); // 내일 시작 (오늘의 끝)
-
-        List<Orders> allByStore = getTodayOrders(store, startOfDay, endOfDay);
-
-        for (Orders orders : allByStore) {
-            OrderGetResponse newOrderGetResponse = OrderGetResponse.builder()
-                .id(orders.getId())
-                .name(orders.getUser().getName())
-                .orderStatus(orders.getOrderStatus())
-                .teamName(orders.getTeam().getName())
-                .price(orders.getOrderPrice())
-                .build();
-
-            orderGetResponse.add(newOrderGetResponse);
-        }
-
-        return StoreHomeResponse.TodayOrder.of(orderGetResponse);
-    }
-
-    /**
-     * 지난 주문을 조회한다.
-     * @param userId userId
-     * @return LastOrder - 지난 주문 내역
-     */
-    public StoreHomeResponse.LastOrder getOrdersLast(String userId) {
-        List<OrderGetResponse> orderGetResponseList = new ArrayList<>();
-
-        Store store = storeResolver.getStoreByUserId(userId);
-
-        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
-        List<Orders> lastOrders = getLastOrders(store, todayStart);
-
-        for (Orders orders : lastOrders) {
-            orderGetResponseList.add(OrderGetResponse.builder()
-                .id(orders.getId())
-                .orderStatus(orders.getOrderStatus())
-                .name(orders.getUser().getName())
-                .teamName(orders.getTeam().getName())
-                .price(orders.getOrderPrice())
-                .build());
-        }
-
-        return StoreHomeResponse.LastOrder.of(orderGetResponseList);
-    }
-
-    private List<Orders> getLastOrders (Store store, LocalDateTime todayStart) {
-        return ordersRepository.findOrdersByStoreAndDateAndStatusNative(store.getId(), todayStart,
-            OrderStatus.PaymentStatus());
-    }
-
     public List<StoreChargeHistoryResponse> getPaymentHistory(String userId) {
         Store store = storeResolver.getStoreByUserId(userId);
 
@@ -247,9 +157,4 @@ public class StoreQueryService {
             .sum();
     }
 
-    private List<Orders> getTodayOrders (Store store, LocalDateTime startOfDay,
-        LocalDateTime endOfDay) {
-        return ordersRepository.findOrdersByStoreAndTodayDateAndStatus(store.getId(), startOfDay,
-            endOfDay, OrderStatus.PaymentStatus());
-    }
 }

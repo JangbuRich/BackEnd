@@ -15,7 +15,12 @@ public enum ErrorCode {
     INVALID_STORE_ID(400, null, "해당 store가 존재하지 않습니다."),
     INVALID_TEAM_ID(400,null,"해당 그룹이 존재하지 않습니다."),
     INVALID_USER_ID(400, null, "사용자 권한이 없습니다"),
-    INVALID_STORE_TEAM_ID(400,"INVALID_STORE_TEAM_ID", "유효하지 않은 가게 id와 팀 id 입니다.");
+    INVALID_STORE_TEAM_ID(400,"INVALID_STORE_TEAM_ID", "유효하지 않은 가게 id와 팀 id 입니다."),
+
+    // Order Error
+    ORDER_NOT_FOUND(400,"ORDER_NOT_FOUND","존재하지 않는 주문 번호 입니다."),
+
+    ;
 
     private final String code;
     private final String message;

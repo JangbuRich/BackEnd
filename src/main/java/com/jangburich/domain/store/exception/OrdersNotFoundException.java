@@ -1,7 +1,16 @@
 package com.jangburich.domain.store.exception;
 
+import com.jangburich.global.payload.ErrorCode;
+
+import lombok.Getter;
+
+@Getter
 public class OrdersNotFoundException extends RuntimeException {
-	public OrdersNotFoundException() {
-		super("해당 가게를 찾을 수 없습니다.");
+
+	private final ErrorCode errorCode;
+
+	public OrdersNotFoundException(ErrorCode errorCode) {
+		super(errorCode.getMessage());
+		this.errorCode = errorCode;
 	}
 }

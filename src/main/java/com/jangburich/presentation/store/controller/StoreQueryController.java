@@ -1,18 +1,13 @@
 package com.jangburich.presentation.store.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jangburich.global.payload.BaseResponse;
-import com.jangburich.presentation.store.dtos.response.order.OrderDetailResponse;
 import com.jangburich.presentation.store.dtos.response.payment.PaymentGroupDetailResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreSearchDetailsResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
@@ -50,13 +45,6 @@ public class StoreQueryController {
             storeQueryService.getPaymentGroup(AuthenticationParser.parseUserId(authentication)));
     }
 
-    @Operation(summary = "오늘 주문 조회", description = "가게에 있는 오늘 주문을 조회합니다")
-    @GetMapping("/orders/today")
-    public ResponseCustom<StoreHomeResponse.TodayOrder> getTodayOrders(Authentication authentication) {
-        return ResponseCustom.OK(storeQueryService.getTodayOrders(
-            AuthenticationParser.parseUserId(authentication)));
-    }
-
     @Operation(summary = "매장 상세 페이지 조회", description = "매장을 상세 조회합니다.")
     @GetMapping("/{storeId}")
     public ResponseCustom<StoreSearchDetailsResponse> storeSearchDetails(
@@ -82,19 +70,4 @@ public class StoreQueryController {
             storeQueryService.getPaymentHistory(AuthenticationParser.parseUserId(authentication)));
     }
 
-    @Operation(summary = "지난 주문 조회", description = "가게에 있는 지난 주문을 조회합니다")
-    @GetMapping("/orders/last")
-    public ResponseEntity<BaseResponse<StoreHomeResponse.LastOrder>> getLastOrders(Authentication authentication) {
-        StoreHomeResponse.LastOrder ordersLast = storeQueryService.getOrdersLast(
-            AuthenticationParser.parseUserId(authentication));
-
-        return ResponseEntity.ok(new BaseResponse<>(ordersLast, LocalDateTime.now(), "OK"));
-    }
-
-    @Operation(summary = "주문 상세 조회", description = "가게에 있는 주문을 상세 조회합니다")
-    @GetMapping("/orders/{ordersId}")
-    public ResponseCustom<OrderDetailResponse> getOrders(Authentication authentication, @RequestParam Long orderId) {
-        return ResponseCustom.OK(
-            storeQueryService.getOrderDetails(AuthenticationParser.parseUserId(authentication), orderId));
-    }
 }
