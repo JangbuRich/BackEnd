@@ -1,6 +1,6 @@
 package com.jangburich.presentation.prepay.controller;
 
-import com.jangburich.application.service.prepay.PrepayQueryService;
+import com.jangburich.application.prepay.service.PrepayQueryService;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;

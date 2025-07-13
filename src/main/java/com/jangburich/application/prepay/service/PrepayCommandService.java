@@ -1,4 +1,4 @@
-package com.jangburich.application.service.prepay;
+package com.jangburich.application.prepay.service;
 
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;

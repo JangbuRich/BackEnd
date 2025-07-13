@@ -1,6 +1,6 @@
 package com.jangburich.presentation.order.controller;
 
-import com.jangburich.application.service.order.OrderQueryService;
+import com.jangburich.application.order.service.OrderQueryService;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
 import com.jangburich.presentation.order.dto.response.OrderResponse;
@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

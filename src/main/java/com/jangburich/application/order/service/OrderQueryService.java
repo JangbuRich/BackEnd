@@ -1,4 +1,4 @@
-package com.jangburich.application.service.order;
+package com.jangburich.application.order.service;
 
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.repository.OrdersRepository;
