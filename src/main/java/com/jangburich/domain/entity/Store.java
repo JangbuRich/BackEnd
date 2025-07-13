@@ -10,8 +10,8 @@ import org.hibernate.annotations.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jangburich.domain.owner.domain.entity.Owner;
 
-import com.jangburich.domain.store.presentation.dto.request.StoreCreateRequest;
-import com.jangburich.domain.store.presentation.dto.request.StoreUpdateRequest;
+import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
+import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -25,6 +25,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -120,6 +121,32 @@ public class Store {
         this.maxReservation = maxReservation;
         this.minPrepayment = minPrepayment;
         this.prepaymentDuration = prepaymentDuration;
+    }
+
+    @Builder
+    public Store (Owner owner, String name, Category category, String representativeImage, Boolean reservationAvailable,
+        Long maxReservation, Long minPrepayment, Long prepaymentDuration, String introduction, Double latitude,
+        Double longitude, String address, String location, List<DayOfWeek> workDays, LocalTime openTime,
+        LocalTime closeTime, String contactNumber, String storeUniqueCode, String storeId) {
+        this.owner = owner;
+        this.name = name;
+        this.category = category;
+        this.representativeImage = representativeImage;
+        this.reservationAvailable = reservationAvailable;
+        this.maxReservation = maxReservation;
+        this.minPrepayment = minPrepayment;
+        this.prepaymentDuration = prepaymentDuration;
+        this.introduction = introduction;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.location = location;
+        this.workDays = workDays;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.contactNumber = contactNumber;
+        this.storeUniqueCode = storeUniqueCode;
+        this.storeId = storeId;
     }
 
     public static Store of(Owner owner, StoreCreateRequest storeCreateRequest, List<DayOfWeek> dayOfWeeks, String imageUrl) {

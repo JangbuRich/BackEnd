@@ -48,7 +48,6 @@ public class Owner extends BaseEntity {
 		return newOwner;
 	}
 
-
     public void register(String name, String registrationNumber, String businessName, LocalDate openingDate, String phoneNumber) {
         this.name = name;
         this.businessName = businessName;

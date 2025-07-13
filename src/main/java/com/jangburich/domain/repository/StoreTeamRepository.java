@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.store.presentation.dto.response.store.StoreTeamResponseDTO;
+import com.jangburich.presentation.store.dtos.response.store.StoreTeamResponseDTO;
 
 public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
 	Optional<StoreTeam> findByStoreIdAndTeamId(Long store_id, Long team_id);
