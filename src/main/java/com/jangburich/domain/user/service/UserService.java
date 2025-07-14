@@ -3,7 +3,6 @@ package com.jangburich.domain.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.user.domain.AdditionalInfoCreateDTO;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.dto.response.UserHomeResponse;

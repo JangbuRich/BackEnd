@@ -13,7 +13,7 @@ import com.jangburich.domain.entity.OrderResponse;
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.repository.CustomOrderRepository;
 import com.jangburich.domain.repository.OrdersRepository;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.presentation.store.dtos.response.payment.PaymentGroupDetailResponse;

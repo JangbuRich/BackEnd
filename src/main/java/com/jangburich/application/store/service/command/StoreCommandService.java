@@ -6,7 +6,7 @@ import com.jangburich.domain.repository.OrdersRepository;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.payment.domain.repository.TeamChargeHistoryRepository;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;

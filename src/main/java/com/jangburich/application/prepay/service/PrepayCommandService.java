@@ -2,9 +2,9 @@ package com.jangburich.application.prepay.service;
 
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.point.domain.PointTransaction;
-import com.jangburich.domain.point.domain.TransactionType;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.entity.PointTransaction;
+import com.jangburich.domain.entity.TransactionType;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.repository.StoreRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;

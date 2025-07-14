@@ -2,8 +2,7 @@ package com.jangburich.application.wallet.service;
 
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.point.domain.PointTransaction;
-import com.jangburich.domain.point.domain.TransactionType;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.repository.OrdersRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
@@ -12,6 +11,8 @@ import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.presentation.wallet.dto.response.AvailableOrder;
+import com.jangburich.presentation.wallet.dto.response.PointResponse;
+import com.jangburich.presentation.wallet.dto.response.PointTransactionItem;
 import com.jangburich.presentation.wallet.dto.response.WalletResponse;
 import com.jangburich.utils.DateTimeFormatterUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -31,6 +31,7 @@ import java.util.List;
 public class WalletQueryService {
 
     private final OrdersRepository ordersRepository;
+    private final PointTransactionRepository pointTransactionRepository;
     private final StoreTeamRepository storeTeamRepository;
     private final UserRepository userRepository;
 
@@ -53,5 +54,29 @@ public class WalletQueryService {
         PageInfo pageInfo = new PageInfo(orders.getNumber(), orders.getSize(), orders.getTotalPages(), orders.getTotalElements(), orders.hasNext(), orders.hasPrevious());
 
         return new WalletResponse(point, user.getName(),availableOrders, pageInfo);
+    }
+
+    public PointResponse getPointList(String userId, Boolean prePay, LocalDate createdAfter, LocalDate createdBefore, Pageable pageable){
+        User user = userRepository.findByProviderId(userId)
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_USER_ID));
+
+        if(createdAfter==null){
+            createdAfter =  LocalDate.of(1970, 1, 1);
+        }
+        if(createdBefore == null){
+            createdBefore= LocalDate.of(2999, 12, 31);
+        }
+
+        Page<PointTransactionItem> pointTransactions;
+        if(prePay) {
+            pointTransactions = pointTransactionRepository.findAllPrepayByCreatedAfterAndCreatedBefore(user, createdAfter.atStartOfDay(), createdBefore.atTime(LocalTime.MAX), pageable);
+        }
+        else{
+            pointTransactions = ordersRepository.findAllTicketByCreatedAfterAndCreatedBefore(user, createdAfter.atStartOfDay(), createdBefore.atTime(LocalTime.MAX), pageable);
+        }
+
+        PageInfo pageInfo = new PageInfo(pointTransactions.getNumber(),pointTransactions.getSize(),pointTransactions.getTotalPages(),pointTransactions.getTotalElements(), pointTransactions.hasNext(), pointTransactions.hasPrevious());
+
+        return new PointResponse(pointTransactions.stream().toList(), pageInfo);
     }
 }

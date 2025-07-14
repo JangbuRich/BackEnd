@@ -28,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
-import com.jangburich.domain.point.domain.TransactionType;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.entity.TransactionType;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
