@@ -25,7 +25,8 @@ public interface PointTransactionRepository extends JpaRepository<PointTransacti
 
     @Query("""
     SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
-        pt.store.id
+        pt.id
+        , pt.store.id
         , pt.store.name
         , pt.store.category
         , pt.transactionedPoint

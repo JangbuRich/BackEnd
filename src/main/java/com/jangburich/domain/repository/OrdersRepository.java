@@ -23,7 +23,8 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
     @Query("""
     SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
-        o.store.id
+        o.id
+        , o.store.id
         , o.store.name
         , o.store.category
         , o.orderPrice

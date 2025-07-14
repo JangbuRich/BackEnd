@@ -6,7 +6,8 @@ import com.jangburich.domain.entity.OrderStatus;
 import java.time.LocalDateTime;
 
 public record PointTransactionItem(
-        Long storeId
+        Long id
+        , Long storeId
         , String storeName
         , Category storeCategory
         , Integer amount
