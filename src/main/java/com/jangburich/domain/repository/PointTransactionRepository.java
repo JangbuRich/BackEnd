@@ -19,6 +19,22 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PointTransactionRepository extends JpaRepository<PointTransaction, Long> {
+    @Query("""
+    SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
+        pt.id
+        , pt.store.id
+        , pt.store.name
+        , pt.store.category
+        , pt.transactionedPoint
+        , null
+        , pt.updatedAt
+    )
+    FROM PointTransaction pt
+    where pt.id = :id
+    and pt.user = :user
+""")
+    PointTransactionItem findByIdAndUser(@Param("id") Long id, @Param("user") User user);
+
     List<PointTransaction> findByUser(User user);
 
     List<StoreChargeHistoryResponse> findAllByStore(Store store);

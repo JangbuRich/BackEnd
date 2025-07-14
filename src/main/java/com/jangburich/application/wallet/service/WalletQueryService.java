@@ -7,11 +7,12 @@ import com.jangburich.domain.repository.OrdersRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.repository.UserRepository;
+import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.presentation.wallet.dto.response.AvailableOrder;
-import com.jangburich.presentation.wallet.dto.response.PointResponse;
+import com.jangburich.presentation.wallet.dto.response.PointTransactionList;
 import com.jangburich.presentation.wallet.dto.response.PointTransactionItem;
 import com.jangburich.presentation.wallet.dto.response.WalletResponse;
 import com.jangburich.utils.DateTimeFormatterUtil;
@@ -56,7 +57,7 @@ public class WalletQueryService {
         return new WalletResponse(point, user.getName(),availableOrders, pageInfo);
     }
 
-    public PointResponse getPointList(String userId, Boolean prePay, LocalDate createdAfter, LocalDate createdBefore, Pageable pageable){
+    public PointTransactionList getPointList(String userId, Boolean prePay, LocalDate createdAfter, LocalDate createdBefore, Pageable pageable){
         User user = userRepository.findByProviderId(userId)
                 .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_USER_ID));
 
@@ -75,8 +76,31 @@ public class WalletQueryService {
             pointTransactions = ordersRepository.findAllTicketByCreatedAfterAndCreatedBefore(user, createdAfter.atStartOfDay(), createdBefore.atTime(LocalTime.MAX), pageable);
         }
 
+        if(pointTransactions == null){
+            throw new DefaultException(ErrorCode.INVALID_TRANSACTION_ID);
+        }
+
         PageInfo pageInfo = new PageInfo(pointTransactions.getNumber(),pointTransactions.getSize(),pointTransactions.getTotalPages(),pointTransactions.getTotalElements(), pointTransactions.hasNext(), pointTransactions.hasPrevious());
 
-        return new PointResponse(pointTransactions.stream().toList(), pageInfo);
+        return new PointTransactionList(pointTransactions.stream().toList(), pageInfo);
+    }
+
+    public PointTransactionItem getPointDetail (String userId, Long transactionId, boolean prePay){
+        User user = userRepository.findByProviderId(userId)
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_USER_ID));
+
+        PointTransactionItem pointTransactionItem;
+        if(prePay){
+            pointTransactionItem = pointTransactionRepository.findByIdAndUser(transactionId, user);
+        }
+        else{
+            pointTransactionItem = ordersRepository.findByIdAndUser(transactionId, user);
+        }
+
+        if(pointTransactionItem == null){
+            throw new DefaultException(ErrorCode.INVALID_TRANSACTION_ID);
+        }
+
+        return pointTransactionItem;
     }
 }

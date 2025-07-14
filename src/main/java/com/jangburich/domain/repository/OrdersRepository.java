@@ -38,6 +38,22 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
 """)
     Page<PointTransactionItem> findAllTicketByCreatedAfterAndCreatedBefore(@Param("user")User user, @Param("createdAfter")LocalDateTime createdAfter, @Param("createdBefore")LocalDateTime createdBefore, Pageable pageable);
 
+    @Query("""
+    select new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
+        o.id
+        , o.store.id
+        , o.store.name
+        , o.store.category
+        , o.orderPrice
+        , o.orderStatus
+        , o.updatedAt
+    )
+    from Orders o
+    where o.id = :id
+    and o.user = :user
+""")
+    PointTransactionItem findByIdAndUser(@Param("id") Long id, @Param("user") User user);
+
     Page<Orders> findByUserAndOrderStatus(User user, OrderStatus orderStatus, Pageable pageable);
 
     @Query(value = "SELECT * FROM orders WHERE store_id = :storeId AND updated_at < :updatedAt AND order_status in :orderStatus order by id desc",
