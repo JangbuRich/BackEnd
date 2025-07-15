@@ -12,7 +12,7 @@ import com.jangburich.application.store.resolver.StoreResolver;
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.domain.repository.OrdersRepository;
+import com.jangburich.infrastructure.repository.OrdersRepository;
 import com.jangburich.domain.store.exception.OrdersNotFoundException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.presentation.store.dtos.response.order.OrderDetailResponse;

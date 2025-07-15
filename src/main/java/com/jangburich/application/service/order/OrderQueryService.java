@@ -1,7 +1,7 @@
 package com.jangburich.application.service.order;
 
 import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.repository.OrdersRepository;
+import com.jangburich.infrastructure.repository.OrdersRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;

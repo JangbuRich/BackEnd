@@ -3,7 +3,7 @@ package com.jangburich.domain.user.service.impl;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.domain.repository.StoreRepository;
+import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.domain.user.domain.SocialLoginProvider;
 import com.jangburich.domain.user.domain.SocialUserProfileDTO;
 import com.jangburich.domain.user.domain.TokenResponseDTO;

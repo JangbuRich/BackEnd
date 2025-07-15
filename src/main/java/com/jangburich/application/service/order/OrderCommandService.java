@@ -1,20 +1,18 @@
 package com.jangburich.application.service.order;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.repository.OrdersRepository;
-import com.jangburich.domain.repository.StoreRepository;
-import com.jangburich.domain.repository.StoreTeamRepository;
+import com.jangburich.infrastructure.repository.OrdersRepository;
+import com.jangburich.infrastructure.repository.StoreRepository;
+import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
-import com.jangburich.global.payload.Message;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
 import com.jangburich.presentation.order.dto.request.UseTicketRequest;
 import jakarta.persistence.OptimisticLockException;

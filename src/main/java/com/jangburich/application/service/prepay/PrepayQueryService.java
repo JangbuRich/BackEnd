@@ -2,8 +2,8 @@ package com.jangburich.application.service.prepay;
 
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.repository.StoreRepository;
-import com.jangburich.domain.repository.StoreTeamRepository;
+import com.jangburich.infrastructure.repository.StoreRepository;
+import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
