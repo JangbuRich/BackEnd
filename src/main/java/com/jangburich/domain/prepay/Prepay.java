@@ -38,7 +38,7 @@ public class Prepay extends BaseEntity {
 
     @Comment("선결제 신청 금액")
     @Column(name = "prepay_price", precision = 8)
-    private BigDecimal prepayPrice;
+    private BigDecimal prepayAmount;
 
     @Comment("선결제 신청 상태")
     @Enumerated(EnumType.STRING)
@@ -61,8 +61,8 @@ public class Prepay extends BaseEntity {
     private Team team;
 
     @Builder
-    public Prepay (BigDecimal prepayPrice, PrepayStatus prepayStatus, User user, Store store) {
-        this.prepayPrice = prepayPrice;
+    public Prepay (BigDecimal prepayAmount, PrepayStatus prepayStatus, User user, Store store) {
+        this.prepayAmount = prepayAmount;
         this.prepayStatus = prepayStatus;
         this.user = user;
         this.store = store;
