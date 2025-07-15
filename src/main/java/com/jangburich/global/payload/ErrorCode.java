@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-
+    // 400
     INVALID_PARAMETER(400,null,"잘못된 요청 데이터입니다."),
     INVALID_REPRESENTATION(400,null,"잘못된 표현 입니다."),
     INVALID_FILE_PATH(400,null,"잘못된 파일 경로 입니다."),
@@ -20,6 +20,10 @@ public enum ErrorCode {
     // Order Error
     ORDER_NOT_FOUND(400,"ORDER_NOT_FOUND","존재하지 않는 주문 번호 입니다."),
 
+    // 500
+
+    // Common Error
+    ENTITY_NOT_FOUND(500, null, "Entity 를 찾을 수 없습니다."),
     ;
 
     private final String code;
