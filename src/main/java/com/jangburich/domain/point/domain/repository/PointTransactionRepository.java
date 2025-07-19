@@ -14,4 +14,7 @@ public interface PointTransactionRepository extends JpaRepository<PointTransacti
     List<PointTransaction> findByUser(User user);
 
     List<StoreChargeHistoryResponse> findAllByStore(Store store);
+
+    List<PointTransaction> findAllByStoreIdOrderByIdDesc(Long store_id);
+
 }

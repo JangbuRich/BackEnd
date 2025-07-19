@@ -2,20 +2,16 @@ package com.jangburich.application.store.service.command;
 
 import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.infrastructure.repository.OrdersRepository;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
-import com.jangburich.domain.payment.domain.repository.TeamChargeHistoryRepository;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
 import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponseDto;
 import com.jangburich.infrastructure.repository.StoreRepository;
-import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
-import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.infrastructure.config.s3.S3Service;
@@ -42,11 +38,7 @@ public class StoreCommandService {
     private final StoreRepository storeRepository;
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
-    private final StoreTeamRepository storeTeamRepository;
-    private final TeamRepository teamRepository;
-    private final TeamChargeHistoryRepository teamChargeHistoryRepository;
-    private final OrdersRepository ordersRepository;
-    private final PointTransactionRepository pointTransactionRepository;
+    private final StoreQueryDslRepository storeQueryDslRepository;
 
     private final S3Service s3Service;
 
@@ -131,7 +123,7 @@ public class StoreCommandService {
                                                        final Category category, Double lat, Double lon, final Pageable pageable) {
         User user = userRepository.findByProviderId(authentication)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-        return storeRepository.findStoresByCategory(user.getUserId(), searchRadius, category, lat, lon,
+        return storeQueryDslRepository.findStoresByCategory(user.getUserId(), searchRadius, category, lat, lon,
             pageable);
     }
 
@@ -139,7 +131,7 @@ public class StoreCommandService {
                                                    final Pageable pageable) {
         User user = userRepository.findByProviderId(authentication)
             .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-        return storeRepository.findStores(user.getUserId(), keyword, pageable);
+        return storeQueryDslRepository.findStores(user.getUserId(), keyword, pageable);
     }
 
     private String createStoreId () {

@@ -10,6 +10,6 @@ import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.entity.Store;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store, Long>, StoreQueryDslRepository {
+public interface StoreRepository extends JpaRepository<Store, Long> {
 	Optional<Store> findByOwner(Owner owner);
 }
