@@ -35,7 +35,7 @@ public class WalletQueryController {
     @GetMapping()
     @Operation(summary = "내 장부 조회", description = "현재 남아 있는 포인트를 조회합니다.",
         responses = {
-            @ApiResponse(responseCode = "201", description = "생성 성공",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(schema = @Schema(implementation = BaseResponse.class)))
     })
     @CommonApiResponse
