@@ -1,10 +1,8 @@
 package com.jangburich.presentation.order.controller;
 
-import com.jangburich.application.service.order.OrderCommandService;
+import com.jangburich.application.order.service.OrderCommandService;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
-import com.jangburich.global.payload.Message;
-import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
 import com.jangburich.presentation.order.dto.request.UseTicketRequest;
 import com.jangburich.utils.parser.AuthenticationParser;

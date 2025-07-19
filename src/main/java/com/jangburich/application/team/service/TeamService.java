@@ -18,7 +18,7 @@ import com.jangburich.domain.entity.UserTeam;
 import com.jangburich.domain.repository.TeamRepository;
 import com.jangburich.domain.repository.UserTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.payload.Message;
 
 import lombok.RequiredArgsConstructor;

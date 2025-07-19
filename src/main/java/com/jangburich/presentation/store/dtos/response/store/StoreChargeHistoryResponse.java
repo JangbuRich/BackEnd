@@ -2,7 +2,7 @@ package com.jangburich.presentation.store.dtos.response.store;
 
 import java.time.LocalDateTime;
 
-import com.jangburich.domain.point.domain.TransactionType;
+import com.jangburich.domain.entity.TransactionType;
 import com.querydsl.core.annotations.QueryProjection;
 
 public record StoreChargeHistoryResponse(

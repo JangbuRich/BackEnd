@@ -15,7 +15,7 @@
 // import com.jangburich.domain.owner.domain.entity.Owner;
 // import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 // import com.jangburich.domain.user.domain.User;
-// import com.jangburich.domain.user.repository.UserRepository;
+// import com.jangburich.domain.repository.UserRepository;
 //
 // import jakarta.servlet.http.HttpServletRequest;
 // import lombok.extern.slf4j.Slf4j;
