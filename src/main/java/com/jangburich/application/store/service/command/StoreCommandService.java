@@ -15,7 +15,7 @@ import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponse
 import com.jangburich.domain.repository.StoreRepository;
 import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
-import com.jangburich.domain.team.domain.repository.TeamRepository;
+import com.jangburich.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.infrastructure.config.s3.S3Service;

@@ -1,21 +1,17 @@
-package com.jangburich.domain.team.presentation;
-
-import com.jangburich.domain.team.dto.response.*;
+package com.jangburich.presentation.team.controller;
 
 import java.util.List;
 
+import com.jangburich.presentation.team.dto.response.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jangburich.domain.team.application.TeamService;
-import com.jangburich.domain.team.dto.request.RegisterTeamRequest;
-import com.jangburich.domain.team.dto.response.MyTeamDetailResponse;
+import com.jangburich.application.team.service.TeamService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;
@@ -56,17 +52,6 @@ public class TeamController {
 	public ResponseCustom<?> getCategories() {
 		// TODO 개발 예정
 		return null;
-	}
-
-
-	@Operation(summary = "내가 속한 그룹 조회", description = "내가 속한 그룹을 카테고리(ALL, LEADER, MEMBER) 별로 조회한다.")
-	@GetMapping
-	public ResponseCustom<List<MyTeamResponse>> getMyTeamByCategory(
-		Authentication authentication,
-		@RequestParam(required = false, defaultValue = "ALL") String category
-	) {
-		return ResponseCustom.OK(
-			teamService.getMyTeamByCategory(AuthenticationParser.parseUserId(authentication), category));
 	}
 
 	@Operation(summary = "그룹(팀) 상세 조회", description = "내가 속한 팀의 정보를 상세 조회합니다.")

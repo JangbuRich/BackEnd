@@ -3,7 +3,7 @@ package com.jangburich.presentation.store.dtos.response.payment;
 import java.util.List;
 
 import com.jangburich.domain.entity.OrderResponse;
-import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.entity.Team;
 import com.jangburich.domain.user.domain.User;
 
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.dto.response;
+package com.jangburich.presentation.team.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import java.util.List;

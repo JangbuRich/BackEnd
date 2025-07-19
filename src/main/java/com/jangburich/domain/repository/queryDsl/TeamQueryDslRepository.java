@@ -1,7 +1,7 @@
-package com.jangburich.domain.team.domain.repository;
+package com.jangburich.domain.repository.queryDsl;
 
-import com.jangburich.domain.team.dto.response.IndividualStoreDetailsResponse;
-import com.jangburich.domain.team.dto.response.MyTeamDetailResponse;
+import com.jangburich.presentation.team.dto.response.IndividualStoreDetailsResponse;
+import com.jangburich.presentation.team.dto.response.MyTeamDetailResponse;
 
 public interface TeamQueryDslRepository {
     MyTeamDetailResponse findMyTeamDetailsAsMember(Long userId, Long teamId);

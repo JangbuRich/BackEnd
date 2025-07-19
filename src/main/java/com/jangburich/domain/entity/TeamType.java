@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.domain;
+package com.jangburich.domain.entity;
 
 import lombok.Getter;
 

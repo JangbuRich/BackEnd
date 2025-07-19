@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.domain;
+package com.jangburich.domain.entity;
 
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.utils.SecretNumberGenerator;

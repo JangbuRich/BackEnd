@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.entity.Team;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

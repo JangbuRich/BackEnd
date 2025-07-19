@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.dto.response;
+package com.jangburich.presentation.team.dto.response;
 
 public record TeamMemberResponse(
         Long memberId,

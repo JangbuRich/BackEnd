@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.dto.response;
+package com.jangburich.presentation.team.dto.response;
 
 import lombok.Getter;
 

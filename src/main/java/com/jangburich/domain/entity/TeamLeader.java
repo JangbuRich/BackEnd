@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.domain;
+package com.jangburich.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -1,7 +1,8 @@
-package com.jangburich.domain.team.domain.repository;
+package com.jangburich.domain.repository.queryDsl;
 
 import com.jangburich.domain.point.domain.TransactionType;
 import com.jangburich.domain.team.dto.response.*;
+import com.jangburich.presentation.team.dto.response.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

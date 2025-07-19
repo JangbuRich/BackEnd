@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.dto.request;
+package com.jangburich.presentation.team.dto.request;
 
 public record RegisterTeamRequest(
     String teamType,

@@ -1,7 +1,6 @@
 package com.jangburich.domain.entity;
 
 import com.jangburich.domain.common.BaseEntity;
-import com.jangburich.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
 

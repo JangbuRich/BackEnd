@@ -21,8 +21,8 @@ import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryR
 import com.jangburich.presentation.store.dtos.response.store.StoreGetResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
 import com.jangburich.domain.repository.StoreTeamRepository;
-import com.jangburich.domain.team.domain.Team;
-import com.jangburich.domain.team.domain.repository.TeamRepository;
+import com.jangburich.domain.entity.Team;
+import com.jangburich.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;

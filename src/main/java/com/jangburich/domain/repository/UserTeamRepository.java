@@ -1,10 +1,10 @@
-package com.jangburich.domain.team.domain.repository;
+package com.jangburich.domain.repository;
 
 import com.jangburich.domain.common.Status;
-import com.jangburich.domain.team.domain.Team;
-import com.jangburich.domain.team.domain.UserTeam;
+import com.jangburich.domain.entity.Team;
+import com.jangburich.domain.entity.UserTeam;
 import com.jangburich.domain.user.domain.User;
-import java.util.Collection;
+
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

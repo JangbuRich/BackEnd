@@ -1,6 +1,6 @@
 package com.jangburich.domain.repository;
 
-import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.entity.Team;
 
 import java.util.List;
 import java.util.Optional;

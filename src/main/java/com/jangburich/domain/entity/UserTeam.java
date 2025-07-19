@@ -1,4 +1,4 @@
-package com.jangburich.domain.team.domain;
+package com.jangburich.domain.entity;
 
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.user.domain.User;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FavoriteTeam extends BaseEntity {
+public class UserTeam extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +31,16 @@ public class FavoriteTeam extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    public UserTeam(User user, Team team) {
+        this.user = user;
+        this.team = team;
+    }
+
+    public static UserTeam of(User user, Team team) {
+        if (user == null || team == null) {
+            throw new IllegalArgumentException("유저와 팀은 null이 될 수 없습니다.");
+        }
+        return new UserTeam(user, team);
+    }
 }

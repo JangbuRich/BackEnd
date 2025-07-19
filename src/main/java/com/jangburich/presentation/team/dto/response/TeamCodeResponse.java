@@ -1,7 +1,7 @@
-package com.jangburich.domain.team.dto.response;
+package com.jangburich.presentation.team.dto.response;
 
 import com.jangburich.domain.common.Status;
-import com.jangburich.domain.team.domain.TeamType;
+import com.jangburich.domain.entity.TeamType;
 import lombok.Builder;
 import lombok.Getter;
 
