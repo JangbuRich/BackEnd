@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import com.jangburich.infrastructure.repository.PointTransactionRepository;
+import com.jangburich.infrastructure.repository.UserRepository;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -29,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.entity.TransactionType;
-import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
@@ -37,7 +38,6 @@ import com.jangburich.presentation.store.dtos.response.store.StoreTeamResponseDT
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 
@@ -56,13 +56,13 @@ public class StoreFileService {
 
     public byte[] createExcel(String userId, Integer period) {
         User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(LocalDate.now().minusMonths(period) + "~" + LocalDate.now());
@@ -102,16 +102,16 @@ public class StoreFileService {
 
         // 헤더 내용 배열로 관리
         String[] headers = {
-            "① 선결제일자",
-            "② 그룹명",
-            "③ 선결제액",
-            "④ 부가세 (③ * 1/11)",
-            "⑤ 공급가액 (③-④)",
-            "⑥ 누적선결제건수",
-            "⑦ 누적선결제액",
-            "⑧ 누적차감건수",
-            "⑨ 누적차감금액",
-            "⑩ 잔여선결제액 (⑦-⑨)"
+                "① 선결제일자",
+                "② 그룹명",
+                "③ 선결제액",
+                "④ 부가세 (③ * 1/11)",
+                "⑤ 공급가액 (③-④)",
+                "⑥ 누적선결제건수",
+                "⑦ 누적선결제액",
+                "⑧ 누적차감건수",
+                "⑨ 누적차감금액",
+                "⑩ 잔여선결제액 (⑦-⑨)"
         };
 
         // 헤더 작성
@@ -125,20 +125,20 @@ public class StoreFileService {
         headerRow.setHeightInPoints(20); // 원하는 높이로 설정
 
         java.util.List<StoreChargeHistoryResponse> prepayHistoryResponses = pointTransactionRepository.findAllByStore(store)
-            .stream()
-            .filter(storeChargeHistoryResponse ->
-                storeChargeHistoryResponse.transactionType() == TransactionType.PREPAY
-                    && storeChargeHistoryResponse.createdAt().isAfter(LocalDateTime.now().minusMonths(period))
-            )
-            .sorted(Comparator.comparing(StoreChargeHistoryResponse::createdAt)) // 오름차순 정렬
-            .toList();
+                .stream()
+                .filter(storeChargeHistoryResponse ->
+                        storeChargeHistoryResponse.transactionType() == TransactionType.PREPAY
+                                && storeChargeHistoryResponse.createdAt().isAfter(LocalDateTime.now().minusMonths(period))
+                )
+                .sorted(Comparator.comparing(StoreChargeHistoryResponse::createdAt)) // 오름차순 정렬
+                .toList();
 
         List<StoreChargeHistoryResponse> foodPurchaseHistoryResponses = pointTransactionRepository.findAllByStore(store)
-            .stream()
-            .filter(
-                storeChargeHistoryResponse -> storeChargeHistoryResponse.transactionType()
-                    == TransactionType.FOOD_PURCHASE)
-            .toList();
+                .stream()
+                .filter(
+                        storeChargeHistoryResponse -> storeChargeHistoryResponse.transactionType()
+                                == TransactionType.FOOD_PURCHASE)
+                .toList();
 
         Integer totalPrePay = 0;
 
@@ -146,7 +146,7 @@ public class StoreFileService {
         for (StoreChargeHistoryResponse prepayHistoryResponse : prepayHistoryResponses) {
             Row dataRow = sheet.createRow(rowIndex++);
             dataRow.createCell(1)
-                .setCellValue(prepayHistoryResponse.createdAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    .setCellValue(prepayHistoryResponse.createdAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             dataRow.createCell(2).setCellValue(prepayHistoryResponse.teamName());
             totalPrePay += prepayHistoryResponse.transactionedPoint();
             dataRow.createCell(3).setCellValue(prepayHistoryResponse.transactionedPoint());
@@ -154,13 +154,13 @@ public class StoreFileService {
             dataRow.createCell(4).setCellValue(surtax);
             dataRow.createCell(5).setCellValue(prepayHistoryResponse.transactionedPoint() - surtax);
             StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(store.getId(),
-                    prepayHistoryResponse.teamId())
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_CHECK));
+                            prepayHistoryResponse.teamId())
+                    .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_CHECK));
             dataRow.createCell(6).setCellValue(storeTeam.getPrepayCount());
             dataRow.createCell(7).setCellValue(storeTeam.getPoint()); // 누적 선결제 금액
             dataRow.createCell(8)
-                .setCellValue(foodPurchaseHistoryResponses.stream().filter(storeChargeHistoryResponse -> Objects.equals(
-                    storeChargeHistoryResponse.teamId(), prepayHistoryResponse.teamId())).count());
+                    .setCellValue(foodPurchaseHistoryResponses.stream().filter(storeChargeHistoryResponse -> Objects.equals(
+                            storeChargeHistoryResponse.teamId(), prepayHistoryResponse.teamId())).count());
             dataRow.createCell(9).setCellValue(storeTeam.getPoint() - storeTeam.getRemainPoint());
             dataRow.createCell(10).setCellValue(storeTeam.getRemainPoint());
         }
@@ -205,14 +205,14 @@ public class StoreFileService {
         periodCell.setCellStyle(rightCellStyle);
 
         int totalPoint = storeTeamRepository.findAllByStore(store)
-            .stream()
-            .mapToInt(StoreTeamResponseDTO::point)
-            .sum();
+                .stream()
+                .mapToInt(StoreTeamResponseDTO::point)
+                .sum();
 
         int remainPoint = storeTeamRepository.findAllByStore(store)
-            .stream()
-            .mapToInt(StoreTeamResponseDTO::remainPoint)
-            .sum();
+                .stream()
+                .mapToInt(StoreTeamResponseDTO::remainPoint)
+                .sum();
 
         dataRow = sheet.createRow(rowIndex++);
         cell = dataRow.createCell(3);

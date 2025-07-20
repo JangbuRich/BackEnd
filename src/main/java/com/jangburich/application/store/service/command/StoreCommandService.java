@@ -4,8 +4,7 @@ import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
-import com.jangburich.domain.payment.domain.repository.TeamChargeHistoryRepository;
-import com.jangburich.domain.repository.PointTransactionRepository;
+import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
@@ -15,7 +14,6 @@ import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponse
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.infrastructure.config.s3.S3Service;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
@@ -48,17 +46,17 @@ public class StoreCommandService {
 
     @Transactional
     public StoreCreateResponseDto createStore(String authentication, StoreCreateRequest storeCreateRequest, MultipartFile image,
-                            List<MultipartFile> menuImages) {
+                                              List<MultipartFile> menuImages) {
 
         try {
             User user = userRepository.findByProviderId(authentication)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                    .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
             Owner owner = ownerRepository.findByUser(user)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                    .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
             List<DayOfWeek> dayOfWeeks = DayOfWeekConverter.convertStringToDayOfWeekList(
-                storeCreateRequest.getDayOfWeek());
+                    storeCreateRequest.getDayOfWeek());
 
             String imageUrl = s3Service.uploadImageToS3(image);
 
@@ -81,32 +79,32 @@ public class StoreCommandService {
     public void createAdditionalInfo(String authentication,
                                      StoreAdditionalInfoCreateRequest storeAdditionalInfoCreateRequest) {
         User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         store.additionalInfo(
-            storeAdditionalInfoCreateRequest.getReservationAvailable(),
-            storeAdditionalInfoCreateRequest.getMinPrepayment(),
-            storeAdditionalInfoCreateRequest.getMaxReservation(),
-            storeAdditionalInfoCreateRequest.getPrepaymentDuration()
+                storeAdditionalInfoCreateRequest.getReservationAvailable(),
+                storeAdditionalInfoCreateRequest.getMinPrepayment(),
+                storeAdditionalInfoCreateRequest.getMaxReservation(),
+                storeAdditionalInfoCreateRequest.getPrepaymentDuration()
         );
     }
 
     @Transactional
     public void updateStore(String userId, StoreUpdateRequest storeUpdateRequest) {
         User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Store store = storeRepository.findByOwner(owner)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         if (!store.getOwner().getUser().getProviderId().equals(userId)) {
             throw new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION);
@@ -124,26 +122,26 @@ public class StoreCommandService {
     public Page<SearchStoresResponse> searchByCategory(final String authentication, final Integer searchRadius,
                                                        final Category category, Double lat, Double lon, final Pageable pageable) {
         User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
         return storeQueryDslRepository.findStoresByCategory(user.getUserId(), searchRadius, category, lat, lon,
-            pageable);
+                pageable);
     }
 
     public Page<SearchStoresResponse> searchStores(final String authentication, final String keyword,
                                                    final Pageable pageable) {
         User user = userRepository.findByProviderId(authentication)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
         return storeQueryDslRepository.findStores(user.getUserId(), keyword, pageable);
     }
 
-    private String createStoreId () {
+    private String createStoreId() {
         String datePrefix = createDatePrefix();
         String eightDigitNumber = randomNumberProvider.createEightDigitNumber();
 
         return datePrefix + eightDigitNumber;
     }
 
-    private String createDatePrefix () {
+    private String createDatePrefix() {
         return LocalDate.parse(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)).toString();
     }
 }

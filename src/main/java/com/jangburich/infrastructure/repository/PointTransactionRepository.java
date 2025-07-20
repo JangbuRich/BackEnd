@@ -1,11 +1,10 @@
-package com.jangburich.domain.repository;
+package com.jangburich.infrastructure.repository;
 
 import com.jangburich.domain.entity.PointTransaction;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
 import com.jangburich.domain.user.domain.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,24 +19,26 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PointTransactionRepository extends JpaRepository<PointTransaction, Long> {
     @Query("""
-    SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
-        pt.id
-        , pt.store.id
-        , pt.store.name
-        , pt.store.category
-        , pt.transactionedPoint
-        , null
-        , pt.updatedAt
-    )
-    FROM PointTransaction pt
-    where pt.id = :id
-    and pt.user = :user
-""")
+                SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
+                    pt.id
+                    , pt.store.id
+                    , pt.store.name
+                    , pt.store.category
+                    , pt.transactionedPoint
+                    , null
+                    , pt.updatedAt
+                )
+                FROM PointTransaction pt
+                where pt.id = :id
+                and pt.user = :user
+            """)
     PointTransactionItem findByIdAndUser(@Param("id") Long id, @Param("user") User user);
 
     List<PointTransaction> findByUser(User user);
 
     List<StoreChargeHistoryResponse> findAllByStore(Store store);
+
+    List<PointTransaction> findAllByStoreIdOrderByIdDesc(Long store_id);
 
     @Query("""
     SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(

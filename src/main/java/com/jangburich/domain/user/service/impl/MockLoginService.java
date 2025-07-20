@@ -8,8 +8,8 @@ import com.jangburich.domain.user.domain.SocialLoginProvider;
 import com.jangburich.domain.user.domain.SocialUserProfileDTO;
 import com.jangburich.domain.user.domain.TokenResponseDTO;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.domain.user.service.SocialLoginService;
+import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.utils.JwtManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,12 +34,12 @@ public class MockLoginService implements SocialLoginService {
     private long refreshTokenExpiration;
 
     @Override
-    public SocialLoginProvider getProvider(){
+    public SocialLoginProvider getProvider() {
         return SocialLoginProvider.LOCAL;
     }
 
     @Override
-    public SocialUserProfileDTO getUserInfo(String accessToken){
+    public SocialUserProfileDTO getUserInfo(String accessToken) {
         return SocialUserProfileDTO.builder()
                 .socialId(accessToken)
                 .email("fakeuser@test.com")
@@ -50,7 +50,7 @@ public class MockLoginService implements SocialLoginService {
     }
 
     @Override
-    public TokenResponseDTO joinOwner(String mockAccessToken){
+    public TokenResponseDTO joinOwner(String mockAccessToken) {
         SocialUserProfileDTO userInfo = getUserInfo(mockAccessToken);
 
         User user = userRepository.save(User.create("local_" + userInfo.getSocialId(), userInfo.getName(),
@@ -73,7 +73,7 @@ public class MockLoginService implements SocialLoginService {
     }
 
     @Override
-    public TokenResponseDTO joinUser(String mockAccessToken){
+    public TokenResponseDTO joinUser(String mockAccessToken) {
         SocialUserProfileDTO userInfo = getUserInfo(mockAccessToken);
 
         User user = userRepository.save(User.create("local_" + userInfo.getSocialId(), userInfo.getName(),
@@ -94,7 +94,7 @@ public class MockLoginService implements SocialLoginService {
     }
 
     @Override
-    public TokenResponseDTO login(String accessToken){
+    public TokenResponseDTO login(String accessToken) {
         SocialUserProfileDTO userInfo = getUserInfo(accessToken);
 
         User user = userRepository.findByProviderId(userInfo.getSocialId())

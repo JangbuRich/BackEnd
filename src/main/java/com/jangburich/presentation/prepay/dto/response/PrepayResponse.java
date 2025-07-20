@@ -1,7 +1,6 @@
 package com.jangburich.presentation.prepay.dto.response;
 
-import com.jangburich.domain.point.domain.TransactionType;
-
+import com.jangburich.domain.entity.TransactionType;
 import lombok.Builder;
 
 public final class PrepayResponse {

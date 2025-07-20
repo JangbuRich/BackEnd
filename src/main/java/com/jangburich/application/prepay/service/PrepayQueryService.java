@@ -6,17 +6,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.jangburich.application.store.resolver.StoreResolver;
+import com.jangburich.domain.entity.PointTransaction;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.point.domain.PointTransaction;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.infrastructure.repository.PointTransactionRepository;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
+import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.infrastructure.repository.queryDsl.PointTransactionQueryDslRepository;
 import com.jangburich.presentation.prepay.dto.response.PrepayResponse;
 import com.jangburich.presentation.prepay.dto.response.PrepaymentInfoResponse;
@@ -79,29 +79,29 @@ public class PrepayQueryService {
         return pointTransactionQueryDslRepository.queryAllByStoreIdOrderByIdDesc(store.getId(), name);
     }
 
-    public List<PrepayResponse.StorePrepayInfo> getPrepayInfoFilterByDate (String userId, String startDate, String endDate) {
+    public List<PrepayResponse.StorePrepayInfo> getPrepayInfoFilterByDate(String userId, String startDate, String endDate) {
         Store store = storeResolver.getStoreByUserId(userId);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         LocalDateTime startDateTime = LocalDate.parse(startDate, formatter).atStartOfDay();
-        LocalDateTime endDateTime = LocalDate.parse(endDate, formatter).atTime(23,59,59);
+        LocalDateTime endDateTime = LocalDate.parse(endDate, formatter).atTime(23, 59, 59);
 
-        if(startDateTime.isAfter(endDateTime))
+        if (startDateTime.isAfter(endDateTime))
             throw new IllegalArgumentException("시작날짜는 종료날짜보다 길 수 없습니다.");
 
         return pointTransactionQueryDslRepository.queryAllByStoreIdAndBetweenStartDateAndEndDateOrderByIdDesc(store.getId(), startDateTime, endDateTime);
     }
 
-    private List<PrepayResponse.StorePrepayInfo> buildStorePrepayInfoResponse (List<PointTransaction> storeList) {
+    private List<PrepayResponse.StorePrepayInfo> buildStorePrepayInfoResponse(List<PointTransaction> storeList) {
         return storeList.stream()
-            .map(point -> PrepayResponse.StorePrepayInfo.builder()
-                .pointTransactionId(point.getId())
-                .teamName(point.getTeam().getName())
-                .userName(point.getUser().getName())
-                .transactionPoint(point.getTransactionedPoint())
-                .transactionType(point.getTransactionType())
-                .build())
-            .toList();
+                .map(point -> PrepayResponse.StorePrepayInfo.builder()
+                        .pointTransactionId(point.getId())
+                        .teamName(point.getTeam().getName())
+                        .userName(point.getUser().getName())
+                        .transactionPoint(point.getTransactionedPoint())
+                        .transactionType(point.getTransactionType())
+                        .build())
+                .toList();
     }
 
 }

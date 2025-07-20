@@ -1,5 +1,6 @@
 package com.jangburich.domain.owner.domain.service;
 
+import com.jangburich.infrastructure.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,7 +8,6 @@ import com.jangburich.domain.owner.domain.controller.dto.req.OwnerCreateReqDTO;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 
@@ -26,17 +26,17 @@ public class OwnerCommandService {
         log.info("OAuthUser : {}", customOAuthUser);
 
         User user = userRepository.findByProviderId(customOAuthUser)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         owner.register(
-            ownerCreateReqDTO.getName(),
-            ownerCreateReqDTO.getBusinessRegistrationNumber(),
-            owner.getBusinessName(),
-            owner.getOpeningDate(),
-            owner.getPhoneNumber()
+                ownerCreateReqDTO.getName(),
+                ownerCreateReqDTO.getBusinessRegistrationNumber(),
+                owner.getBusinessName(),
+                owner.getOpeningDate(),
+                owner.getPhoneNumber()
         );
 
         ownerRepository.save(owner);

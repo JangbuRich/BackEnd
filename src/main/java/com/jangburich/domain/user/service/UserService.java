@@ -1,12 +1,12 @@
 package com.jangburich.domain.user.service;
 
+import com.jangburich.infrastructure.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jangburich.domain.user.domain.AdditionalInfoCreateDTO;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.dto.response.UserHomeResponse;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.utils.JwtManager;
@@ -22,12 +22,12 @@ public class UserService {
 
     public User getUserInfos(String accessToken) {
         return userRepository.findByProviderId(accessToken)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
     }
 
     public UserHomeResponse getUserHome(String userId) {
         User user = userRepository.findByProviderId(userId)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         return userRepository.findUserHomeData(user.getUserId());
     }

@@ -3,11 +3,11 @@ package com.jangburich.infrastructure.repository.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.jangburich.domain.entity.QPointTransaction;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.jangburich.domain.entity.QStore;
-import com.jangburich.domain.point.domain.QPointTransaction;
 import com.jangburich.domain.team.domain.QTeam;
 import com.jangburich.domain.user.domain.QUser;
 import com.jangburich.infrastructure.repository.queryDsl.PointTransactionQueryDslRepository;

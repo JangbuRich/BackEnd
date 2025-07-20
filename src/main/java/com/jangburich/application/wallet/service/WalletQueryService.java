@@ -2,15 +2,15 @@ package com.jangburich.application.wallet.service;
 
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.repository.PointTransactionRepository;
-import com.jangburich.domain.repository.OrdersRepository;
-import com.jangburich.domain.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
+import com.jangburich.infrastructure.repository.OrdersRepository;
+import com.jangburich.infrastructure.repository.PointTransactionRepository;
+import com.jangburich.infrastructure.repository.StoreTeamRepository;
+import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.presentation.wallet.dto.response.AvailableOrder;
 import com.jangburich.presentation.wallet.dto.response.PointTransactionList;
 import com.jangburich.presentation.wallet.dto.response.PointTransactionItem;
@@ -54,50 +54,48 @@ public class WalletQueryService {
 
         PageInfo pageInfo = new PageInfo(orders.getNumber(), orders.getSize(), orders.getTotalPages(), orders.getTotalElements(), orders.hasNext(), orders.hasPrevious());
 
-        return new WalletResponse(point, user.getName(),availableOrders, pageInfo);
+        return new WalletResponse(point, user.getName(), availableOrders, pageInfo);
     }
 
-    public PointTransactionList getPointList(String userId, Boolean prePay, LocalDate createdAfter, LocalDate createdBefore, Pageable pageable){
+    public PointTransactionList getPointList(String userId, Boolean prePay, LocalDate createdAfter, LocalDate createdBefore, Pageable pageable) {
         User user = userRepository.findByProviderId(userId)
                 .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_USER_ID));
 
-        if(createdAfter==null){
-            createdAfter =  LocalDate.of(1970, 1, 1);
+        if (createdAfter == null) {
+            createdAfter = LocalDate.of(1970, 1, 1);
         }
-        if(createdBefore == null){
-            createdBefore= LocalDate.of(2999, 12, 31);
+        if (createdBefore == null) {
+            createdBefore = LocalDate.of(2999, 12, 31);
         }
 
         Page<PointTransactionItem> pointTransactions;
-        if(prePay) {
+        if (prePay) {
             pointTransactions = pointTransactionRepository.findAllPrepayByCreatedAfterAndCreatedBefore(user, createdAfter.atStartOfDay(), createdBefore.atTime(LocalTime.MAX), pageable);
-        }
-        else{
+        } else {
             pointTransactions = ordersRepository.findAllTicketByCreatedAfterAndCreatedBefore(user, createdAfter.atStartOfDay(), createdBefore.atTime(LocalTime.MAX), pageable);
         }
 
-        if(pointTransactions == null){
+        if (pointTransactions == null) {
             throw new DefaultException(ErrorCode.INVALID_TRANSACTION_ID);
         }
 
-        PageInfo pageInfo = new PageInfo(pointTransactions.getNumber(),pointTransactions.getSize(),pointTransactions.getTotalPages(),pointTransactions.getTotalElements(), pointTransactions.hasNext(), pointTransactions.hasPrevious());
+        PageInfo pageInfo = new PageInfo(pointTransactions.getNumber(), pointTransactions.getSize(), pointTransactions.getTotalPages(), pointTransactions.getTotalElements(), pointTransactions.hasNext(), pointTransactions.hasPrevious());
 
         return new PointTransactionList(pointTransactions.stream().toList(), pageInfo);
     }
 
-    public PointTransactionItem getPointDetail (String userId, Long transactionId, boolean prePay){
+    public PointTransactionItem getPointDetail(String userId, Long transactionId, boolean prePay) {
         User user = userRepository.findByProviderId(userId)
                 .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_USER_ID));
 
         PointTransactionItem pointTransactionItem;
-        if(prePay){
+        if (prePay) {
             pointTransactionItem = pointTransactionRepository.findByIdAndUser(transactionId, user);
-        }
-        else{
+        } else {
             pointTransactionItem = ordersRepository.findByIdAndUser(transactionId, user);
         }
 
-        if(pointTransactionItem == null){
+        if (pointTransactionItem == null) {
             throw new DefaultException(ErrorCode.INVALID_TRANSACTION_ID);
         }
 

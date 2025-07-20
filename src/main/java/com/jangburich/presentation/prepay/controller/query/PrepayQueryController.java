@@ -3,7 +3,7 @@ package com.jangburich.presentation.prepay.controller.query;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.jangburich.application.service.prepay.PrepayQueryService;
+import com.jangburich.application.prepay.service.PrepayQueryService;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.prepay.dto.response.PrepayResponse;
