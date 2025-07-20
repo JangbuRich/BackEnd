@@ -1,7 +1,7 @@
 package com.jangburich.domain.repository.queryDsl;
 
+import com.jangburich.domain.entity.QStoreTeam;
 import com.jangburich.domain.entity.TransactionType;
-import com.jangburich.domain.team.dto.response.*;
 import com.jangburich.presentation.team.dto.response.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,8 +18,8 @@ import java.util.List;
 import static com.jangburich.domain.entity.QPointTransaction.pointTransaction;
 import static com.jangburich.domain.entity.QStore.store;
 import static com.jangburich.domain.entity.QStoreTeam.storeTeam;
-import static com.jangburich.domain.team.domain.QTeam.team;
-import static com.jangburich.domain.team.domain.QUserTeam.userTeam;
+import static com.jangburich.domain.entity.QTeam.team;
+import static com.jangburich.domain.entity.QUserTeam.userTeam;
 import static com.jangburich.domain.user.domain.QUser.user;
 
 @Slf4j

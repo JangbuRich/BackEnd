@@ -28,6 +28,11 @@ public class Team extends BaseEntity {
     private String secretCode;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "leaderId", column = @Column(name = "leader_user_id")),
+            @AttributeOverride(name = "accountNumber", column = @Column(name = "leader_account_number")),
+            @AttributeOverride(name = "bankName", column = @Column(name = "leader_bank_name"))
+    })
     private TeamLeader teamLeader;
 
     @Enumerated(EnumType.STRING)

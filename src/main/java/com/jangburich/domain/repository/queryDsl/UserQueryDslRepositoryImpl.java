@@ -1,8 +1,8 @@
 package com.jangburich.domain.repository.queryDsl;
 
 import static com.jangburich.domain.entity.QStoreTeam.storeTeam;
-import static com.jangburich.domain.team.domain.QTeam.*;
-import static com.jangburich.domain.team.domain.QUserTeam.userTeam;
+import static com.jangburich.domain.entity.QTeam.*;
+import static com.jangburich.domain.entity.QUserTeam.userTeam;
 import static com.jangburich.domain.user.domain.QUser.user;
 
 import com.jangburich.domain.common.Status;

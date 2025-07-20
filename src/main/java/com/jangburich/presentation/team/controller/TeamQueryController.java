@@ -1,5 +1,6 @@
 package com.jangburich.presentation.team.controller;
 
+import com.jangburich.application.team.service.TeamQueryService;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
@@ -11,12 +12,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Tag(name = "Team", description = "Team Query API")
@@ -32,12 +39,14 @@ public class TeamQueryController {
     , responses = @ApiResponse(responseCode = "200", description = "OK",
             content = @Content(schema = @Schema(implementation = BaseResponse.class))))
     @CommonApiResponse
-    public ResponseCustom<List<MyTeamResponse>> getMyTeamByCategory(
+    public ResponseEntity<BaseResponse<?>> getMyTeamByCategory(
             Authentication authentication
             , @RequestParam(required = false) String keyword
             , @RequestParam(required = false, defaultValue = "ALL") String category
-    ) {
-        return ResponseCustom.OK(
-                teamService.getMyTeamByCategory(AuthenticationParser.parseUserId(authentication), category));
+            , @PageableDefault(page = 0, size = 10, sort = "createdAt", direction =  Sort.Direction.DESC)Pageable pageable
+            ) {
+        MyTeamResponse myTeamResponse = teamQueryService.getMyTeamByCategory(AuthenticationParser.parseUserId(authentication),keyword, category, pageable);
+
+        return ResponseEntity.ok(new BaseResponse<>(myTeamResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")),"OK"));
     }
 }

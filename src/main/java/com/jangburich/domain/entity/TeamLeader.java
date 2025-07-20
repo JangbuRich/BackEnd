@@ -10,13 +10,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class TeamLeader {
-    @Column(name = "user_id")
+
     private Long leaderId;
 
-    @Column(name = "account_number")
     private String accountNumber;
 
-    @Column(name = "bank_name")
     private String bankName;
 
     @Builder

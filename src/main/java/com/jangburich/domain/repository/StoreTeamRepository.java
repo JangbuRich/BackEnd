@@ -29,6 +29,14 @@ public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
 	List<StoreTeam> findByStoreIdWithStoreAndTeam(@Param("storeId") Long storeId);
 
 	@Query("""
+select st.team.id, sum(st.remainPoint)
+from StoreTeam st
+where st.team in :teams
+order by st.team.id
+""")
+	List<Object[]> findRemainingPointByTeams(@Param("teams") List<Team> teams);
+
+	@Query("""
 	select sum (st.remainPoint)
 	from StoreTeam st
 	inner join Team t on st.team = t

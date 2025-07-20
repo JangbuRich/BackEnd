@@ -1,65 +1,88 @@
 package com.jangburich.application.team.service;
 
-import com.jangburich.domain.common.Status;
 import com.jangburich.domain.entity.Team;
-import com.jangburich.domain.repository.TeamRepository;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.*;
+import com.jangburich.global.error.DefaultException;
+import com.jangburich.global.payload.ErrorCode;
+import com.jangburich.global.payload.PageInfo;
+import com.jangburich.presentation.team.dto.response.myTeam.MyTeamItem;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamQueryService {
 
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "https://github.com/user-attachments/assets/56565343-51f4-48b5-bf87-7585011d8de6";
+
+    private final FavoriteTeamRepository favoriteTeamRepository;
+    private final StoreTeamRepository storeTeamRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final UserTeamRepository userTeamRepository;
 
-    public List<MyTeamResponse> getMyTeamByCategory(String userId, String category) {
+    public MyTeamResponse getMyTeamByCategory(String userId, String keyword, String category, Pageable pageable) {
         User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new NullPointerException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
 
-        List<Team> teams = teamRepository.findAllByUserAndStatus(user, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 팀을 찾을 수 없습니다."));
-
-        List<MyTeamResponse> myTeamResponses = new ArrayList<>();
-
-        for (Team team : teams) {
-            boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
-
-            // TODO 반복문 내에 repository 접근은 리팩터링 필수
-            int memberCount = userTeamRepository.countByTeam(team);
-
-            List<String> profileImageUrls = userTeamRepository.findAllByTeam(team).stream()
-                    .map(userTeam -> Optional.ofNullable(userTeam.getUser().getProfileImageUrl())
-                            .orElse(DEFAULT_PROFILE_IMAGE_URL))
-                    .toList();
-
-            if ("ALL".equalsIgnoreCase(category) ||
-                ("LEADER".equalsIgnoreCase(category) && isMeLeader) ||
-                ("MEMBER".equalsIgnoreCase(category) && !isMeLeader)) {
-
-                MyTeamResponse response = new MyTeamResponse(
-                        team.getId(),
-                        team.getName(),
-                        team.getTeamType().getDescription(),
-                        false, // isLiked는 임의로 false로 설정
-                        memberCount,
-                        isMeLeader,
-                        profileImageUrls,
-                        0 // TODO 그룹의 남은 돈
-                );
-                myTeamResponses.add(response);
-            }
+        if(!StringUtils.hasText(keyword)){
+            keyword = null;
         }
 
-        return myTeamResponses;
+        Page<Team> teams = teamRepository.findAllByUserAndCategory(user.getUserId(), keyword, category, pageable);
+
+        List<Team> team = teams.getContent().stream().toList();
+
+        Map<Long, Long> remainPointMap = storeTeamRepository.findRemainingPointByTeams(team).stream()
+                                                    .collect(Collectors.toMap(
+                                                            row -> (Long) row[0]
+                                                            , row -> (Long) row[1]
+                                                    ));
+
+        Set<Long> likedTeams = new HashSet<>(favoriteTeamRepository.findLikedTeamIdsByUser(user));
+
+        Map<Long, Long> memberCountMap = userTeamRepository.countByTeams(team).stream()
+                                                 .collect(Collectors.toMap(
+                                                         row -> (Long) row[0]
+                                                         , row -> (Long) row[1]
+                                                 ));
+
+        Map<Long, List<String>> profileImageMap = userTeamRepository.findProfileImagesByTeams(team).stream()
+                                                          .collect(Collectors.groupingBy(
+                                                                  row -> (Long) row[0]
+                                                                  , Collectors.mapping(row -> Optional.ofNullable((String) row[1]).orElse(DEFAULT_PROFILE_IMAGE_URL),
+                                                                          Collectors.collectingAndThen(Collectors.toList(), list -> list.stream().limit(3).toList())
+                                                                  )
+                                                          ));
+
+        List<MyTeamItem> myTeamItemList = teams.stream()
+                                                  .map(teamItem -> {
+                                                      Long teamId = teamItem.getId();
+
+                                                      return new MyTeamItem(
+                                                              teamId
+                                                              , teamItem.getName()
+                                                              , remainPointMap.getOrDefault(teamId, 0L)
+                                                              , teamItem.getTeamType().name()
+                                                              , likedTeams.contains(teamId)
+                                                              , memberCountMap.getOrDefault(teamId, 0L)
+                                                              , user.getUserId().equals(teamItem.getTeamLeader().getLeaderId())
+                                                              , profileImageMap.getOrDefault(teamId, List.of())
+                                                      );
+                                                  } ).toList();
+
+        PageInfo pageInfo = new PageInfo(teams.getNumber(), teams.getSize(), teams.getTotalPages(), teams.getTotalElements(), teams.hasNext(), teams.hasPrevious());
+
+        return new MyTeamResponse(myTeamItemList, pageInfo);
     }
 }
