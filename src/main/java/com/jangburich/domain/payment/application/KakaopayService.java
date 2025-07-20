@@ -14,11 +14,11 @@ import org.springframework.web.client.RestTemplate;
 import com.jangburich.domain.payment.dto.request.PayRequest;
 import com.jangburich.domain.payment.dto.response.ApproveResponse;
 import com.jangburich.domain.payment.dto.response.ReadyResponse;
-import com.jangburich.domain.point.domain.PointTransaction;
-import com.jangburich.domain.point.domain.TransactionType;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.entity.PointTransaction;
+import com.jangburich.domain.entity.TransactionType;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 

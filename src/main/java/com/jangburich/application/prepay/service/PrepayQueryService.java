@@ -1,4 +1,4 @@
-package com.jangburich.application.service.prepay;
+package com.jangburich.application.prepay.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;

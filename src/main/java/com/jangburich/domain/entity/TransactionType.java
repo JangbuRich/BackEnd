@@ -1,4 +1,4 @@
-package com.jangburich.domain.point.domain;
+package com.jangburich.domain.entity;
 
 public enum TransactionType {
     POINT_PURCHASE("지갑 충전"),

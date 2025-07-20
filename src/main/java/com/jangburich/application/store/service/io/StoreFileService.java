@@ -28,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
-import com.jangburich.domain.point.domain.TransactionType;
-import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.entity.TransactionType;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
@@ -37,7 +37,7 @@ import com.jangburich.presentation.store.dtos.response.store.StoreTeamResponseDT
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 

@@ -1,7 +1,8 @@
-package com.jangburich.domain.user.repository;
+package com.jangburich.domain.repository;
 
 import java.util.Optional;
 
+import com.jangburich.domain.repository.queryDsl.UserQueryDslRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

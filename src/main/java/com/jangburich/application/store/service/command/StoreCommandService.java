@@ -4,6 +4,8 @@ import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.domain.payment.domain.repository.TeamChargeHistoryRepository;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
@@ -13,7 +15,7 @@ import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponse
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.infrastructure.config.s3.S3Service;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;

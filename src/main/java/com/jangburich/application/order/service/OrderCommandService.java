@@ -1,4 +1,4 @@
-package com.jangburich.application.service.order;
+package com.jangburich.application.order.service;
 
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
@@ -10,7 +10,7 @@ import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.Team;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.presentation.order.dto.request.OrderRequest;

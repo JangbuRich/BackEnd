@@ -1,6 +1,6 @@
 package com.jangburich.presentation.prepay.controller.command;
 
-import com.jangburich.application.service.prepay.PrepayCommandService;
+import com.jangburich.application.prepay.service.PrepayCommandService;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.prepay.dto.request.PrepayRequest;

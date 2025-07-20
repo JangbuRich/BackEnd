@@ -5,7 +5,7 @@ import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.domain.user.domain.*;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.domain.user.service.SocialLoginService;
 import com.jangburich.utils.JwtManager;
 import lombok.RequiredArgsConstructor;

@@ -8,7 +8,7 @@ import com.jangburich.domain.user.domain.SocialLoginProvider;
 import com.jangburich.domain.user.domain.SocialUserProfileDTO;
 import com.jangburich.domain.user.domain.TokenResponseDTO;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.domain.user.service.SocialLoginService;
 import com.jangburich.utils.JwtManager;
 import lombok.RequiredArgsConstructor;

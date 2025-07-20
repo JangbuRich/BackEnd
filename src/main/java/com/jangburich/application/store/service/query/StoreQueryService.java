@@ -13,6 +13,9 @@ import com.jangburich.domain.entity.Orders;
 import com.jangburich.infrastructure.repository.CustomOrderRepository;
 import com.jangburich.infrastructure.repository.OrdersRepository;
 import com.jangburich.domain.point.domain.repository.PointTransactionRepository;
+import com.jangburich.domain.repository.CustomOrderRepository;
+import com.jangburich.domain.repository.OrdersRepository;
+import com.jangburich.domain.repository.PointTransactionRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreGetResponse;
@@ -20,6 +23,8 @@ import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeRespo
 import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.repository.UserRepository;
+import com.jangburich.domain.user.domain.User;
+import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.utils.DateTimeFormatterUtil;

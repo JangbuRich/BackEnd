@@ -1,4 +1,4 @@
-package com.jangburich.domain.user.repository;
+package com.jangburich.domain.repository.queryDsl;
 
 import com.jangburich.domain.user.dto.response.UserHomeResponse;
 
