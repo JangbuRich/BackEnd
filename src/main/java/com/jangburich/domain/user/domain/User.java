@@ -1,11 +1,14 @@
 package com.jangburich.domain.user.domain;
 
+import org.hibernate.annotations.Comment;
+
 import com.jangburich.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Comment("회원")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

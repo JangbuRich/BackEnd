@@ -4,15 +4,15 @@ import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.repository.OrdersRepository;
-import com.jangburich.domain.repository.StoreRepository;
-import com.jangburich.domain.repository.StoreTeamRepository;
-import com.jangburich.domain.entity.Team;
-import com.jangburich.domain.repository.TeamRepository;
+import com.jangburich.infrastructure.repository.OrdersRepository;
+import com.jangburich.infrastructure.repository.StoreRepository;
+import com.jangburich.infrastructure.repository.StoreTeamRepository;
+import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.team.domain.repository.TeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
+import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.presentation.order.dto.request.OrderRequest;
 import com.jangburich.presentation.order.dto.request.UseTicketRequest;
 import jakarta.persistence.OptimisticLockException;
@@ -33,7 +33,7 @@ public class OrderCommandService {
     @Transactional
     public long order(String userProviderId, OrderRequest orderRequest) {
         User user = userRepository.findByProviderId(userProviderId)
-                .orElseThrow(()-> new DefaultException(ErrorCode.INVALID_USER_ID));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
 
         Store store = storeRepository.findById(orderRequest.storeId())
                 .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_ID));
@@ -44,11 +44,11 @@ public class OrderCommandService {
         StoreTeam storeTeam = storeTeamRepository.findByStoreIdAndTeamId(store.getId(), team.getId())
                 .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_TEAM_ID));
 
-        if(storeTeam.getPersonalAllocatedPoint() != null && storeTeam.getPersonalAllocatedPoint() < orderRequest.quantity()){
+        if (storeTeam.getPersonalAllocatedPoint() != null && storeTeam.getPersonalAllocatedPoint() < orderRequest.quantity()) {
             throw new DefaultException(ErrorCode.INVALID_CHECK);
         }
 
-        if(storeTeam.getRemainPoint() < orderRequest.quantity()){
+        if (storeTeam.getRemainPoint() < orderRequest.quantity()) {
             throw new DefaultException(ErrorCode.INVALID_CHECK);
         }
 
@@ -62,22 +62,22 @@ public class OrderCommandService {
     @Transactional
     public void useTicket(String userProviderId, Long orderId, UseTicketRequest useTicketRequest) {
         User user = userRepository.findByProviderId(userProviderId)
-                .orElseThrow(()->new DefaultException(ErrorCode.INVALID_USER_ID));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
 
         Orders orders = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_ORDER_ID));
 
         Store store = storeRepository.findById(useTicketRequest.storeId())
-                .orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_ID));
 
         Team team = teamRepository.findById(useTicketRequest.teamId())
-                        .orElseThrow(()-> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
 
-        if(store!=orders.getStore() || team!=orders.getTeam()){
+        if (store != orders.getStore() || team != orders.getTeam()) {
             throw new DefaultException(ErrorCode.INVALID_CHECK);
         }
 
-        if(!store.getStoreUniqueCode().equals(useTicketRequest.secretCode())){
+        if (!store.getStoreUniqueCode().equals(useTicketRequest.secretCode())) {
             throw new DefaultException(ErrorCode.INVALID_CHECK);
         }
 

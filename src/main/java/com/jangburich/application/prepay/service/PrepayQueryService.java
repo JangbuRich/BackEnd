@@ -1,19 +1,29 @@
 package com.jangburich.application.prepay.service;
 
+import java.util.List;
+
+import com.jangburich.application.store.resolver.StoreResolver;
+import com.jangburich.domain.entity.PointTransaction;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.repository.StoreRepository;
-import com.jangburich.domain.repository.StoreTeamRepository;
+import com.jangburich.infrastructure.repository.PointTransactionRepository;
+import com.jangburich.infrastructure.repository.StoreRepository;
+import com.jangburich.infrastructure.repository.StoreTeamRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
+import com.jangburich.infrastructure.repository.UserRepository;
+import com.jangburich.presentation.prepay.dto.response.PrepayResponse;
 import com.jangburich.presentation.prepay.dto.response.PrepaymentInfoResponse;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,6 +31,9 @@ public class PrepayQueryService {
     private final StoreRepository storeRepository;
     private final StoreTeamRepository storeTeamRepository;
     private final UserRepository userRepository;
+    private final PointTransactionRepository pointTransactionRepository;
+
+    private final StoreResolver storeResolver;
 
     @Transactional
     public PrepaymentInfoResponse getPrepayInfo(String userId, Long storeId, Long teamId) {
@@ -46,4 +59,25 @@ public class PrepayQueryService {
                 .storeName(store.getName())
                 .build();
     }
+
+    public List<PrepayResponse.StorePrepayInfo> getStorePrepayInfo(String userId) {
+        Store store = storeResolver.getStoreByUserId(userId);
+
+        List<PointTransaction> storePointTransactionList = pointTransactionRepository.findAllByStoreIdOrderByIdDesc(store.getId());
+
+        return buildStorePrepayInfoResponse(storePointTransactionList);
+    }
+
+    private List<PrepayResponse.StorePrepayInfo> buildStorePrepayInfoResponse(List<PointTransaction> storeList) {
+        return storeList.stream()
+                .map(point -> PrepayResponse.StorePrepayInfo.builder()
+                        .pointTransactionId(point.getId())
+                        .teamName(point.getTeam().getName())
+                        .userName(point.getUser().getName())
+                        .transactionPoint(point.getTransactionedPoint())
+                        .transactionType(point.getTransactionType())
+                        .build())
+                .toList();
+    }
+
 }

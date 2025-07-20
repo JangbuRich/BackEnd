@@ -1,14 +1,11 @@
 package com.jangburich.presentation.store.controller.query;
 
-import java.util.List;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jangburich.presentation.store.dtos.response.payment.PaymentGroupDetailResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreSearchDetailsResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
 import com.jangburich.application.store.service.query.StoreQueryService;
@@ -38,13 +35,6 @@ public class StoreQueryController {
         return ResponseCustom.OK(storeQueryService.getStoreAccountInfo(AuthenticationParser.parseUserId(authentication)));
     }
 
-    @Operation(summary = "결제 그룹 조회", description = "장부 결제 그룹을 조회합니다.")
-    @GetMapping("/payment-group")
-    public ResponseCustom<List<StoreHomeResponse.TodayPaymentTeam>> getPaymentGroup(Authentication authentication) {
-        return ResponseCustom.OK(
-            storeQueryService.getPaymentGroup(AuthenticationParser.parseUserId(authentication)));
-    }
-
     @Operation(summary = "매장 상세 페이지 조회", description = "매장을 상세 조회합니다.")
     @GetMapping("/{storeId}")
     public ResponseCustom<StoreSearchDetailsResponse> storeSearchDetails(
@@ -53,14 +43,6 @@ public class StoreQueryController {
     ) {
         // TODO API 수정 필요
         return ResponseCustom.OK();
-    }
-
-    @Operation(summary = "결제 그룹 상세 조회", description = "장부 결제 그룹을 상세 조회합니다.")
-    @GetMapping("/payment-group/{teamId}")
-    public ResponseCustom<PaymentGroupDetailResponse> getPaymentGroupDetail(Authentication authentication,
-        @PathVariable Long teamId) {
-        return ResponseCustom.OK(
-            storeQueryService.getPaymentGroupDetail(AuthenticationParser.parseUserId(authentication), teamId));
     }
 
     @Operation(summary = "결제 내역 조회", description = "가게에서 일어난 결제 내역을 조회합니다.")

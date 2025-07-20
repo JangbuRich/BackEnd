@@ -1,6 +1,7 @@
-package com.jangburich.domain.repository.queryDsl;
+package com.jangburich.infrastructure.repository.impl;
 
 import com.jangburich.domain.entity.Category;
+import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.response.store.QSearchStoresResponse;
 import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
