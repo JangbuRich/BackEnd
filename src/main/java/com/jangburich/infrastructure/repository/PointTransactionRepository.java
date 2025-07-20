@@ -2,11 +2,13 @@ package com.jangburich.infrastructure.repository;
 
 import com.jangburich.domain.entity.PointTransaction;
 import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
 import com.jangburich.domain.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import com.jangburich.presentation.wallet.dto.response.PointTransactionItem;
 import org.springframework.data.domain.Page;
@@ -36,25 +38,27 @@ public interface PointTransactionRepository extends JpaRepository<PointTransacti
 
     List<PointTransaction> findByUser(User user);
 
+    Optional<PointTransaction> findByStoreIdAndTeamId(Long store_id, Long team_id);
+
     List<StoreChargeHistoryResponse> findAllByStore(Store store);
 
     List<PointTransaction> findAllByStoreIdOrderByIdDesc(Long store_id);
 
     @Query("""
-    SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
-        pt.id
-        , pt.store.id
-        , pt.store.name
-        , pt.store.category
-        , pt.transactionedPoint
-        , null
-        , pt.updatedAt
-    )
-    FROM PointTransaction pt
-    WHERE pt.transactionType = "PREPAY"
-    And pt.user = :user
-    AND (:createdAfter IS NULL OR pt.createdAt >= :createdAfter)
-    AND (:createdBefore IS NULL OR pt.createdAt <= :createdBefore)
-""")
+                SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
+                    pt.id
+                    , pt.store.id
+                    , pt.store.name
+                    , pt.store.category
+                    , pt.transactionedPoint
+                    , null
+                    , pt.updatedAt
+                )
+                FROM PointTransaction pt
+                WHERE pt.transactionType = "PREPAY"
+                And pt.user = :user
+                AND (:createdAfter IS NULL OR pt.createdAt >= :createdAfter)
+                AND (:createdBefore IS NULL OR pt.createdAt <= :createdBefore)
+            """)
     Page<PointTransactionItem> findAllPrepayByCreatedAfterAndCreatedBefore(@Param("user") User user, @Param("createdAfter") LocalDateTime createdAfter, @Param("createdBefore") LocalDateTime createdBefore, Pageable pageable);
 }

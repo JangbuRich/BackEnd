@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.jangburich.domain.entity.QPointTransaction;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -76,6 +79,18 @@ public class PointTransactionQueryDslRepositoryImpl implements PointTransactionQ
                 .and(Q_POINT_TRANSACTION.createdAt.between(startDate, endDate)))
             .orderBy(Q_POINT_TRANSACTION.id.desc())
             .fetch();
+    }
+
+    @Override
+    public Integer queryTotalAmountByStoreIdAndTeam(Long storeId, Long teamId) {
+        return jpaQueryFactory.select(Q_POINT_TRANSACTION.transactionedPoint.sum().coalesce(0))
+                .from(Q_POINT_TRANSACTION)
+                .where(
+                        Q_POINT_TRANSACTION.store.id.eq(storeId),
+                        Q_POINT_TRANSACTION.team.id.eq(teamId),
+                        Q_POINT_TRANSACTION.createdAt.eq(LocalDateTime.now())
+                )
+                .fetchOne();
     }
 
 }
