@@ -29,6 +29,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Comment("가맹점")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

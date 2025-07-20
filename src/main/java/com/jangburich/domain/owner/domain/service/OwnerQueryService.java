@@ -1,5 +1,6 @@
 package com.jangburich.domain.owner.domain.service;
 
+import com.jangburich.infrastructure.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +12,6 @@ import com.jangburich.domain.owner.domain.controller.dto.res.OwnerResDto;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.domain.repository.UserRepository;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 
@@ -32,28 +32,29 @@ public class OwnerQueryService {
 
     public OwnerGetResDTO getOwnerInfo(String customOAuthUser) {
         User user = userRepository.findByProviderId(customOAuthUser)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
 
         Owner owner = ownerRepository.findByUser(user)
-            .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
         return OwnerGetResDTO.of(owner);
     }
 
     /**
      * 사업자 번호가 유효한지 조회한다.
+     *
      * @param businessNo - target 사업자 번호
      * @return OwnerValidationResDto
      */
-    public OwnerResDto.OwnerValidationResDto getValidateBusinessNo (String businessNo) {
+    public OwnerResDto.OwnerValidationResDto getValidateBusinessNo(String businessNo) {
         BusinessNoDto.BusinessNoResponseDto responseDto = restClientUtil.callPostRestClient(
-            "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=" + serviceKey,
-            BusinessNoDto.BusinessNoRequestDto.of(businessNo),
-            BusinessNoDto.BusinessNoResponseDto.class
+                "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=" + serviceKey,
+                BusinessNoDto.BusinessNoRequestDto.of(businessNo),
+                BusinessNoDto.BusinessNoResponseDto.class
         );
 
         boolean activeBusiness = responseDto.getBusinessInfoList().getFirst().isActiveBusiness();
 
-        if(activeBusiness)
+        if (activeBusiness)
             return OwnerResDto.OwnerValidationResDto.of(true);
         else
             return OwnerResDto.OwnerValidationResDto.of(false);
@@ -61,11 +62,12 @@ public class OwnerQueryService {
 
     /**
      * 계좌주 & 계좌번호가 유효한지 조회한다.
-     * @param account - 은행명
+     *
+     * @param account   - 은행명
      * @param accountNo - 계좌번호
      * @return OwnerValidationResDto
      */
-    public OwnerResDto.OwnerValidationResDto getValidateAccountNo (String account, String accountNo) {
+    public OwnerResDto.OwnerValidationResDto getValidateAccountNo(String account, String accountNo) {
 
         return null;
     }

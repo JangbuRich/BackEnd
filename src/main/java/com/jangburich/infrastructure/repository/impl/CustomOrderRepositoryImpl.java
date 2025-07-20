@@ -1,4 +1,4 @@
-package com.jangburich.domain.repository.impl;
+package com.jangburich.infrastructure.repository.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.entity.QOrders;
-import com.jangburich.domain.repository.CustomOrderRepository;
+import com.jangburich.infrastructure.repository.CustomOrderRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;

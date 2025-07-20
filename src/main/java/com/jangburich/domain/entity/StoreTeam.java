@@ -4,6 +4,7 @@ import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
 
@@ -26,6 +27,7 @@ public class StoreTeam extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @Comment("사용 포인트")
     @Column(name = "point")
     private Integer point;
 
@@ -33,11 +35,14 @@ public class StoreTeam extends BaseEntity {
     private Integer personalAllocatedPoint;
 
     @Column(name = "remain_point")
+    @Comment("잔여 포인트")
     private Integer remainPoint;
 
+    @Comment("선불 포인트 만료 날짜")
     @Column(name = "prepaid_expiration_date")
     private LocalDate prepaidExpirationDate;
 
+    @Comment("총 포인트 사용 횟수")
     @Column(name = "prepay_count")
     private Integer prepayCount;
 

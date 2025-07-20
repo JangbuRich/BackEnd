@@ -1,4 +1,4 @@
-package com.jangburich.presentation.prepay.controller;
+package com.jangburich.presentation.prepay.controller.command;
 
 import com.jangburich.application.prepay.service.PrepayCommandService;
 import com.jangburich.global.payload.Message;
