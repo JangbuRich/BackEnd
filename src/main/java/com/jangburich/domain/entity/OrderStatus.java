@@ -15,8 +15,7 @@ public enum OrderStatus {
     RECEIVED("식권 발급 완료"),
     TICKET_ISSUED("금액권 발급 완료"),
     TICKET_USED("식권 사용 완료"),
-    CANCELLED("사용 취소")
-    ;
+    CANCELLED("사용 취소");
 
     private final String description;
 

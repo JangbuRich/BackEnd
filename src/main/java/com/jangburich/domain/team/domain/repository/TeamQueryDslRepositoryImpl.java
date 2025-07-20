@@ -1,6 +1,6 @@
 package com.jangburich.domain.team.domain.repository;
 
-import com.jangburich.domain.point.domain.TransactionType;
+import com.jangburich.domain.entity.TransactionType;
 import com.jangburich.domain.team.dto.response.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,7 +14,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.jangburich.domain.point.domain.QPointTransaction.pointTransaction;
+import static com.jangburich.domain.entity.QPointTransaction.pointTransaction;
 import static com.jangburich.domain.entity.QStore.store;
 import static com.jangburich.domain.entity.QStoreTeam.storeTeam;
 import static com.jangburich.domain.team.domain.QTeam.team;

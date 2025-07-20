@@ -5,7 +5,6 @@ import com.jangburich.domain.user.domain.SocialLoginProvider;
 import com.jangburich.domain.user.domain.TokenResponseDTO;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.domain.user.dto.response.UserHomeResponse;
-import com.jangburich.domain.user.dto.response.WalletResponse;
 import com.jangburich.domain.user.service.SocialLoginService;
 import com.jangburich.domain.user.service.SocialLoginServiceFactory;
 import com.jangburich.domain.user.service.UserService;
@@ -100,12 +99,6 @@ public class UserController {
 		@RequestBody AdditionalInfoCreateDTO additionalInfoCreateDTO) {
 		userService.additionalInfo(AuthenticationParser.parseUserId(authentication), additionalInfoCreateDTO);
 		return ResponseCustom.OK(Message.builder().message("success").build());
-	}
-
-	@Operation(summary = "나의 지갑 조회", description = "나의 현재 남아 있는 포인트를 조회합니다.")
-	@GetMapping("/wallet")
-	public ResponseCustom<WalletResponse> getMyWallet(Authentication authentication) {
-		return ResponseCustom.OK(userService.getMyWallet(AuthenticationParser.parseUserId(authentication)));
 	}
 
 	@Operation(summary = "유저 홈 화면 조회", description = "유저의 홈 화면을 조회합니다.")
