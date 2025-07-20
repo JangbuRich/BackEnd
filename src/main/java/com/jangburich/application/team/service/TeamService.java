@@ -2,12 +2,13 @@ package com.jangburich.application.team.service;
 
 import com.jangburich.domain.entity.Store;
 import com.jangburich.infrastructure.repository.StoreRepository;
-import com.jangburich.domain.team.dto.response.*;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.jangburich.infrastructure.repository.UserRepository;
+import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
+import com.jangburich.presentation.team.dto.response.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,8 @@ import com.jangburich.domain.entity.Team;
 import com.jangburich.domain.entity.TeamLeader;
 import com.jangburich.domain.entity.TeamType;
 import com.jangburich.domain.entity.UserTeam;
-import com.jangburich.domain.repository.TeamRepository;
-import com.jangburich.domain.repository.UserTeamRepository;
+import com.jangburich.infrastructure.repository.TeamRepository;
+import com.jangburich.infrastructure.repository.UserTeamRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.global.payload.Message;
 

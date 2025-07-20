@@ -1,10 +1,10 @@
 package com.jangburich.application.team.service;
 
 import com.jangburich.domain.entity.Team;
-import com.jangburich.domain.repository.*;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
+import com.jangburich.infrastructure.repository.*;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamItem;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.domain.user.domain.User;
@@ -32,10 +32,9 @@ public class TeamQueryService {
     private final UserTeamRepository userTeamRepository;
 
     public MyTeamResponse getMyTeamByCategory(String userId, String keyword, String category, Pageable pageable) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
 
-        if(!StringUtils.hasText(keyword)){
+        if (!StringUtils.hasText(keyword)) {
             keyword = null;
         }
 
@@ -43,43 +42,19 @@ public class TeamQueryService {
 
         List<Team> team = teams.getContent().stream().toList();
 
-        Map<Long, Long> remainPointMap = storeTeamRepository.findRemainingPointByTeams(team).stream()
-                                                    .collect(Collectors.toMap(
-                                                            row -> (Long) row[0]
-                                                            , row -> (Long) row[1]
-                                                    ));
+        Map<Long, Long> remainPointMap = storeTeamRepository.findRemainingPointByTeams(team).stream().collect(Collectors.toMap(row -> (Long) row[0], row -> (Long) row[1]));
 
         Set<Long> likedTeams = new HashSet<>(favoriteTeamRepository.findLikedTeamIdsByUser(user));
 
-        Map<Long, Long> memberCountMap = userTeamRepository.countByTeams(team).stream()
-                                                 .collect(Collectors.toMap(
-                                                         row -> (Long) row[0]
-                                                         , row -> (Long) row[1]
-                                                 ));
+        Map<Long, Long> memberCountMap = userTeamRepository.countByTeams(team).stream().collect(Collectors.toMap(row -> (Long) row[0], row -> (Long) row[1]));
 
-        Map<Long, List<String>> profileImageMap = userTeamRepository.findProfileImagesByTeams(team).stream()
-                                                          .collect(Collectors.groupingBy(
-                                                                  row -> (Long) row[0]
-                                                                  , Collectors.mapping(row -> Optional.ofNullable((String) row[1]).orElse(DEFAULT_PROFILE_IMAGE_URL),
-                                                                          Collectors.collectingAndThen(Collectors.toList(), list -> list.stream().limit(3).toList())
-                                                                  )
-                                                          ));
+        Map<Long, List<String>> profileImageMap = userTeamRepository.findProfileImagesByTeams(team).stream().collect(Collectors.groupingBy(row -> (Long) row[0], Collectors.mapping(row -> Optional.ofNullable((String) row[1]).orElse(DEFAULT_PROFILE_IMAGE_URL), Collectors.collectingAndThen(Collectors.toList(), list -> list.stream().limit(3).toList()))));
 
-        List<MyTeamItem> myTeamItemList = teams.stream()
-                                                  .map(teamItem -> {
-                                                      Long teamId = teamItem.getId();
+        List<MyTeamItem> myTeamItemList = teams.stream().map(teamItem -> {
+            Long teamId = teamItem.getId();
 
-                                                      return new MyTeamItem(
-                                                              teamId
-                                                              , teamItem.getName()
-                                                              , remainPointMap.getOrDefault(teamId, 0L)
-                                                              , teamItem.getTeamType().name()
-                                                              , likedTeams.contains(teamId)
-                                                              , memberCountMap.getOrDefault(teamId, 0L)
-                                                              , user.getUserId().equals(teamItem.getTeamLeader().getLeaderId())
-                                                              , profileImageMap.getOrDefault(teamId, List.of())
-                                                      );
-                                                  } ).toList();
+            return new MyTeamItem(teamId, teamItem.getName(), remainPointMap.getOrDefault(teamId, 0L), teamItem.getTeamType().name(), likedTeams.contains(teamId), memberCountMap.getOrDefault(teamId, 0L), user.getUserId().equals(teamItem.getTeamLeader().getLeaderId()), profileImageMap.getOrDefault(teamId, List.of()));
+        }).toList();
 
         PageInfo pageInfo = new PageInfo(teams.getNumber(), teams.getSize(), teams.getTotalPages(), teams.getTotalElements(), teams.hasNext(), teams.hasPrevious());
 
