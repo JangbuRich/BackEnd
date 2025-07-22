@@ -23,10 +23,36 @@ public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
 
     List<StoreTeamResponseDTO> findAllByStoreOrderByCreatedAtDesc(Store store);
 
-    @Query("SELECT st FROM StoreTeam st " +
-            "JOIN FETCH st.store s " +
-            "WHERE s.id = :storeId")
+    @Query("SELECT st FROM StoreTeam st " + "JOIN FETCH st.store s " + "WHERE s.id = :storeId")
     List<StoreTeam> findByStoreIdWithStoreAndTeam(@Param("storeId") Long storeId);
+
+    @Query("""
+            select st
+            from StoreTeam st
+            inner join FavoriteStore fs on fs.store = st.store and fs.user = :user
+            left join UserTeam ut on ut.team = :team and ut.user = :user
+            where 1=1
+            and st.status = 'ACTIVE'
+            and fs.status = 'ACTIVE'
+            and ut.status = 'ACTIVE'
+            """)
+    Optional<StoreTeam> findFavoriteStoreByUserAndTeam(@Param("user") User user, @Param("team") Team team);
+
+    @Query("""
+            SELECT st
+            FROM StoreTeam st
+            left join UserTeam ut on ut.user = :user and ut.team = :team
+            WHERE st.team = :team
+            AND st.store = (
+                SELECT pt.store
+                FROM PointTransaction pt
+                WHERE pt.user = :user AND pt.team = :team
+                ORDER BY pt.createdAt DESC
+              )
+            AND st.status = 'ACTIVE'
+            and ut.status = 'ACTIVE'
+            """)
+    StoreTeam findLastStoreTeamByUserAndTeam(@Param("user") User user, @Param("team") Team team);
 
     @Query("""
             select st.team.id, sum(st.remainPoint)
@@ -39,12 +65,32 @@ public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
     List<Object[]> findRemainingPointByTeams(@Param("teams") List<Team> teams);
 
     @Query("""
+            select sum(st.point)
+                        from StoreTeam st
+                        where st.team = :team
+                        and st.status = 'ACTIVE'
+                        and st.team.status = 'ACTIVE'
+            """)
+    Integer sumPointByTeam(@Param("team") Team team);
+
+    @Query("""
+            select sum(st.remainPoint)
+            from StoreTeam st
+            where st.team = :team
+            and st.status = 'ACTIVE'
+            and st.team.status = 'ACTIVE'
+            """)
+    Integer sumRemainPointByTeam(@Param("team") Team team);
+
+    @Query("""
             	select sum (st.remainPoint)
             	from StoreTeam st
             	inner join Team t on st.team = t
             	inner join UserTeam ut on ut.team = t
             	where ut.user = :user
-            	and st.status = "ACTIVE"
+            	and st.status = 'ACTIVE'
+            	and t.status = 'ACTIVE'
+            	and ut.status = 'ACTIVE'
             """)
     Integer sumRemainPointByUserAndStatus(@Param("user") User user);
 }

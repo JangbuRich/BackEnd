@@ -1,7 +1,5 @@
-package com.jangburich.domain.repository.queryDsl;
+package com.jangburich.infrastructure.repository.queryDsl;
 
-import com.jangburich.domain.entity.QStoreTeam;
-import com.jangburich.domain.entity.TransactionType;
 import com.jangburich.presentation.team.dto.response.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -19,8 +16,6 @@ import static com.jangburich.domain.entity.QPointTransaction.pointTransaction;
 import static com.jangburich.domain.entity.QStore.store;
 import static com.jangburich.domain.entity.QStoreTeam.storeTeam;
 import static com.jangburich.domain.entity.QTeam.team;
-import static com.jangburich.domain.entity.QUserTeam.userTeam;
-import static com.jangburich.domain.user.domain.QUser.user;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,133 +29,6 @@ public class TeamQueryDslRepositoryImpl implements TeamQueryDslRepository {
 
     LocalDateTime startOfDay = currentDate.atStartOfDay();
     LocalDateTime endOfDay = currentDate.plusDays(1).atStartOfDay().minusNanos(1);
-
-    @Override
-    public MyTeamDetailResponse findMyTeamDetailsAsMember(Long userId, Long teamId) {
-
-        List<PrepayedStore> prepayedStores = queryFactory
-            .select(new QPrepayedStore(
-                store.id,
-                store.name,
-                store.representativeImage,
-                store.address,
-                Expressions.constant(false)
-            ))
-            .from(store)
-            .leftJoin(storeTeam).on(storeTeam.team.id.eq(teamId))
-            .fetch();
-
-        List<String> images = queryFactory
-            .select(user.profileImageUrl)
-            .from(userTeam)
-            .where(userTeam.team.id.eq(teamId))
-            .fetch();
-
-        List<TodayPayment> todayPayments = queryFactory
-            .selectDistinct(new QTodayPayment(
-                Expressions.constant(formattedDate),
-                Expressions.stringTemplate("DATE_FORMAT({0}, '%H:%i')", pointTransaction.createdAt),
-                store.name, // TODO 수정 필요
-                store.name, // TODO 수정 필요
-                Expressions.asNumber(1) // TODO 수정 필요
-            ))
-            .from(pointTransaction)
-            .leftJoin(store).on(store.id.eq(pointTransaction.store.id))
-            .where(pointTransaction.createdAt.between(startOfDay, endOfDay), pointTransaction.transactionType.eq(
-                TransactionType.FOOD_PURCHASE))
-            .fetch();
-
-        return queryFactory
-            .selectDistinct(new QMyTeamDetailResponse(
-                storeTeam.team.id,
-                Expressions.constant(false),
-                storeTeam.store.name,
-                storeTeam.team.name,
-                storeTeam.team.description,
-                Expressions.constant(-1),
-                storeTeam.remainPoint,
-                storeTeam.personalAllocatedPoint,
-                pointTransaction.transactionedPoint.sum(),
-                Expressions.constant(prepayedStores),
-                Expressions.constant(images),
-                Expressions.constant(images.size()),
-                Expressions.constant(todayPayments),
-                Expressions.constant(todayPayments.size())
-            ))
-            .from(storeTeam)
-            .leftJoin(team).on(storeTeam.team.id.eq(teamId))
-            .leftJoin(userTeam).on(userTeam.team.id.eq(storeTeam.team.id))
-            .leftJoin(pointTransaction).on(pointTransaction.transactionType.eq(TransactionType.FOOD_PURCHASE),
-                pointTransaction.user.userId.eq(userId))
-            .where(storeTeam.team.id.eq(teamId))
-            .fetchOne();
-
-    }
-
-    @Override
-    public MyTeamDetailResponse findMyTeamDetailsAsLeader(Long userId, Long teamId) {
-
-        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
-        LocalDateTime endOfToday = LocalDate.now().atTime(LocalTime.NOON);
-
-        List<PrepayedStore> prepayedStores = queryFactory
-            .select(new QPrepayedStore(
-                store.id,
-                store.name,
-                store.representativeImage,
-                store.address,
-                Expressions.constant(false)
-            ))
-            .from(store)
-            .leftJoin(storeTeam).on(storeTeam.team.id.eq(teamId))
-            .fetch();
-
-        List<String> images = queryFactory
-            .select(user.profileImageUrl)
-            .from(userTeam)
-            .where(userTeam.team.id.eq(teamId))
-            .fetch();
-
-        List<TodayPayment> todayPayments = queryFactory
-            .selectDistinct(new QTodayPayment(
-                Expressions.constant(formattedDate),
-                Expressions.stringTemplate("DATE_FORMAT({0}, '%H:%i')", pointTransaction.createdAt),
-                store.name, // TODO 수정 필요
-                store.name, // TODO 수정 필요
-                Expressions.asNumber(1) // TODO 수정 필요
-            ))
-            .from(pointTransaction)
-            .leftJoin(store).on(store.id.eq(pointTransaction.store.id))
-            .where(pointTransaction.createdAt.between(startOfToday, endOfToday), pointTransaction.transactionType.eq(
-                TransactionType.FOOD_PURCHASE))
-            .fetch();
-
-        return queryFactory
-            .selectDistinct(new QMyTeamDetailResponse(
-                storeTeam.team.id,
-                Expressions.constant(true),
-                storeTeam.store.name,
-                storeTeam.team.name,
-                storeTeam.team.description,
-                storeTeam.point,
-                storeTeam.remainPoint,
-                Expressions.constant(-1),
-                pointTransaction.transactionedPoint.sum(),
-                Expressions.constant(prepayedStores),
-                Expressions.constant(images),
-                Expressions.constant(images.size()),
-                Expressions.constant(todayPayments),
-                Expressions.constant(todayPayments.size())
-            ))
-            .from(storeTeam)
-            .leftJoin(team).on(storeTeam.team.id.eq(teamId))
-            .leftJoin(userTeam).on(userTeam.team.id.eq(storeTeam.team.id))
-            .leftJoin(pointTransaction).on(pointTransaction.transactionType.eq(TransactionType.FOOD_PURCHASE),
-                pointTransaction.user.userId.eq(userId))
-            .where(storeTeam.team.id.eq(teamId))
-            .fetchOne();
-
-    }
 
     @Override
     public IndividualStoreDetailsResponse findIndividualStoreDetails(Long userId, Long teamId, Long storeId, boolean isMeLeader) {

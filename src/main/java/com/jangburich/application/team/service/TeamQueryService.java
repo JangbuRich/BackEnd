@@ -1,10 +1,12 @@
 package com.jangburich.application.team.service;
 
+import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.domain.entity.Team;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.infrastructure.repository.*;
+import com.jangburich.presentation.team.dto.response.myTeam.MyTeamDetailResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamItem;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.domain.user.domain.User;
@@ -59,5 +61,17 @@ public class TeamQueryService {
         PageInfo pageInfo = new PageInfo(teams.getNumber(), teams.getSize(), teams.getTotalPages(), teams.getTotalElements(), teams.hasNext(), teams.hasPrevious());
 
         return new MyTeamResponse(myTeamItemList, pageInfo);
+    }
+
+    public MyTeamDetailResponse getTeamDetailById(String userId, long teamId) {
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        StoreTeam storeTeam = storeTeamRepository.findFavoriteStoreByUserAndTeam(user, team).orElseGet(() -> storeTeamRepository.findLastStoreTeamByUserAndTeam(user, team));
+
+        List<String> profileImages = userTeamRepository.findProfileImagesByTeam(team);
+
+        return MyTeamDetailResponse.builder().teamId(team.getId()).isMeLeader(user.equals(team.getTeamLeader())).teamName(team.getName()).description(team.getDescription()).totalPrepaidAmount(storeTeamRepository.sumPointByTeam(team)).remainingAmount(storeTeamRepository.sumRemainPointByTeam(team)).storeName(storeTeam.getStore().getName()).storePrepaidAmount(storeTeam.getPoint()).storeRemainingAmount(storeTeam.getRemainPoint()).teamMemberImgUrl(profileImages.subList(0 ,profileImages.size() <= 5 ? profileImages.size() : 5)).totalMemberCount(profileImages.size()).build();
     }
 }

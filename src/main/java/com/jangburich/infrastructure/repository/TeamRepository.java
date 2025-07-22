@@ -2,7 +2,6 @@ package com.jangburich.infrastructure.repository;
 
 import com.jangburich.domain.common.Status;
 import com.jangburich.domain.entity.Team;
-import com.jangburich.domain.repository.queryDsl.TeamQueryDslRepository;
 import com.jangburich.domain.user.domain.User;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface TeamRepository extends JpaRepository<Team, Long>, TeamQueryDslRepository {
+public interface TeamRepository extends JpaRepository<Team, Long> {
     Optional<Team> findBySecretCode(String secretCode);
 
 

@@ -22,17 +22,26 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
             and ut.status = 'ACTIVE'
             group by ut.team.id
             order by ut.team.id
-            """
-    )
+            """)
     List<Object[]> countByTeams(@Param("teams") List<Team> teams);
 
     Optional<UserTeam> findByUserAndTeam(User user, Team team);
+
+    @Query("""
+            select ut.user.profileImageUrl
+            from UserTeam ut
+            where ut.team = :team
+            and ut.status = 'ACTIVE'
+            and ut.user.status = 'ACTIVE'
+            """)
+    List<String> findProfileImagesByTeam(@Param("team") Team team);
 
     @Query("""
                 select ut.team.id, ut.user.profileImageUrl
                 from UserTeam ut
                 where ut.team in :teams
                 and ut.status = 'ACTIVE'
+                and ut.user.status = 'ACTIVE'
                 order by ut.team.id
             """)
     List<Object[]> findProfileImagesByTeams(@Param("teams") List<Team> teams);

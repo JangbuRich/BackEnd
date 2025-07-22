@@ -1,8 +1,5 @@
 package com.jangburich.application.team.service;
 
-import com.jangburich.domain.entity.Store;
-import com.jangburich.infrastructure.repository.StoreRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +31,6 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final UserTeamRepository userTeamRepository;
-    private final StoreRepository storeRepository;
 
     @Transactional
     public TeamSecretCodeResponse registerTeam(String userId, RegisterTeamRequest registerTeamRequest) {
@@ -84,24 +80,6 @@ public class TeamService {
                 .build();
     }
 
-    public MyTeamDetailResponse getTeamDetailsById(String userId, Long teamId) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new NullPointerException("사용자를 찾을 수 없습니다."));
-
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 팀을 찾을 수 없습니다."));
-
-        if (!team.getTeamLeader().getLeaderId().equals(user.getUserId())) {
-            // 일반 구성원
-            return teamRepository.findMyTeamDetailsAsMember(user.getUserId(),
-                    teamId);
-        }
-        // 팀 리더일 때
-
-        return teamRepository.findMyTeamDetailsAsLeader(user.getUserId(),
-                teamId);
-    }
-
     public List<TeamMemberResponse> getTeamMembers(String userId, Long teamId) {
         User user = userRepository.findByProviderId(userId)
                 .orElseThrow(() -> new NullPointerException("사용자를 찾을 수 없습니다."));
@@ -146,23 +124,5 @@ public class TeamService {
                 profileImages,
                 team.getStatus()
         );
-    }
-
-    public IndividualStoreDetailsResponse getIndividualStoreDetails(String userId, Long teamId, Long storeId) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new NullPointerException("사용자를 찾을 수 없습니다."));
-
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 팀을 찾을 수 없습니다."));
-
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 가게를 찾을 수 없습니다."));
-
-        boolean isMeLeader = team.getTeamLeader().getLeaderId().equals(user.getUserId());
-
-        IndividualStoreDetailsResponse individualStoreDetails = teamRepository.findIndividualStoreDetails(
-                user.getUserId(), team.getId(), store.getId(), isMeLeader);
-
-        return individualStoreDetails;
     }
 }
