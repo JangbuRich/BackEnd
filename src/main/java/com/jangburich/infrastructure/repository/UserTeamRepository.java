@@ -6,6 +6,7 @@ import com.jangburich.domain.entity.UserTeam;
 import com.jangburich.domain.user.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,24 +19,20 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
             select ut.team.id, count(ut)
             from UserTeam ut
             where ut.team in :teams
+            and ut.status = 'ACTIVE'
             group by ut.team.id
             order by ut.team.id
             """
     )
     List<Object[]> countByTeams(@Param("teams") List<Team> teams);
 
-    @Query("""
-            select ut.team.id, ut.user
-            from UserTeam ut
-            where ut.team in :teams
-            order by ut.team.id
-            """)
-    List<Object[]> findLeaderByTeams(@Param("teams") List<Team> teams);
+    Optional<UserTeam> findByUserAndTeam(User user, Team team);
 
     @Query("""
                 select ut.team.id, ut.user.profileImageUrl
                 from UserTeam ut
                 where ut.team in :teams
+                and ut.status = 'ACTIVE'
                 order by ut.team.id
             """)
     List<Object[]> findProfileImagesByTeams(@Param("teams") List<Team> teams);

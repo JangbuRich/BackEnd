@@ -32,6 +32,8 @@ public interface TeamRepository extends JpaRepository<Team, Long>, TeamQueryDslR
                     or (:category = 'LEADER' and t.teamLeader.leaderId = :user)
                     or (:category = 'MEMBER' and t.teamLeader.leaderId <> :user)
                 )
+                and t.status = 'ACTIVE'
+               and ut.status = 'ACTIVE'
             """)
     Page<Team> findAllByUserAndCategory(@Param("user") Long user, @Param("keyword") String keyword, @Param("category") String category, Pageable pageable);
 }

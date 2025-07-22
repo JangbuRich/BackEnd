@@ -32,6 +32,7 @@ public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
             select st.team.id, sum(st.remainPoint)
             from StoreTeam st
             where st.team in :teams
+            and st.status = 'ACTIVE'
             group by st.team.id
             order by st.team.id
             """)

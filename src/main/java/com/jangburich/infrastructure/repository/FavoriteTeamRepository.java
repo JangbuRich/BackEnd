@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface FavoriteTeamRepository extends JpaRepository<FavoriteTeam, Long> {
-    @Query("select ft.team.id from FavoriteTeam ft where ft.user = :user")
+    @Query("select ft.team.id from FavoriteTeam ft where ft.user = :user and ft.status = 'ACTIVE'")
     List<Long> findLikedTeamIdsByUser(@Param("user") User user);
 }
