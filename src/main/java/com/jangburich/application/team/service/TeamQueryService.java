@@ -1,14 +1,15 @@
 package com.jangburich.application.team.service;
 
+import com.jangburich.domain.common.Status;
 import com.jangburich.domain.entity.StoreTeam;
 import com.jangburich.domain.entity.Team;
+import com.jangburich.domain.entity.UserTeam;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.infrastructure.repository.*;
-import com.jangburich.presentation.team.dto.response.myTeam.MyTeamDetailResponse;
-import com.jangburich.presentation.team.dto.response.myTeam.MyTeamItem;
-import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
+import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
+import com.jangburich.presentation.team.dto.response.myTeam.*;
 import com.jangburich.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,6 +73,32 @@ public class TeamQueryService {
 
         List<String> profileImages = userTeamRepository.findProfileImagesByTeam(team);
 
-        return MyTeamDetailResponse.builder().teamId(team.getId()).isMeLeader(user.equals(team.getTeamLeader())).teamName(team.getName()).description(team.getDescription()).totalPrepaidAmount(storeTeamRepository.sumPointByTeam(team)).remainingAmount(storeTeamRepository.sumRemainPointByTeam(team)).storeName(storeTeam.getStore().getName()).storePrepaidAmount(storeTeam.getPoint()).storeRemainingAmount(storeTeam.getRemainPoint()).teamMemberImgUrl(profileImages.subList(0 ,profileImages.size() <= 5 ? profileImages.size() : 5)).totalMemberCount(profileImages.size()).build();
+        return MyTeamDetailResponse.builder().teamId(team.getId()).isMeLeader(user.getUserId().equals(team.getTeamLeader().getLeaderId())).teamName(team.getName()).description(team.getDescription()).totalPrepaidAmount(storeTeamRepository.sumPointByTeam(team)).remainingAmount(storeTeamRepository.sumRemainPointByTeam(team)).storeName(storeTeam.getStore().getName()).storePrepaidAmount(storeTeam.getPoint()).storeRemainingAmount(storeTeam.getRemainPoint()).teamMemberImgUrl(profileImages.subList(0, profileImages.size() <= 5 ? profileImages.size() : 5)).totalMemberCount(profileImages.size()).build();
+    }
+
+    public TeamMemberResponse getTeamMembers(String userId, Long teamId, Pageable pageable) {
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        Page<UserTeam> userTeamPage = userTeamRepository.findAllByTeamAndStatus(team, Status.ACTIVE, pageable);
+
+        List<TeamMemberItem> userTeamList = userTeamPage.stream().map(userTeam -> {
+            User member = userTeam.getUser();
+
+            return new TeamMemberItem(member.getUserId(), member.getName(), member.getUserId().equals(user.getUserId()), team.getTeamLeader().getLeaderId().equals(member.getUserId()), Optional.ofNullable(member.getProfileImageUrl()).orElse(DEFAULT_PROFILE_IMAGE_URL));
+        }).toList();
+
+        PageInfo pageInfo = new PageInfo(userTeamPage.getNumber(), userTeamPage.getSize(), userTeamPage.getTotalPages(), userTeamPage.getTotalElements(), userTeamPage.hasNext(), userTeamPage.hasPrevious());
+
+        return new TeamMemberResponse(userTeamList, pageInfo);
+    }
+
+    public TeamPaymentHistoryResponse getTeamPaymentHistory(String userId, Long teamId, Pageable pageable){
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        Page<>
     }
 }

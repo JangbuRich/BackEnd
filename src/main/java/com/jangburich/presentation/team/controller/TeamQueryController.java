@@ -1,6 +1,8 @@
 package com.jangburich.presentation.team.controller;
 
 import com.jangburich.application.team.service.TeamQueryService;
+import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
+import com.jangburich.presentation.team.dto.response.myTeam.TeamMemberResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamDetailResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.global.payload.BaseResponse;
@@ -39,11 +41,28 @@ public class TeamQueryController {
         return ResponseEntity.ok(new BaseResponse<>(myTeamResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
-    @Operation(summary = "그룹(팀) 상세 조회", description = "내가 속한 팀의 정보를 상세 조회합니다.")
     @GetMapping("/{teamId}")
+    @Operation(summary = "그룹(팀) 상세 조회", description = "내가 속한 팀의 정보를 상세 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
     public ResponseEntity<BaseResponse<?>> getTeamDetailById(Authentication authentication, @PathVariable Long teamId) {
         MyTeamDetailResponse myTeamDetailResponse = teamQueryService.getTeamDetailById(AuthenticationParser.parseUserId(authentication), teamId);
 
         return ResponseEntity.ok(new BaseResponse<>(myTeamDetailResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
+    @GetMapping("/{teamId}/members")
+    @Operation(summary = "그룹(팀) 멤버 전체 조회", description = "그룹(팀)에 소속된 모든 멤버를 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<BaseResponse<?>> getTeamMembers(Authentication authentication, @PathVariable Long teamId, @PageableDefault(page = 0, size = 10, sort = "user.name", direction = Sort.Direction.ASC) Pageable pageable) {
+        TeamMemberResponse teamMemberResponse = teamQueryService.getTeamMembers(AuthenticationParser.parseUserId(authentication), teamId, pageable);
+        return ResponseEntity.ok(new BaseResponse<>(teamMemberResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
+    @GetMapping("/{teamId}/payment/history")
+    @Operation(summary = "그룹(팀) 결제 내역 조회", description = "그룹(팀)에 소속된 결제 내역을 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<BaseResponse<?>> getTeamPaymentHistory(Authentication authentication, @PathVariable Long teamId, @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable) {
+        TeamPaymentHistoryResponse teamPaymentHistoryResponse = teamQueryService.getTeamPaymentHistory(AuthenticationParser.parseUserId(authentication), teamId, pageable);
+        return ResponseEntity.ok(new BaseResponse<>(teamPaymentHistoryResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 }

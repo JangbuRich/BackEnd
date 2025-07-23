@@ -80,30 +80,6 @@ public class TeamService {
                 .build();
     }
 
-    public List<TeamMemberResponse> getTeamMembers(String userId, Long teamId) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new NullPointerException("사용자를 찾을 수 없습니다."));
-
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 팀을 찾을 수 없습니다."));
-
-        List<UserTeam> userTeams = userTeamRepository.findAllByTeamAndStatus(team, Status.ACTIVE);
-
-        return userTeams.stream()
-                .map(userTeam -> {
-                    User teamMember = userTeam.getUser();
-
-                    return new TeamMemberResponse(
-                            teamMember.getUserId(),
-                            teamMember.getName(),
-                            teamMember.getUserId().equals(user.getUserId()),
-                            team.getTeamLeader().getLeaderId().equals(teamMember.getUserId()),
-                            Optional.ofNullable(teamMember.getProfileImageUrl()).orElse(DEFAULT_PROFILE_IMAGE_URL)
-                    );
-                })
-                .toList();
-    }
-
     public TeamCodeResponse getTeamsWithSecretCode(String secretCode) {
         Team team = teamRepository.findBySecretCode(secretCode)
                 .orElseThrow(() -> new RuntimeException("시크릿 코드가 존재하지 않습니다."));

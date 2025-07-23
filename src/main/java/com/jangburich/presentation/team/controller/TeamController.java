@@ -55,12 +55,6 @@ public class TeamController {
         return null;
     }
 
-    @Operation(summary = "그룹(팀) 멤버 전체 조회", description = "그룹(팀)에 소속된 모든 멤버를 조회합니다.")
-    @GetMapping("/{teamId}/members")
-    public ResponseCustom<List<TeamMemberResponse>> getTeamMembers(Authentication authentication, @PathVariable Long teamId) {
-        return ResponseCustom.OK(teamService.getTeamMembers(AuthenticationParser.parseUserId(authentication), teamId));
-    }
-
     @Operation(summary = "그룹(팀) 비밀코드 조회", description = "비밀코드를 입력하면, 그 팀을 조회하는 api 입니다.")
     @GetMapping("/info/secretcode/{secretCode}")
     public ResponseCustom<TeamCodeResponse> getTeamWithSecretCode(@PathVariable String secretCode) {
