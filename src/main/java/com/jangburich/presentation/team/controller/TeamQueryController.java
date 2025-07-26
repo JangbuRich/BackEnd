@@ -2,11 +2,14 @@ package com.jangburich.presentation.team.controller;
 
 import com.jangburich.application.team.service.TeamQueryService;
 import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
+import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem;
+import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.TeamMemberResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamDetailResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
+import com.jangburich.presentation.user.dto.response.StoreListResponse;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,5 +67,14 @@ public class TeamQueryController {
     public ResponseEntity<BaseResponse<?>> getTeamPaymentHistory(Authentication authentication, @PathVariable Long teamId, @RequestParam(required = false) Long userId, @RequestParam(required = false) Long storeId, @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         TeamPaymentHistoryResponse teamPaymentHistoryResponse = teamQueryService.getTeamPaymentHistory(AuthenticationParser.parseUserId(authentication), teamId, userId, storeId, pageable);
         return ResponseEntity.ok(new BaseResponse<>(teamPaymentHistoryResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
+    @GetMapping("/{teamId}/store")
+    @Operation(summary = "제휴 매장 조회", description = "팀의 제휴 매장을 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<BaseResponse<?>> getTeamStoreList(Authentication authentication, @PathVariable Long teamId, @RequestParam(required = false) String keyword, @PageableDefault(page = 0, size = 3) Pageable pageable) {
+        TeamPrepaidStoreResponse teamPrepaidStoreResponse = teamQueryService.getTeamStoreList(AuthenticationParser.parseUserId(authentication), teamId, keyword, pageable);
+
+        return ResponseEntity.ok(new BaseResponse<>(teamPrepaidStoreResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 }

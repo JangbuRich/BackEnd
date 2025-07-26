@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.jangburich.domain.user.domain.User;
+import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -53,6 +56,24 @@ public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
             and ut.status = 'ACTIVE'
             """)
     StoreTeam findLastStoreTeamByUserAndTeam(@Param("user") User user, @Param("team") Team team);
+
+    @Query(value = """
+            select new com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem(
+                st.store.id
+                , st.store.name
+                , st.prepaidExpirationDate
+                , st.store.representativeImage
+                , st.point
+                , st.remainPoint
+                , (fs.id is not null)
+            )
+            from StoreTeam st
+            left join FavoriteStore fs on fs.store = st.store and fs.user = :user
+            where (st.team = :team and st.team.status = 'ACTIVE')
+            and (:keyword is null or (st.store.name like concat('%', :keyword, '%')))
+            and st.status = 'ACTIVE'
+            """)
+    Page<TeamPrepaidStoreItem> findByTeamAndKeyword(@Param("user") User user, @Param("team") Team team, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("""
             select st.team.id, sum(st.remainPoint)

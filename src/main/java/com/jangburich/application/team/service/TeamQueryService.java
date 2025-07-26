@@ -8,11 +8,14 @@ import com.jangburich.global.payload.PageInfo;
 import com.jangburich.infrastructure.repository.*;
 import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryItem;
 import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
+import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem;
+import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.*;
 import com.jangburich.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -110,5 +113,19 @@ public class TeamQueryService {
         PageInfo pageInfo = new PageInfo(teamPaymentHistoryItemPage.getNumber(), teamPaymentHistoryItemPage.getSize(), teamPaymentHistoryItemPage.getTotalPages(), teamPaymentHistoryItemPage.getTotalElements(), teamPaymentHistoryItemPage.hasNext(), teamPaymentHistoryItemPage.hasPrevious());
 
         return new TeamPaymentHistoryResponse(startDate, LocalDateTime.now(ZoneId.of("Asia/Seoul")), teamPaymentHistoryItemPage.stream().toList(), pageInfo);
+    }
+
+    public TeamPrepaidStoreResponse getTeamStoreList(String providerId, Long teamId, String keyword, Pageable pageable) {
+        User user = userRepository.findByProviderId(providerId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        UserTeam userTeam = userTeamRepository.findByUserAndTeam(user, team).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_TEAM_ID));
+
+        Page<TeamPrepaidStoreItem> teamPrepaidStoreItemPage = storeTeamRepository.findByTeamAndKeyword(user, team, keyword, pageable);
+
+        PageInfo pageInfo = new PageInfo(teamPrepaidStoreItemPage.getNumber(), teamPrepaidStoreItemPage.getSize(), teamPrepaidStoreItemPage.getTotalPages(), teamPrepaidStoreItemPage.getTotalElements(), teamPrepaidStoreItemPage.hasNext(), teamPrepaidStoreItemPage.hasPrevious());
+
+        return new TeamPrepaidStoreResponse(teamPrepaidStoreItemPage.stream().toList(), pageInfo);
     }
 }
