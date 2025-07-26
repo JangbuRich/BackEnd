@@ -1,6 +1,8 @@
 package com.jangburich.presentation.team.controller;
 
 import com.jangburich.application.team.service.TeamQueryService;
+import com.jangburich.global.payload.ResponseCustom;
+import com.jangburich.presentation.team.dto.response.TeamCodeResponse;
 import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
 import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem;
 import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreResponse;
@@ -76,5 +78,11 @@ public class TeamQueryController {
         TeamPrepaidStoreResponse teamPrepaidStoreResponse = teamQueryService.getTeamStoreList(AuthenticationParser.parseUserId(authentication), teamId, keyword, pageable);
 
         return ResponseEntity.ok(new BaseResponse<>(teamPrepaidStoreResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
+    @Operation(summary = "그룹(팀) 비밀코드 조회", description = "비밀코드를 입력하면, 그 팀을 조회하는 api 입니다.")
+    @GetMapping("/info/secretcode/{secretCode}")
+    public ResponseCustom<TeamCodeResponse> getTeamWithSecretCode(@PathVariable String secretCode) {
+        return ResponseCustom.OK(teamQueryService.getTeamsWithSecretCode(secretCode));
     }
 }

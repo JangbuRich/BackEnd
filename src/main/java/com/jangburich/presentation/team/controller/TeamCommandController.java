@@ -2,6 +2,10 @@ package com.jangburich.presentation.team.controller;
 
 import com.jangburich.application.team.service.TeamCommandService;
 import com.jangburich.global.payload.CommonApiResponse;
+import com.jangburich.global.payload.Message;
+import com.jangburich.global.payload.ResponseCustom;
+import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
+import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,4 +41,15 @@ public class TeamCommandController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "팀 생성", description = "팀을 생성한다. 팀 리더는 생성자")
+    @PostMapping
+    public ResponseCustom<TeamSecretCodeResponse> registerTeam(Authentication authentication, @RequestBody RegisterTeamRequest registerTeamRequest) {
+        return ResponseCustom.OK(teamCommandService.registerTeam(AuthenticationParser.parseUserId(authentication), registerTeamRequest));
+    }
+
+    @Operation(summary = "팀 가입", description = "비밀 코드를 입력해 팀에 가입한다.")
+    @PostMapping("/join/{joinCode}")
+    public ResponseCustom<Message> joinTeam(Authentication authentication, @PathVariable("joinCode") String joinCode) {
+        return ResponseCustom.OK(teamCommandService.joinTeam(AuthenticationParser.parseUserId(authentication), joinCode));
+    }
 }

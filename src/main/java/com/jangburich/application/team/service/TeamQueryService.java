@@ -6,10 +6,7 @@ import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.infrastructure.repository.*;
-import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryItem;
-import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
-import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem;
-import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreResponse;
+import com.jangburich.presentation.team.dto.response.*;
 import com.jangburich.presentation.team.dto.response.myTeam.*;
 import com.jangburich.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -127,5 +124,27 @@ public class TeamQueryService {
         PageInfo pageInfo = new PageInfo(teamPrepaidStoreItemPage.getNumber(), teamPrepaidStoreItemPage.getSize(), teamPrepaidStoreItemPage.getTotalPages(), teamPrepaidStoreItemPage.getTotalElements(), teamPrepaidStoreItemPage.hasNext(), teamPrepaidStoreItemPage.hasPrevious());
 
         return new TeamPrepaidStoreResponse(teamPrepaidStoreItemPage.stream().toList(), pageInfo);
+    }
+
+    public TeamCodeResponse getTeamsWithSecretCode(String secretCode) {
+        Team team = teamRepository.findBySecretCode(secretCode)
+                .orElseThrow(() -> new RuntimeException("시크릿 코드가 존재하지 않습니다."));
+
+        long count = userTeamRepository.findAllByTeam(team).size();
+
+        List<String> profileImages = userTeamRepository.findAllByTeam(team)
+                .stream()
+                .map(userTeam -> userTeam.getUser().getProfileImageUrl())
+                .limit(3)
+                .toList();
+
+        return new TeamCodeResponse(
+                team.getName(),
+                team.getCreatedAt(),
+                team.getTeamType(),
+                count,
+                profileImages,
+                team.getStatus()
+        );
     }
 }
