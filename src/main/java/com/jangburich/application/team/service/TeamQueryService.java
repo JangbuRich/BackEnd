@@ -93,12 +93,4 @@ public class TeamQueryService {
 
         return new TeamMemberResponse(userTeamList, pageInfo);
     }
-
-    public TeamPaymentHistoryResponse getTeamPaymentHistory(String userId, Long teamId, Pageable pageable){
-        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
-
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
-
-        Page<>
-    }
 }

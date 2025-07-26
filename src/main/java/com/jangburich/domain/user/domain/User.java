@@ -1,5 +1,6 @@
 package com.jangburich.domain.user.domain;
 
+import com.jangburich.domain.entity.TeamLeader;
 import org.hibernate.annotations.Comment;
 
 import com.jangburich.domain.common.BaseEntity;

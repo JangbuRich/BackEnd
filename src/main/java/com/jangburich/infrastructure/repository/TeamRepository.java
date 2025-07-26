@@ -2,6 +2,7 @@ package com.jangburich.infrastructure.repository;
 
 import com.jangburich.domain.common.Status;
 import com.jangburich.domain.entity.Team;
+import com.jangburich.domain.entity.TeamLeader;
 import com.jangburich.domain.user.domain.User;
 
 import java.util.List;
@@ -15,7 +16,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
     Optional<Team> findBySecretCode(String secretCode);
-
 
     @Query("SELECT t FROM Team t JOIN UserTeam ut ON ut.team = t WHERE ut.user = :user AND t.status = :status")
     Optional<List<Team>> findAllByUserAndStatus(@Param("user") User user, @Param("status") Status status);
@@ -35,4 +35,13 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
                and ut.status = 'ACTIVE'
             """)
     Page<Team> findAllByUserAndCategory(@Param("user") Long user, @Param("keyword") String keyword, @Param("category") String category, Pageable pageable);
+
+    @Query("""
+            select t
+            from Team t
+            where t.id = :team
+            and t.teamLeader.leaderId = :teamLeaderId
+            and t.status = 'ACTIVE'
+            """)
+    Optional<Team> findByIdAndTeamLeaderId(@Param("team") long teamId, @Param("teamLeaderId") long teamLeaderId);
 }

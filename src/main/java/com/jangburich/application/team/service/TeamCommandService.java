@@ -22,12 +22,25 @@ public class TeamCommandService {
     private final UserTeamRepository userTeamRepository;
 
     @Transactional
-    public void leaveTeam(String userId, long teamId) {
+    public void deleteTeam(String userId, long teamId) {
         User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
 
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
 
         UserTeam userTeam = userTeamRepository.findByUserAndTeam(user, team).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_TEAM_ID));
+
+        userTeam.updateStatus(Status.INACTIVE);
+    }
+
+    @Transactional
+    public void deleteTeamMember(String leaderId, long teamId, long userId) {
+        User leader = userRepository.findByProviderId(leaderId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findByIdAndTeamLeaderId(teamId, leader.getUserId()).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_CHECK));
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        UserTeam userTeam = userTeamRepository.findByUserAndTeam(user, team).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_CHECK));
 
         userTeam.updateStatus(Status.INACTIVE);
     }
