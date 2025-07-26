@@ -1,13 +1,12 @@
 package com.jangburich.application.team.service;
 
 import com.jangburich.domain.common.Status;
-import com.jangburich.domain.entity.StoreTeam;
-import com.jangburich.domain.entity.Team;
-import com.jangburich.domain.entity.UserTeam;
+import com.jangburich.domain.entity.*;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.infrastructure.repository.*;
+import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryItem;
 import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.*;
 import com.jangburich.domain.user.domain.User;
@@ -18,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ public class TeamQueryService {
     private static final String DEFAULT_PROFILE_IMAGE_URL = "https://github.com/user-attachments/assets/56565343-51f4-48b5-bf87-7585011d8de6";
 
     private final FavoriteTeamRepository favoriteTeamRepository;
+    private final PointTransactionRepository pointTransactionRepository;
     private final StoreTeamRepository storeTeamRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
@@ -92,5 +94,21 @@ public class TeamQueryService {
         PageInfo pageInfo = new PageInfo(userTeamPage.getNumber(), userTeamPage.getSize(), userTeamPage.getTotalPages(), userTeamPage.getTotalElements(), userTeamPage.hasNext(), userTeamPage.hasPrevious());
 
         return new TeamMemberResponse(userTeamList, pageInfo);
+    }
+
+    public TeamPaymentHistoryResponse getTeamPaymentHistory(String providerId, Long teamId, Long userId, Long storeId, Pageable pageable) {
+        User user = userRepository.findByProviderId(providerId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        UserTeam userTeam = userTeamRepository.findByUserAndTeam(user, team).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_TEAM_ID));
+
+        Page<TeamPaymentHistoryItem> teamPaymentHistoryItemPage = pointTransactionRepository.findAllByTeamAndUserAndStore(team, userId, storeId, pageable);
+
+        LocalDateTime startDate = pointTransactionRepository.findMinCreatedAtByTeamAndUserAndStore(team, userId, storeId);
+
+        PageInfo pageInfo = new PageInfo(teamPaymentHistoryItemPage.getNumber(), teamPaymentHistoryItemPage.getSize(), teamPaymentHistoryItemPage.getTotalPages(), teamPaymentHistoryItemPage.getTotalElements(), teamPaymentHistoryItemPage.hasNext(), teamPaymentHistoryItemPage.hasPrevious());
+
+        return new TeamPaymentHistoryResponse(startDate, LocalDateTime.now(ZoneId.of("Asia/Seoul")), teamPaymentHistoryItemPage.stream().toList(), pageInfo);
     }
 }

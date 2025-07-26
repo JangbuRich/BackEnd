@@ -58,5 +58,11 @@ public class TeamQueryController {
         return ResponseEntity.ok(new BaseResponse<>(teamMemberResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
-
+    @GetMapping("/{teamId}/payment/history")
+    @Operation(summary = "팀별 결제 내역 조회", description = "팀별 결제 내역을 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<BaseResponse<?>> getTeamPaymentHistory(Authentication authentication, @PathVariable Long teamId, @RequestParam(required = false) Long userId, @RequestParam(required = false) Long storeId, @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        TeamPaymentHistoryResponse teamPaymentHistoryResponse = teamQueryService.getTeamPaymentHistory(AuthenticationParser.parseUserId(authentication), teamId, userId, storeId, pageable);
+        return ResponseEntity.ok(new BaseResponse<>(teamPaymentHistoryResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
 }
