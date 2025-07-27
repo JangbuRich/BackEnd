@@ -36,7 +36,16 @@ public class TeamCommandController {
     public ResponseEntity<BaseResponse<?>> registerTeam(Authentication authentication, @RequestBody RegisterTeamRequest registerTeamRequest) {
         TeamCreateResponse teamCreateResponseResponse = teamCommandService.registerTeam(AuthenticationParser.parseUserId(authentication), registerTeamRequest);
         URI location = URI.create("/teams/" + teamCreateResponseResponse.id());
+
         return ResponseEntity.created(location).body(new BaseResponse<>(teamCommandService, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
+    @PostMapping("/join/{joinCode}")
+    @Operation(summary = "팀 가입", description = "비밀 코드를 입력해 팀에 가입한다.")
+    public ResponseEntity<Void> joinTeam(Authentication authentication, @PathVariable("joinCode") String joinCode) {
+        teamCommandService.joinTeam(AuthenticationParser.parseUserId(authentication), joinCode);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{teamId}/delete")
@@ -55,11 +64,5 @@ public class TeamCommandController {
         teamCommandService.deleteTeamMember(AuthenticationParser.parseUserId(authentication), teamId, userId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "팀 가입", description = "비밀 코드를 입력해 팀에 가입한다.")
-    @PostMapping("/join/{joinCode}")
-    public ResponseCustom<Message> joinTeam(Authentication authentication, @PathVariable("joinCode") String joinCode) {
-        return ResponseCustom.OK(teamCommandService.joinTeam(AuthenticationParser.parseUserId(authentication), joinCode));
     }
 }
