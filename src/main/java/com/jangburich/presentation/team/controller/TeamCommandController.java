@@ -6,6 +6,7 @@ import com.jangburich.global.payload.CommonApiResponse;
 import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
+import com.jangburich.presentation.team.dto.response.TeamCreateResponse;
 import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,9 +34,9 @@ public class TeamCommandController {
     @PostMapping
     @Operation(summary = "팀 생성", description = "팀을 생성한다. 팀 리더는 생성자", responses = @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(implementation = BaseResponse.class))))
     public ResponseEntity<BaseResponse<?>> registerTeam(Authentication authentication, @RequestBody RegisterTeamRequest registerTeamRequest) {
-        TeamSecretCodeResponse teamSecretCodeResponse = teamCommandService.registerTeam(AuthenticationParser.parseUserId(authentication), registerTeamRequest);
-        URI location = URI.create("/teams/" + teamSecretCodeResponse.id());
-        return ResponseEntity.created(location).body(new BaseResponse<>(teamSecretCodeResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+        TeamCreateResponse teamCreateResponseResponse = teamCommandService.registerTeam(AuthenticationParser.parseUserId(authentication), registerTeamRequest);
+        URI location = URI.create("/teams/" + teamCreateResponseResponse.id());
+        return ResponseEntity.created(location).body(new BaseResponse<>(teamCommandService, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
     @PostMapping("/{teamId}/delete")

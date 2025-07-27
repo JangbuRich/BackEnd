@@ -2,16 +2,14 @@ package com.jangburich.presentation.team.controller;
 
 import com.jangburich.application.team.service.TeamQueryService;
 import com.jangburich.global.payload.ResponseCustom;
-import com.jangburich.presentation.team.dto.response.TeamCodeResponse;
 import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryResponse;
-import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreItem;
 import com.jangburich.presentation.team.dto.response.TeamPrepaidStoreResponse;
+import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.TeamMemberResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamDetailResponse;
 import com.jangburich.presentation.team.dto.response.myTeam.MyTeamResponse;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
-import com.jangburich.presentation.user.dto.response.StoreListResponse;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,6 +44,14 @@ public class TeamQueryController {
         return ResponseEntity.ok(new BaseResponse<>(myTeamResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
+    @Operation(summary = "그룹(팀) 비밀코드 조회", description = "비밀코드를 입력하면, 그 팀을 조회하는 api 입니다.")
+    @GetMapping("/secretcode/{secretCode}")
+    public ResponseEntity<BaseResponse<?>> getTeamWithSecretCode(@PathVariable String secretCode) {
+        TeamSecretCodeResponse teamSecretCodeResponse = teamQueryService.getTeamsWithSecretCode(secretCode);
+
+        return ResponseEntity.ok(new BaseResponse<>(teamSecretCodeResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
     @GetMapping("/{teamId}")
     @Operation(summary = "그룹(팀) 상세 조회", description = "내가 속한 팀의 정보를 상세 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
     @CommonApiResponse
@@ -78,11 +84,5 @@ public class TeamQueryController {
         TeamPrepaidStoreResponse teamPrepaidStoreResponse = teamQueryService.getTeamStoreList(AuthenticationParser.parseUserId(authentication), teamId, keyword, pageable);
 
         return ResponseEntity.ok(new BaseResponse<>(teamPrepaidStoreResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
-    }
-
-    @Operation(summary = "그룹(팀) 비밀코드 조회", description = "비밀코드를 입력하면, 그 팀을 조회하는 api 입니다.")
-    @GetMapping("/info/secretcode/{secretCode}")
-    public ResponseCustom<TeamCodeResponse> getTeamWithSecretCode(@PathVariable String secretCode) {
-        return ResponseCustom.OK(teamQueryService.getTeamsWithSecretCode(secretCode));
     }
 }

@@ -13,6 +13,7 @@ import com.jangburich.infrastructure.repository.TeamRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.infrastructure.repository.UserTeamRepository;
 import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
+import com.jangburich.presentation.team.dto.response.TeamCreateResponse;
 import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,7 @@ public class TeamCommandService {
     }
 
     @Transactional
-    public TeamSecretCodeResponse registerTeam(String userId, RegisterTeamRequest registerTeamRequest) {
+    public TeamCreateResponse registerTeam(String userId, RegisterTeamRequest registerTeamRequest) {
         User user = userRepository.findByProviderId(userId)
                 .orElseThrow(NullPointerException::new);
 
@@ -95,6 +96,6 @@ public class TeamCommandService {
         UserTeam userTeam = UserTeam.of(user, team);
         userTeamRepository.save(userTeam);
 
-        return new TeamSecretCodeResponse(saved.getId(), saved.getSecretCode());
+        return new TeamCreateResponse(saved.getId(), saved.getSecretCode());
     }
 }

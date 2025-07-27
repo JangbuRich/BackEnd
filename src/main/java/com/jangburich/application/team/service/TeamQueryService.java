@@ -12,7 +12,6 @@ import com.jangburich.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -126,9 +125,9 @@ public class TeamQueryService {
         return new TeamPrepaidStoreResponse(teamPrepaidStoreItemPage.stream().toList(), pageInfo);
     }
 
-    public TeamCodeResponse getTeamsWithSecretCode(String secretCode) {
+    public TeamSecretCodeResponse getTeamsWithSecretCode(String secretCode) {
         Team team = teamRepository.findBySecretCode(secretCode)
-                .orElseThrow(() -> new RuntimeException("시크릿 코드가 존재하지 않습니다."));
+                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_CHECK));
 
         long count = userTeamRepository.findAllByTeam(team).size();
 
@@ -138,7 +137,7 @@ public class TeamQueryService {
                 .limit(3)
                 .toList();
 
-        return new TeamCodeResponse(
+        return new TeamSecretCodeResponse(
                 team.getName(),
                 team.getCreatedAt(),
                 team.getTeamType(),
