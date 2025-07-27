@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class TeamCommandService {
@@ -83,8 +85,6 @@ public class TeamCommandService {
                 .teamLeader(
                         TeamLeader.builder()
                                 .leaderId(user.getUserId())
-                                .accountNumber(registerTeamRequest.teamLeaderAccountNumber())
-                                .bankName(registerTeamRequest.bankName())
                                 .build()
                 )
                 .teamType(TeamType.valueOf(registerTeamRequest.teamType()))
@@ -95,6 +95,6 @@ public class TeamCommandService {
         UserTeam userTeam = UserTeam.of(user, team);
         userTeamRepository.save(userTeam);
 
-        return new TeamSecretCodeResponse(saved.getSecretCode());
+        return new TeamSecretCodeResponse(saved.getId(), saved.getSecretCode());
     }
 }
