@@ -30,17 +30,11 @@ public class UserQueryController {
     private final UserQueryService userQueryService;
 
     @GetMapping("/store")
-    @Operation(summary = "제휴 매장 조회", description = "유저의 제휴 매장을 조회합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK",
-                            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-            })
+    @Operation(summary = "제휴 매장 조회", description = "유저의 제휴 매장을 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
     @CommonApiResponse
-    public ResponseEntity<BaseResponse<?>> getStoreList(Authentication authentication
-            , @RequestParam boolean liked
-            , @PageableDefault(page = 0, size = 3) Pageable pageable) {
+    public ResponseEntity<BaseResponse<?>> getStoreList(Authentication authentication, @RequestParam boolean liked, @PageableDefault(page = 0, size = 3) Pageable pageable) {
         StoreListResponse storeListResponse = userQueryService.getStoreList(AuthenticationParser.parseUserId(authentication), liked, pageable);
 
-        return ResponseEntity.ok(new BaseResponse<>(storeListResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")),"OK"));
+        return ResponseEntity.ok(new BaseResponse<>(storeListResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 }

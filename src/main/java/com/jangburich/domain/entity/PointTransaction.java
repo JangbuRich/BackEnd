@@ -1,7 +1,8 @@
 package com.jangburich.domain.entity;
 
 import com.jangburich.domain.common.BaseEntity;
-import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.entity.Store;
+import com.jangburich.domain.entity.Team;
 import com.jangburich.domain.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.jangburich.domain.entity.OrderStatus;
 import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.team.domain.Team;
+import com.jangburich.domain.entity.Team;
 
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.presentation.wallet.dto.response.PointTransactionItem;

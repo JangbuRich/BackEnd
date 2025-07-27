@@ -1,0 +1,56 @@
+package com.jangburich.infrastructure.repository;
+
+import com.jangburich.domain.common.Status;
+import com.jangburich.domain.entity.Team;
+import com.jangburich.domain.entity.UserTeam;
+import com.jangburich.domain.user.domain.User;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
+    int countByTeam(Team team);
+
+    @Query("""
+            select ut.team.id, count(ut)
+            from UserTeam ut
+            where ut.team in :teams
+            and ut.status = 'ACTIVE'
+            group by ut.team.id
+            order by ut.team.id
+            """)
+    List<Object[]> countByTeams(@Param("teams") List<Team> teams);
+
+    Optional<UserTeam> findByUserAndTeam(User user, Team team);
+
+    @Query("""
+            select ut.user.profileImageUrl
+            from UserTeam ut
+            where ut.team = :team
+            and ut.status = 'ACTIVE'
+            and ut.user.status = 'ACTIVE'
+            """)
+    List<String> findProfileImagesByTeam(@Param("team") Team team);
+
+    @Query("""
+                select ut.team.id, ut.user.profileImageUrl
+                from UserTeam ut
+                where ut.team in :teams
+                and ut.status = 'ACTIVE'
+                and ut.user.status = 'ACTIVE'
+                order by ut.team.id
+            """)
+    List<Object[]> findProfileImagesByTeams(@Param("teams") List<Team> teams);
+
+    boolean existsByUserAndTeam(User user, Team team);
+
+    List<UserTeam> findAllByTeam(Team team);
+
+    Page<UserTeam> findAllByTeamAndStatus(Team team, Status status, Pageable pageable);
+}

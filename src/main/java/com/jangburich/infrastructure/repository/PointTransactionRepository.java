@@ -2,7 +2,7 @@ package com.jangburich.infrastructure.repository;
 
 import com.jangburich.domain.entity.PointTransaction;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.domain.entity.StoreTeam;
+import com.jangburich.domain.entity.Team;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
 import com.jangburich.domain.user.domain.User;
 
@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.jangburich.presentation.team.dto.response.TeamPaymentHistoryItem;
 import com.jangburich.presentation.wallet.dto.response.PointTransactionItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +46,21 @@ public interface PointTransactionRepository extends JpaRepository<PointTransacti
     List<PointTransaction> findAllByStoreIdOrderByIdDesc(Long store_id);
 
     @Query("""
+            select new com.jangburich.presentation.team.dto.response.TeamPaymentHistoryItem(
+                pt.createdAt
+                , pt.store.name
+                , pt.user.name
+                , pt.transactionedPoint
+            )
+            from PointTransaction pt
+            where (pt.team = :team and pt.team.status = 'ACTIVE')
+            and (:userId is null or (pt.user.userId = :userId and pt.user.status = 'ACTIVE'))
+            and (:storeId is null or pt.store.id = :storeId)
+            and pt.status = 'ACTIVE'
+            """)
+    Page<TeamPaymentHistoryItem> findAllByTeamAndUserAndStore(@Param("team") Team team, @Param("userId") Long userId, @Param("storeId") Long storeId, Pageable pageable);
+
+    @Query("""
                 SELECT new com.jangburich.presentation.wallet.dto.response.PointTransactionItem(
                     pt.id
                     , pt.store.id
@@ -61,4 +77,14 @@ public interface PointTransactionRepository extends JpaRepository<PointTransacti
                 AND (:createdBefore IS NULL OR pt.createdAt <= :createdBefore)
             """)
     Page<PointTransactionItem> findAllPrepayByCreatedAfterAndCreatedBefore(@Param("user") User user, @Param("createdAfter") LocalDateTime createdAfter, @Param("createdBefore") LocalDateTime createdBefore, Pageable pageable);
+
+    @Query("""
+            select MIN(pt.createdAt)
+            from PointTransaction pt
+            where (pt.team = :team and pt.team.status = 'ACTIVE')
+            and (:userId is null or (pt.user.userId = :userId and pt.user.status = 'ACTIVE'))
+            and (:storeId is null or pt.store.id = :storeId)
+            and pt.status = 'ACTIVE'
+            """)
+    LocalDateTime findMinCreatedAtByTeamAndUserAndStore(@Param("team") Team team, @Param("userId") Long userId, @Param("storeId") Long storeId);
 }

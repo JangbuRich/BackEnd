@@ -4,14 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.jangburich.domain.entity.QPointTransaction;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.Expressions;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.jangburich.domain.entity.QStore;
-import com.jangburich.domain.team.domain.QTeam;
+import com.jangburich.domain.entity.QTeam;
 import com.jangburich.domain.user.domain.QUser;
 import com.jangburich.infrastructure.repository.queryDsl.PointTransactionQueryDslRepository;
 import com.jangburich.presentation.prepay.dto.response.PrepayResponse;
