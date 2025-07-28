@@ -13,10 +13,13 @@ import com.jangburich.infrastructure.repository.TeamRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.infrastructure.repository.UserTeamRepository;
 import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
+import com.jangburich.presentation.team.dto.response.TeamCreateResponse;
 import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -51,50 +54,32 @@ public class TeamCommandService {
     }
 
     @Transactional
-    public Message joinTeam(String userId, String joinCode) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(NullPointerException::new);
+    public void joinTeam(String userId, String joinCode) {
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
 
-        Team team = teamRepository.findBySecretCode(joinCode)
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+        Team team = teamRepository.findBySecretCode(joinCode).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
 
         team.validateJoinCode(joinCode);
 
         if (userTeamRepository.existsByUserAndTeam(user, team)) {
-            throw new IllegalStateException("유저는 이미 해당 팀에 속해 있습니다.");
+            throw new DefaultException(ErrorCode.INVALID_CHECK);
         }
 
         UserTeam userTeam = UserTeam.of(user, team);
         userTeamRepository.save(userTeam);
-
-        return Message.builder()
-                .message("팀에 성공적으로 참여하였습니다.")
-                .build();
     }
 
     @Transactional
-    public TeamSecretCodeResponse registerTeam(String userId, RegisterTeamRequest registerTeamRequest) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(NullPointerException::new);
+    public TeamCreateResponse registerTeam(String userId, RegisterTeamRequest registerTeamRequest) {
+        User user = userRepository.findByProviderId(userId).orElseThrow(NullPointerException::new);
 
-        Team team = Team.builder()
-                .name(registerTeamRequest.teamName())
-                .description(registerTeamRequest.description())
-                .teamLeader(
-                        TeamLeader.builder()
-                                .leaderId(user.getUserId())
-                                .accountNumber(registerTeamRequest.teamLeaderAccountNumber())
-                                .bankName(registerTeamRequest.bankName())
-                                .build()
-                )
-                .teamType(TeamType.valueOf(registerTeamRequest.teamType()))
-                .build();
+        Team team = Team.builder().name(registerTeamRequest.teamName()).description(registerTeamRequest.description()).teamLeader(TeamLeader.builder().leaderId(user.getUserId()).build()).teamType(TeamType.valueOf(registerTeamRequest.teamType())).build();
 
         Team saved = teamRepository.save(team);
 
         UserTeam userTeam = UserTeam.of(user, team);
         userTeamRepository.save(userTeam);
 
-        return new TeamSecretCodeResponse(saved.getSecretCode());
+        return new TeamCreateResponse(saved.getId(), saved.getSecretCode());
     }
 }
