@@ -13,7 +13,7 @@ import com.jangburich.application.store.resolver.StoreResolver;
 import com.jangburich.domain.entity.Orders;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
-import com.jangburich.presentation.store.dtos.response.store.StoreGetResponse;
+import com.jangburich.presentation.store.dtos.response.store.StoreInfoResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
@@ -75,14 +75,19 @@ public class StoreQueryService {
                 .build();
     }
 
-    public StoreGetResponse getStoreInfo(String authentication) {
+    /**
+     * [매장 정보 관리 Tab] -> 매장 정보를 조회한다.
+     * @param authentication AuthenticationId
+     * @return StoreInfoResponse
+     */
+    public StoreInfoResponse getStoreInfo(String authentication) {
         Store store = storeResolver.getStoreByUserId(authentication);
 
         if (!store.getOwner().getUser().getProviderId().equals(authentication)) {
             throw new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION);
         }
 
-        return new StoreGetResponse().of(store);
+        return new StoreInfoResponse().of(store);
     }
 
     public List<StoreChargeHistoryResponse> getPaymentHistory(String userId) {
