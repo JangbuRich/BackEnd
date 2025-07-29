@@ -1,6 +1,7 @@
 package com.jangburich.presentation.store.dtos.request;
 
 import com.jangburich.domain.entity.Category;
+import com.jangburich.domain.store.StoreMenu;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
@@ -13,19 +14,16 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public class StoreUpdateRequest {
-	@Enumerated(EnumType.STRING)
+ 	@Enumerated(EnumType.STRING)
 	private Category category;
 	private String representativeImage;
-	private Boolean reservationAvailable;
-	private Long maxReservation;
-	private Long minPrepayment;
-	private Long prepaymentDuration;
 	private String introduction;
-	private Double latitude;
-	private Double longitude;
 	private String address;
 	private String location;
+	private String phoneNumber;
+	private String uniqueCode;
 	private List<DayOfWeek> dayOfWeek;
 	private LocalTime openTime;
 	private LocalTime closeTime;
+	private List<StoreMenu> storeMenus;
 }

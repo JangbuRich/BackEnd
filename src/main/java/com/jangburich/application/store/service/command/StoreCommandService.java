@@ -1,5 +1,6 @@
 package com.jangburich.application.store.service.command;
 
+import com.jangburich.application.store.resolver.StoreResolver;
 import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.owner.domain.entity.Owner;
@@ -40,6 +41,8 @@ public class StoreCommandService {
     private final UserRepository userRepository;
     private final StoreQueryDslRepository storeQueryDslRepository;
 
+    private final StoreResolver storeResolver;
+
     private final S3Service s3Service;
 
     private final RandomNumberProvider randomNumberProvider;
@@ -47,6 +50,7 @@ public class StoreCommandService {
     @Transactional
     public StoreCreateResponseDto createStore(String authentication, StoreCreateRequest storeCreateRequest, MultipartFile image,
                                               List<MultipartFile> menuImages) {
+        // TODO 매장 신규 가입시 menuImages 는 S3 에 담고, 그 preSignUrl 을 store_menu 테이블에 넣자.
 
         try {
             User user = userRepository.findByProviderId(authentication)
@@ -97,26 +101,14 @@ public class StoreCommandService {
 
     @Transactional
     public void updateStore(String userId, StoreUpdateRequest storeUpdateRequest) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         if (!store.getOwner().getUser().getProviderId().equals(userId)) {
             throw new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION);
         }
 
-        storeRepository.save(updateStore(store, storeUpdateRequest));
-    }
-
-    @Transactional
-    public Store updateStore(Store store, StoreUpdateRequest storeUpdateRequest) {
+        // 더티 체킹사용 업데이트
         store.update(storeUpdateRequest);
-        return store;
     }
 
     public Page<SearchStoresResponse> searchByCategory(final String authentication, final Integer searchRadius,

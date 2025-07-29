@@ -1,10 +1,15 @@
 package com.jangburich.presentation.store.controller.command;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.jangburich.global.payload.BaseResponse;
+import com.jangburich.presentation.store.dtos.response.store.StoreInfoResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -78,12 +83,16 @@ public class StoreCommandController {
 		return ResponseCustom.OK(responseDto);
 	}
 
-	@Operation(summary = "가게 정보 수정", description = "가게 정보를 수정합니다.")
+
+	@Operation(summary = "매장 정보 수정", description = "[매장 정보 관리 Tab] 매장 정보를 수정합니다.")
 	@PatchMapping("/update")
-	public ResponseCustom<Message> updateStore(Authentication authentication,
-		@RequestBody StoreUpdateRequest storeUpdateRequest) {
+	public ResponseEntity<?> updateStore(Authentication authentication, @Valid @RequestBody StoreUpdateRequest storeUpdateRequest) {
 		storeCommandService.updateStore(AuthenticationParser.parseUserId(authentication), storeUpdateRequest);
-		return ResponseCustom.OK(Message.builder().message("success").build());
+
+		return ResponseEntity.ok(new BaseResponse<>(null, LocalDateTime.now(), "OK"));
 	}
+
+
+
 
 }
