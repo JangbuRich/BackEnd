@@ -3,7 +3,7 @@ package com.jangburich.infrastructure.repository.impl;
 import com.jangburich.domain.entity.Category;
 import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.response.store.QSearchStoresResponse;
-import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
+import com.jangburich.presentation.store.dtos.response.store.StoreListItem;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -27,14 +27,14 @@ public class StoreQueryDslRepositoryImpl implements StoreQueryDslRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<SearchStoresResponse> findStoresByCategory(Long userId, Integer searchRadius, Category category,
-                                                           Double lat, Double lon, Pageable pageable) {
+    public Page<StoreListItem> findStoresByCategory(Long userId, Integer searchRadius, Category category,
+                                                    Double lat, Double lon, Pageable pageable) {
         double myCurrentLat = lat;
         double myCurrentLon = lon;
 
         BooleanExpression categoryCondition = isAllCategory(category);
 
-        List<SearchStoresResponse> results = queryFactory
+        List<StoreListItem> results = queryFactory
                 .select(new QSearchStoresResponse(store.id, store.name, store.latitude, store.longitude, Expressions.FALSE, store.category,
                         Expressions.constant(1.0), Expressions.constant("open"),
                         store.closeTime.stringValue(), store.contactNumber, store.representativeImage))
@@ -60,10 +60,10 @@ public class StoreQueryDslRepositoryImpl implements StoreQueryDslRepository {
     }
 
     @Override
-    public Page<SearchStoresResponse> findStores(Long userId, String keyword,
-                                                 Pageable pageable) {
+    public Page<StoreListItem> findStores(Long userId, String keyword,
+                                          Pageable pageable) {
 
-        List<SearchStoresResponse> results = queryFactory
+        List<StoreListItem> results = queryFactory
                 .select(new QSearchStoresResponse(store.id, store.name, store.latitude, store.longitude, Expressions.FALSE, store.category,
                         Expressions.constant(1.0), Expressions.constant("open"),
                         store.closeTime.stringValue(), store.contactNumber, store.representativeImage))

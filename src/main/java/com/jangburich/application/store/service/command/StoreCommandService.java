@@ -1,15 +1,12 @@
 package com.jangburich.application.store.service.command;
 
-import com.jangburich.domain.entity.Category;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
-import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
-import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponseDto;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
@@ -19,8 +16,6 @@ import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.utils.DayOfWeekConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +33,6 @@ public class StoreCommandService {
     private final StoreRepository storeRepository;
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
-    private final StoreQueryDslRepository storeQueryDslRepository;
 
     private final S3Service s3Service;
 
@@ -117,21 +111,6 @@ public class StoreCommandService {
     public Store updateStore(Store store, StoreUpdateRequest storeUpdateRequest) {
         store.update(storeUpdateRequest);
         return store;
-    }
-
-    public Page<SearchStoresResponse> searchByCategory(final String authentication, final Integer searchRadius,
-                                                       final Category category, Double lat, Double lon, final Pageable pageable) {
-        User user = userRepository.findByProviderId(authentication)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-        return storeQueryDslRepository.findStoresByCategory(user.getUserId(), searchRadius, category, lat, lon,
-                pageable);
-    }
-
-    public Page<SearchStoresResponse> searchStores(final String authentication, final String keyword,
-                                                   final Pageable pageable) {
-        User user = userRepository.findByProviderId(authentication)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-        return storeQueryDslRepository.findStores(user.getUserId(), keyword, pageable);
     }
 
     private String createStoreId() {
