@@ -1,15 +1,16 @@
 package com.jangburich.application.store.service.command;
 
-import com.jangburich.domain.entity.Category;
+import com.jangburich.domain.common.Status;
+import com.jangburich.domain.entity.FavoriteStore;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.global.error.DefaultException;
+import com.jangburich.infrastructure.repository.FavoriteStoreRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
-import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
-import com.jangburich.presentation.store.dtos.response.store.SearchStoresResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponseDto;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
@@ -19,8 +20,6 @@ import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.utils.DayOfWeekConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,10 +34,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StoreCommandService {
 
+    private final FavoriteStoreRepository favoriteStoreRepository;
     private final StoreRepository storeRepository;
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
-    private final StoreQueryDslRepository storeQueryDslRepository;
 
     private final S3Service s3Service;
 
@@ -119,19 +118,30 @@ public class StoreCommandService {
         return store;
     }
 
-    public Page<SearchStoresResponse> searchByCategory(final String authentication, final Integer searchRadius,
-                                                       final Category category, Double lat, Double lon, final Pageable pageable) {
-        User user = userRepository.findByProviderId(authentication)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-        return storeQueryDslRepository.findStoresByCategory(user.getUserId(), searchRadius, category, lat, lon,
-                pageable);
+    @Transactional
+    public void createFavoriteStore(String userId, Long storeId){
+        User user = userRepository.findByProviderId(userId).orElseThrow(()->new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
+
+        List<FavoriteStore> favoriteStoreList = favoriteStoreRepository.findAllByUserAndStatus(user, Status.ACTIVE);
+
+        if(!favoriteStoreList.isEmpty()){
+            throw new DefaultException(ErrorCode.FAVORITE_STORE_DUPLICATE);
+        }
+
+        favoriteStoreRepository.save(FavoriteStore.of(user, store));
     }
 
-    public Page<SearchStoresResponse> searchStores(final String authentication, final String keyword,
-                                                   final Pageable pageable) {
-        User user = userRepository.findByProviderId(authentication)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-        return storeQueryDslRepository.findStores(user.getUserId(), keyword, pageable);
+    @Transactional
+    public void deleteFavoriteStore(String userId, Long storeId){
+        User user = userRepository.findByProviderId(userId).orElseThrow(()->new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
+
+        FavoriteStore favoriteStore = favoriteStoreRepository.findByStoreAndUserAndStatus(store, user, Status.ACTIVE).orElseThrow(()->new DefaultException(ErrorCode.INVALID_CHECK));
+
+        favoriteStore.updateStatus(Status.INACTIVE);
     }
 
     private String createStoreId() {

@@ -1,6 +1,5 @@
 package com.jangburich.application.user.service;
 
-import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.error.DefaultNullPointerException;
@@ -16,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,12 +26,6 @@ public class UserQueryService {
     public StoreListResponse getStoreList(String userId, boolean liked, Pageable pageable) {
         User user = userRepository.findByProviderId(userId)
                 .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_USER_ID));
-
-        List<Store> strores = storeRepository.finfd(user.getUserId());
-        for (Store store : strores
-        ) {
-            System.out.println(store.getName());
-        }
 
         Page<StoreItem> storeItemPage = storeRepository.findAllByUser(user, liked, pageable);
 
