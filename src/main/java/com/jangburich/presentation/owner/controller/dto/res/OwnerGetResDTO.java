@@ -1,11 +1,10 @@
-package com.jangburich.domain.owner.domain.controller.dto.res;
+package com.jangburich.presentation.owner.controller.dto.res;
 
+import com.jangburich.domain.owner.Owner;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-
-import com.jangburich.domain.owner.domain.entity.Owner;
 
 @Getter
 @RequiredArgsConstructor

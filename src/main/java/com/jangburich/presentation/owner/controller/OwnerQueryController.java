@@ -1,21 +1,19 @@
-package com.jangburich.domain.owner.domain.controller;
+package com.jangburich.presentation.owner.controller;
 
+import com.jangburich.application.owner.service.query.OwnerQueryService;
+import com.jangburich.global.error.DefaultNullPointerException;
+import com.jangburich.global.payload.ErrorCode;
+import com.jangburich.global.payload.ResponseCustom;
+import com.jangburich.presentation.owner.controller.dto.res.OwnerGetResDTO;
+import com.jangburich.utils.parser.AuthenticationParser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.jangburich.domain.owner.domain.controller.dto.res.OwnerGetResDTO;
-import com.jangburich.domain.owner.domain.service.OwnerQueryService;
-import com.jangburich.global.error.DefaultNullPointerException;
-import com.jangburich.global.payload.ErrorCode;
-import com.jangburich.global.payload.ResponseCustom;
-import com.jangburich.utils.parser.AuthenticationParser;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Tag(name = "Owner", description = "Owner API")

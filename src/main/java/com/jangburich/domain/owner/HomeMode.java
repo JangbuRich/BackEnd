@@ -1,4 +1,4 @@
-package com.jangburich.domain.owner.domain.entity;
+package com.jangburich.domain.owner;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

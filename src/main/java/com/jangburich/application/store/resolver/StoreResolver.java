@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import com.jangburich.application.store.resolver.context.StoreContext;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.domain.owner.domain.entity.Owner;
-import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.domain.owner.Owner;
+import com.jangburich.infrastructure.repository.OwnerRepository;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.global.error.DefaultNullPointerException;

@@ -1,4 +1,4 @@
-package com.jangburich.domain.owner.domain.service.dtos;
+package com.jangburich.application.owner.service.query.dtos;
 
 import java.util.List;
 

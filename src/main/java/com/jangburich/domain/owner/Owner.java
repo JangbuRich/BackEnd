@@ -1,4 +1,4 @@
-package com.jangburich.domain.owner.domain.entity;
+package com.jangburich.domain.owner;
 
 import com.jangburich.domain.common.BaseEntity;
 import com.jangburich.domain.user.domain.User;

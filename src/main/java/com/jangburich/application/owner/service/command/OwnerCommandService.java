@@ -1,12 +1,12 @@
-package com.jangburich.domain.owner.domain.service;
+package com.jangburich.application.owner.service.command;
 
 import com.jangburich.infrastructure.repository.UserRepository;
+import com.jangburich.presentation.owner.controller.dto.req.OwnerCreateReqDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jangburich.domain.owner.domain.controller.dto.req.OwnerCreateReqDTO;
-import com.jangburich.domain.owner.domain.entity.Owner;
-import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.domain.owner.Owner;
+import com.jangburich.infrastructure.repository.OwnerRepository;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;

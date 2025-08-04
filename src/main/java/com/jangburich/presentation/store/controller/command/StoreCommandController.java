@@ -49,23 +49,13 @@ public class StoreCommandController {
         return ResponseCustom.OK(responseDto);
     }
 
-    @Operation(summary = "가게 정보 수정", description = "가게 정보를 수정합니다.")
+    @Operation(summary = "매장 정보 수정", description = "[매장 정보 관리 Tab] 매장 정보를 수정합니다.")
     @PatchMapping("/update")
-    public ResponseCustom<Message> updateStore(Authentication authentication, @RequestBody StoreUpdateRequest storeUpdateRequest) {
+    public ResponseEntity<?> updateStore(Authentication authentication, @Valid @RequestBody StoreUpdateRequest storeUpdateRequest) {
         storeCommandService.updateStore(AuthenticationParser.parseUserId(authentication), storeUpdateRequest);
-        return ResponseCustom.OK(Message.builder().message("success").build());
+
+        return ResponseEntity.ok(new BaseResponse<>(null, LocalDateTime.now(), "OK"));
     }
-
-	@Operation(summary = "매장 정보 수정", description = "[매장 정보 관리 Tab] 매장 정보를 수정합니다.")
-	@PatchMapping("/update")
-	public ResponseEntity<?> updateStore(Authentication authentication, @Valid @RequestBody StoreUpdateRequest storeUpdateRequest) {
-		storeCommandService.updateStore(AuthenticationParser.parseUserId(authentication), storeUpdateRequest);
-
-		return ResponseEntity.ok(new BaseResponse<>(null, LocalDateTime.now(), "OK"));
-	}
-
-
-
 
     @PostMapping("/{storeId}/like")
     @Operation(summary = "가게 단골 등록", description = "가게 좋아요를 등록합니다.", responses = {@ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})

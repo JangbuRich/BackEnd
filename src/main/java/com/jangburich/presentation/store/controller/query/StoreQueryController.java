@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreInfoResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +28,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-
-import java.time.LocalDateTime;
 
 @Tag(name = "Store", description = "Store Query(조회) API")
 @RequiredArgsConstructor
@@ -78,6 +74,9 @@ public class StoreQueryController {
         StoreDetailsResponse storeDetailsResponse = storeQueryService.getStoreDetail(AuthenticationParser.parseUserId(authentication), storeId);
 
         return ResponseEntity.ok(new BaseResponse<>(storeDetailsResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+    }
+
+
     @Operation(summary = "매장 정보 조회", description = "[매장 정보 관리 Tab] 매장 전체 정보를 조회한다.")
     @GetMapping("/store/info")
     public ResponseEntity<?> getStorePrepayDetail(Authentication authentication) {
