@@ -3,11 +3,8 @@ package com.jangburich.presentation.team.controller;
 import com.jangburich.application.team.service.TeamCommandService;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
-import com.jangburich.global.payload.Message;
-import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
 import com.jangburich.presentation.team.dto.response.TeamCreateResponse;
-import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import com.jangburich.utils.parser.AuthenticationParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -62,6 +59,24 @@ public class TeamCommandController {
     @CommonApiResponse
     public ResponseEntity<Void> deleteTeamMember(Authentication authentication, @PathVariable long teamId, @PathVariable long userId) {
         teamCommandService.deleteTeamMember(AuthenticationParser.parseUserId(authentication), teamId, userId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{teamId}/like")
+    @Operation(summary = "대표 그룹 설정", description = "대표 그룹을 설정한다", responses = @ApiResponse(responseCode = "204", description = "No Content"))
+    @CommonApiResponse
+    public ResponseEntity<Void> createFavoriteTeam(Authentication authentication, @PathVariable Long teamId) {
+        teamCommandService.createFavoriteTeam(AuthenticationParser.parseUserId(authentication), teamId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{teamId}/like")
+    @Operation(summary = "대표 그룹 설정 해제", description = "대표 그룹 설정을 해제한다", responses = @ApiResponse(responseCode = "204", description = "No Content"))
+    @CommonApiResponse
+    public ResponseEntity<Void> deleteFavoriteTeam(Authentication authentication, @PathVariable Long teamId) {
+        teamCommandService.deleteFavoriteStore(AuthenticationParser.parseUserId(authentication), teamId);
 
         return ResponseEntity.noContent().build();
     }
