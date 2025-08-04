@@ -4,24 +4,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
-import com.jangburich.domain.entity.Category;
+import com.jangburich.domain.entity.*;
 import com.jangburich.domain.user.domain.User;
+import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.PageInfo;
 import com.jangburich.infrastructure.repository.*;
 import com.jangburich.infrastructure.repository.queryDsl.StoreQueryDslRepository;
-import com.jangburich.presentation.store.dtos.response.store.StoreListItem;
-import com.jangburich.presentation.store.dtos.response.store.StoreListResponse;
+import com.jangburich.presentation.store.dtos.response.store.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jangburich.application.store.resolver.StoreResolver;
-import com.jangburich.domain.entity.Orders;
-import com.jangburich.domain.entity.Store;
-import com.jangburich.presentation.store.dtos.response.store.StoreChargeHistoryResponse;
-import com.jangburich.presentation.store.dtos.response.store.StoreGetResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
@@ -38,7 +35,10 @@ public class StoreQueryService {
     // Todo: Team(group) 관련 로직들은 Team 패키지로 옮겨져야 하는게 맞음
 
     private final CustomOrderRepository customOrderRepository;
+    private final FavoriteStoreRepository favoriteStoreRepository;
     private final PointTransactionRepository pointTransactionRepository;
+    private final StoreRepository storeRepository;
+    private final StoreTeamRepository storeTeamRepository;
     private final UserRepository userRepository;
 
     private final StoreQueryDslRepository storeQueryDslRepository;
@@ -127,6 +127,35 @@ public class StoreQueryService {
         PageInfo pageInfo = new PageInfo(storeListItemPage.getNumber(), storeListItemPage.getSize(), storeListItemPage.getTotalPages(), storeListItemPage.getTotalElements(), storeListItemPage.hasNext(), storeListItemPage.hasPrevious());
 
         return new StoreListResponse(storeListItemPage.stream().toList(), pageInfo);
+    }
+
+    /**
+     * @param authentication AuthenticationId
+     * @param storeId        가게 ID
+     * @return StoreDetailsResponse - 가게 상세 조회 DTO
+     */
+    public StoreDetailsResponse getStoreDetail(final String authentication, final Long storeId) {
+        User user = userRepository.findByProviderId(authentication).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Store store = storeRepository.findById(storeId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_ID));
+
+        Optional<FavoriteStore> favoriteStore = favoriteStoreRepository.findByStoreAndUser(store, user);
+
+        List<StoreTeam> storeTeamList = storeTeamRepository.findAllByStoreAndUser(store, user);
+
+        Boolean groupAvailable = !storeTeamList.isEmpty();
+
+        Boolean isLeader = Boolean.FALSE;
+        if (groupAvailable) {
+            for (StoreTeam storeTeam : storeTeamList) {
+                if (storeTeam.getTeam().getTeamLeader().getLeaderId().equals(user.getUserId())) {
+                    isLeader = Boolean.TRUE;
+                    break;
+                }
+            }
+        }
+
+        return new StoreDetailsResponse(store.getId(), store.getName(), favoriteStore.isPresent(), groupAvailable, isLeader, store.getCategory().name(), store.getAddress(), DateTimeFormatterUtil.formatToKoreanTime(store.getCloseTime()), store.getContactNumber(), store.getRepresentativeImage(), null);
     }
 
     private int getTotalOrderPrice(List<Orders> ordersByStoreAndDate) {

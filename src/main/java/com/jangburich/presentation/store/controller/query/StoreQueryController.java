@@ -3,18 +3,16 @@ package com.jangburich.presentation.store.controller.query;
 import com.jangburich.domain.entity.Category;
 import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
-import com.jangburich.presentation.store.dtos.response.store.StoreListItem;
+import com.jangburich.presentation.store.dtos.response.store.StoreDetailsResponse;
 import com.jangburich.presentation.store.dtos.response.store.StoreListResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.jangburich.presentation.store.dtos.response.store.StoreSearchDetailsResponse;
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
 import com.jangburich.application.store.service.query.StoreQueryService;
 import com.jangburich.global.payload.ResponseCustom;
@@ -53,11 +51,11 @@ public class StoreQueryController {
         Category categoryEnum = Category.fromDisplayName(category);
         StoreListResponse storeListResponse = storeQueryService.getStoreListByCategory(AuthenticationParser.parseUserId(authentication), searchRadius, categoryEnum, lat, lon, pageable);
 
-        return ResponseEntity.ok(new BaseResponse(storeListResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
+        return ResponseEntity.ok(new BaseResponse<>(storeListResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
-    @Operation(summary = "매장 찾기(검색)", description = "검색어와 매장 유형에 맞는 매장을 검색합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
     @GetMapping("/search")
+    @Operation(summary = "매장 찾기(검색)", description = "검색어와 매장 유형에 맞는 매장을 검색합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
     @CommonApiResponse
     public ResponseEntity<BaseResponse<?>> searchStores(Authentication authentication, @RequestParam(required = false, defaultValue = "") String keyword, Pageable pageable) {
         StoreListResponse storeListResponse = storeQueryService.searchStores(AuthenticationParser.parseUserId(authentication), keyword, pageable);
@@ -65,11 +63,13 @@ public class StoreQueryController {
         return ResponseEntity.ok(new BaseResponse<>(storeListResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
-    @Operation(summary = "매장 상세 페이지 조회", description = "매장을 상세 조회합니다.")
     @GetMapping("/{storeId}")
-    public ResponseCustom<StoreSearchDetailsResponse> storeSearchDetails(Authentication authentication, @PathVariable Long storeId) {
-        // TODO API 수정 필요
-        return ResponseCustom.OK();
+    @Operation(summary = "매장 상세 페이지 조회", description = "매장을 상세 조회합니다.", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<BaseResponse<?>> storeSearchDetails(Authentication authentication, @PathVariable Long storeId) {
+        StoreDetailsResponse storeDetailsResponse = storeQueryService.getStoreDetail(AuthenticationParser.parseUserId(authentication), storeId);
+
+        return ResponseEntity.ok(new BaseResponse<>(storeDetailsResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
     @Operation(summary = "결제 내역 조회", description = "가게에서 일어난 결제 내역을 조회합니다.")

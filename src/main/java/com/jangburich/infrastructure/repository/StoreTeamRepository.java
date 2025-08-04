@@ -76,6 +76,16 @@ public interface StoreTeamRepository extends JpaRepository<StoreTeam, Long> {
     Page<TeamPrepaidStoreItem> findByTeamAndKeyword(@Param("user") User user, @Param("team") Team team, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("""
+            select st
+            from StoreTeam st
+            left join UserTeam ut on st.team = ut.team
+            where st.store = :store
+            and ut.user = :user and ut.user.status = 'ACTIVE'
+            and st.team.status = 'ACTIVE'
+            """)
+    List<StoreTeam> findAllByStoreAndUser(@Param("store") Store store, @Param("user") User user);
+
+    @Query("""
             select st.team.id, sum(st.remainPoint)
             from StoreTeam st
             where st.team in :teams
