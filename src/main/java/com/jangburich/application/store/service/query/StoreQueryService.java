@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import com.jangburich.domain.common.Status;
 import com.jangburich.domain.entity.*;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.global.error.DefaultException;
@@ -139,7 +140,7 @@ public class StoreQueryService {
 
         Store store = storeRepository.findById(storeId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_STORE_ID));
 
-        Optional<FavoriteStore> favoriteStore = favoriteStoreRepository.findByStoreAndUser(store, user);
+        Optional<FavoriteStore> favoriteStore = favoriteStoreRepository.findByStoreAndUserAndStatus(store, user, Status.ACTIVE);
 
         List<StoreTeam> storeTeamList = storeTeamRepository.findAllByStoreAndUser(store, user);
 

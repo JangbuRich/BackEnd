@@ -1,8 +1,12 @@
 package com.jangburich.application.store.service.command;
 
+import com.jangburich.domain.common.Status;
+import com.jangburich.domain.entity.FavoriteStore;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.owner.domain.entity.Owner;
 import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.global.error.DefaultException;
+import com.jangburich.infrastructure.repository.FavoriteStoreRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.presentation.store.dtos.request.StoreAdditionalInfoCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
@@ -30,6 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StoreCommandService {
 
+    private final FavoriteStoreRepository favoriteStoreRepository;
     private final StoreRepository storeRepository;
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
@@ -111,6 +116,26 @@ public class StoreCommandService {
     public Store updateStore(Store store, StoreUpdateRequest storeUpdateRequest) {
         store.update(storeUpdateRequest);
         return store;
+    }
+
+    @Transactional
+    public void createFavoriteStore(String userId, Long storeId){
+        User user = userRepository.findByProviderId(userId).orElseThrow(()->new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
+
+        favoriteStoreRepository.save(FavoriteStore.of(user, store));
+    }
+
+    @Transactional
+    public void deleteFavoriteStore(String userId, Long storeId){
+        User user = userRepository.findByProviderId(userId).orElseThrow(()->new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
+
+        FavoriteStore favoriteStore = favoriteStoreRepository.findByStoreAndUserAndStatus(store, user, Status.ACTIVE).orElseThrow(()->new DefaultException(ErrorCode.INVALID_CHECK));
+
+        favoriteStore.updateStatus(Status.INACTIVE);
     }
 
     private String createStoreId() {
