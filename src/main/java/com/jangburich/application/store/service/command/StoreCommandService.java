@@ -124,6 +124,12 @@ public class StoreCommandService {
 
         Store store = storeRepository.findById(storeId).orElseThrow(()-> new DefaultException(ErrorCode.INVALID_STORE_ID));
 
+        List<FavoriteStore> favoriteStoreList = favoriteStoreRepository.findAllByUserAndStatus(user, Status.ACTIVE);
+
+        if(!favoriteStoreList.isEmpty()){
+            throw new DefaultException(ErrorCode.FAVORITE_STORE_DUPLICATE);
+        }
+
         favoriteStoreRepository.save(FavoriteStore.of(user, store));
     }
 

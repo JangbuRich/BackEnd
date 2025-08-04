@@ -3,13 +3,13 @@ package com.jangburich.presentation.store.controller.command;
 import java.util.List;
 
 import com.jangburich.global.payload.BaseResponse;
-import com.jangburich.presentation.store.dtos.response.store.StoreListItem;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.jangburich.global.payload.CommonApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,14 +51,18 @@ public class StoreCommandController {
     }
 
     @PostMapping("/{storeId}/like")
-    public ResponseEntity<Void> createFavoriteStore(Authentication authentication, @RequestParam Long storeId) {
+    @Operation(summary = "가게 단골 등록", description = "가게 좋아요를 등록합니다.", responses = {@ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<Void> createFavoriteStore(Authentication authentication, @PathVariable Long storeId) {
         storeCommandService.createFavoriteStore(AuthenticationParser.parseUserId(authentication), storeId);
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{storeId}/like")
-    public ResponseEntity<Void> deleteFavoriteStore(Authentication authentication, @RequestParam Long storeId){
+    @Operation(summary = "가게 단골 등록을 삭제", description = "가게 단골 등록을 삭제합니다", responses = {@ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    @CommonApiResponse
+    public ResponseEntity<Void> deleteFavoriteStore(Authentication authentication, @PathVariable Long storeId) {
         storeCommandService.deleteFavoriteStore(AuthenticationParser.parseUserId(authentication), storeId);
 
         return ResponseEntity.noContent().build();
