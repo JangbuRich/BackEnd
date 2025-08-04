@@ -22,6 +22,9 @@ public enum ErrorCode {
     // Order Error
     ORDER_NOT_FOUND(400,"ORDER_NOT_FOUND","존재하지 않는 주문 번호 입니다."),
 
+    // Store Error
+    FAVORITE_STORE_DUPLICATE(400, "FAVORITE_STORE_DUPLICATE", "가게 단골 등록은 하나만 가능합니다"),
+
     // 500
 
     // Common Error

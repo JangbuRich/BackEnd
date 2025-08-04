@@ -39,14 +39,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
         group by s.id, s.name, st.remainPoint, st.point, s.representativeImage, st.team.name
         """)
     Page<StoreItem> findAllByUser (@Param("user") User user, @Param("liked") boolean liked, Pageable pageable);
-
-    @Query("""
-        select s
-        from Store s
-        left join FavoriteStore fs on (fs.store = s)
-        where fs.id is not null
-        """
-    )
-    List<Store> finfd (@Param("user") long user);
-
 }

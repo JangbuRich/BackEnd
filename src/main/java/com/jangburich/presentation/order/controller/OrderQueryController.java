@@ -31,16 +31,9 @@ public class OrderQueryController {
 
     @GetMapping("/{orderId}")
     @CommonApiResponse
-    @Operation(summary = "Get Voucher", description = "Get voucher detail info"
-            , responses = {
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    public ResponseEntity<BaseResponse<?>> getOrder(
-            Authentication authentication
-            , @PathVariable long orderId
-    ) {
+    @Operation(summary = "Get Voucher", description = "Get voucher detail info", responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    public ResponseEntity<BaseResponse<?>> getOrder(Authentication authentication, @PathVariable long orderId) {
         OrderResponse orderResponse = orderQueryService.getOrder(AuthenticationParser.parseUserId(authentication), orderId);
-        return ResponseEntity.ok(new BaseResponse<>(orderResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")),"OK" ));
+        return ResponseEntity.ok(new BaseResponse<>(orderResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 }
