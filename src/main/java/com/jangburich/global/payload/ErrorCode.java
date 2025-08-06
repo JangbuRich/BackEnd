@@ -25,6 +25,9 @@ public enum ErrorCode {
     // Store Error
     FAVORITE_STORE_DUPLICATE(400, "FAVORITE_STORE_DUPLICATE", "가게 단골 등록은 하나만 가능합니다"),
 
+    // Team Error
+    FAVORITE_TEAM_DUPLICATE(400, "FAVORITE_TEAM_DUPLICATE", "대표 그룹은 하나만 가능합니다"),
+
     // 500
 
     // Common Error
