@@ -31,4 +31,13 @@ public class FavoriteTeam extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    public static FavoriteTeam of(User user, Team team) {
+        FavoriteTeam favoriteTeam = new FavoriteTeam();
+
+        favoriteTeam.user = user;
+        favoriteTeam.team = team;
+
+        return favoriteTeam;
+    }
 }

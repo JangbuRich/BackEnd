@@ -1,33 +1,56 @@
 package com.jangburich.application.team.service;
 
 import com.jangburich.domain.common.Status;
-import com.jangburich.domain.entity.Team;
-import com.jangburich.domain.entity.TeamLeader;
-import com.jangburich.domain.entity.TeamType;
-import com.jangburich.domain.entity.UserTeam;
+import com.jangburich.domain.entity.*;
 import com.jangburich.domain.user.domain.User;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.global.payload.ErrorCode;
-import com.jangburich.global.payload.Message;
+import com.jangburich.infrastructure.repository.FavoriteTeamRepository;
 import com.jangburich.infrastructure.repository.TeamRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
 import com.jangburich.infrastructure.repository.UserTeamRepository;
 import com.jangburich.presentation.team.dto.request.RegisterTeamRequest;
 import com.jangburich.presentation.team.dto.response.TeamCreateResponse;
-import com.jangburich.presentation.team.dto.response.TeamSecretCodeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TeamCommandService {
 
+    private final FavoriteTeamRepository favoriteTeamRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final UserTeamRepository userTeamRepository;
+
+    @Transactional
+    public void createFavoriteTeam(String userId, Long teamId) {
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        List<FavoriteTeam> favoriteTeamList = favoriteTeamRepository.findAllByUserAndStatus(user, Status.ACTIVE);
+
+        if (!favoriteTeamList.isEmpty()) {
+            throw new DefaultException(ErrorCode.FAVORITE_TEAM_DUPLICATE);
+        }
+
+        favoriteTeamRepository.save(FavoriteTeam.of(user, team));
+    }
+
+    @Transactional
+    public void deleteFavoriteStore(String userId, Long teamId) {
+        User user = userRepository.findByProviderId(userId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_USER_ID));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_TEAM_ID));
+
+        FavoriteTeam favoriteTeam = favoriteTeamRepository.findByTeamAndUserAndStatus(team, user, Status.ACTIVE).orElseThrow(() -> new DefaultException(ErrorCode.INVALID_CHECK));
+
+        favoriteTeam.updateStatus(Status.INACTIVE);
+    }
 
     @Transactional
     public void deleteTeam(String userId, long teamId) {
