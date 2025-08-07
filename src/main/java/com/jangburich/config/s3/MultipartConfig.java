@@ -1,4 +1,4 @@
-package com.jangburich.infrastructure.config.s3;
+package com.jangburich.config.s3;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;

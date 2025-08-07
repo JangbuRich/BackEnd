@@ -1,4 +1,4 @@
-package com.jangburich.infrastructure.config;
+package com.jangburich.config;
 
 import com.baroservice.api.BarobillApiProfile;
 import com.baroservice.api.BarobillApiService;

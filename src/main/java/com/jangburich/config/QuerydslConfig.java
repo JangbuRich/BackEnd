@@ -1,4 +1,4 @@
-package com.jangburich.infrastructure.config;
+package com.jangburich.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
