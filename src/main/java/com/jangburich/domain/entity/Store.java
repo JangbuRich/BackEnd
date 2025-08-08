@@ -5,25 +5,15 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.jangburich.domain.store.StoreMenu;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.jangburich.domain.owner.domain.entity.Owner;
+import com.jangburich.domain.owner.Owner;
 
 import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -102,9 +92,12 @@ public class Store {
     @Column(name = "store_unique_code", nullable = false, columnDefinition = "varchar(4)")
     private String storeUniqueCode;
 
-    @Comment("Store Unique ID")
+    @Comment("MID (내부 관리용) ")
     @Column(name="store_id", nullable = false, columnDefinition = "varchar(20)")
     private String storeId;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreMenu> storeMenus;
 
     public static Store create(Owner owner) {
         Store newOwner = new Store();
@@ -182,48 +175,39 @@ public class Store {
     }
 
     public void update(StoreUpdateRequest dto) {
-        if (dto.getCategory() != null) {
+        if (dto.getCategory() != null)
             this.category = dto.getCategory();
-        }
-        if (dto.getReservationAvailable() != null) {
-            this.reservationAvailable = dto.getReservationAvailable();
-        }
-        if (dto.getRepresentativeImage() != null) {
+
+        if (dto.getRepresentativeImage() != null)
             this.representativeImage = dto.getRepresentativeImage();
-        }
-        if (dto.getMaxReservation() != null) {
-            this.maxReservation = dto.getMaxReservation();
-        }
-        if (dto.getMinPrepayment() != null) {
-            this.minPrepayment = dto.getMinPrepayment();
-        }
-        if (dto.getPrepaymentDuration() != null) {
-            this.prepaymentDuration = dto.getPrepaymentDuration();
-        }
-        if (dto.getIntroduction() != null) {
+
+        if (dto.getIntroduction() != null)
             this.introduction = dto.getIntroduction();
-        }
-        if (dto.getLatitude() != null) {
-            this.latitude = dto.getLatitude();
-        }
-        if (dto.getLongitude() != null) {
-            this.longitude = dto.getLongitude();
-        }
-        if (dto.getAddress() != null) {
+
+        if (dto.getAddress() != null)
             this.address = dto.getAddress();
-        }
-        if (dto.getLocation() != null) {
+
+        if (dto.getLocation() != null)
             this.location = dto.getLocation();
-        }
-        if (dto.getDayOfWeek() != null) {
+
+        if(dto.getPhoneNumber() != null && !dto.getPhoneNumber().isBlank())
+            this.contactNumber = dto.getPhoneNumber();
+
+        if(dto.getUniqueCode() != null && !dto.getUniqueCode().isBlank())
+            this.storeUniqueCode = dto.getUniqueCode();
+
+        if (dto.getDayOfWeek() != null)
             this.workDays = dto.getDayOfWeek();
-        }
-        if (dto.getOpenTime() != null) {
+
+        if (dto.getOpenTime() != null)
             this.openTime = dto.getOpenTime();
-        }
-        if (dto.getCloseTime() != null) {
+
+        if (dto.getCloseTime() != null)
             this.closeTime = dto.getCloseTime();
-        }
+
+        // 이 부분은 체크가 업데이트가 어떤식으로 되는지 체크가 필요함
+        if(dto.getStoreMenus() != null)
+            this.storeMenus = dto.getStoreMenus();
     }
 
     public void createUniqueStoreCode(String storeUniqueCode) {

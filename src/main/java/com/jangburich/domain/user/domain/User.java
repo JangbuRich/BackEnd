@@ -56,6 +56,9 @@ public class User extends BaseEntity {
     @Column(name = "agree_advertisement")
     private Boolean agreeAdvertisement;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserConsent consent;
+
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;

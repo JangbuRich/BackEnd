@@ -1,7 +1,7 @@
 package com.jangburich.domain.user.service.impl;
 
-import com.jangburich.domain.owner.domain.entity.Owner;
-import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.domain.owner.Owner;
+import com.jangburich.infrastructure.repository.OwnerRepository;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.domain.user.domain.SocialLoginProvider;

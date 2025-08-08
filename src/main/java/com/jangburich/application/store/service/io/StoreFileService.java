@@ -28,8 +28,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jangburich.domain.owner.domain.entity.Owner;
-import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.domain.owner.Owner;
+import com.jangburich.infrastructure.repository.OwnerRepository;
 import com.jangburich.domain.entity.TransactionType;
 import com.jangburich.domain.entity.Store;
 import com.jangburich.domain.entity.StoreTeam;

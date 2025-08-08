@@ -2,9 +2,10 @@ package com.jangburich.application.store.service.command;
 
 import com.jangburich.domain.common.Status;
 import com.jangburich.domain.entity.FavoriteStore;
+import com.jangburich.application.store.resolver.StoreResolver;
 import com.jangburich.domain.entity.Store;
-import com.jangburich.domain.owner.domain.entity.Owner;
-import com.jangburich.domain.owner.domain.repository.OwnerRepository;
+import com.jangburich.domain.owner.Owner;
+import com.jangburich.infrastructure.repository.OwnerRepository;
 import com.jangburich.global.error.DefaultException;
 import com.jangburich.infrastructure.repository.FavoriteStoreRepository;
 import com.jangburich.infrastructure.repository.UserRepository;
@@ -15,7 +16,7 @@ import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponse
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.infrastructure.config.s3.S3Service;
+import com.jangburich.config.s3.S3Service;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.utils.DayOfWeekConverter;
@@ -38,6 +39,8 @@ public class StoreCommandService {
     private final StoreRepository storeRepository;
     private final OwnerRepository ownerRepository;
     private final UserRepository userRepository;
+
+    private final StoreResolver storeResolver;
 
     private final S3Service s3Service;
 
@@ -96,26 +99,14 @@ public class StoreCommandService {
 
     @Transactional
     public void updateStore(String userId, StoreUpdateRequest storeUpdateRequest) {
-        User user = userRepository.findByProviderId(userId)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Owner owner = ownerRepository.findByUser(user)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
-
-        Store store = storeRepository.findByOwner(owner)
-                .orElseThrow(() -> new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION));
+        Store store = storeResolver.getStoreByUserId(userId);
 
         if (!store.getOwner().getUser().getProviderId().equals(userId)) {
             throw new DefaultNullPointerException(ErrorCode.INVALID_AUTHENTICATION);
         }
 
-        storeRepository.save(updateStore(store, storeUpdateRequest));
-    }
-
-    @Transactional
-    public Store updateStore(Store store, StoreUpdateRequest storeUpdateRequest) {
+        // 더티 체킹사용 업데이트
         store.update(storeUpdateRequest);
-        return store;
     }
 
     @Transactional

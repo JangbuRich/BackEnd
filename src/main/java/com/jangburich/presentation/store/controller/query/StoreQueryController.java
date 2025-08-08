@@ -10,8 +10,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import com.jangburich.presentation.store.dtos.response.store.StoreInfoResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.jangburich.presentation.store.dtos.response.store.view.StoreHomeResponse;
 import com.jangburich.application.store.service.query.StoreQueryService;
@@ -72,6 +76,16 @@ public class StoreQueryController {
         return ResponseEntity.ok(new BaseResponse<>(storeDetailsResponse, LocalDateTime.now(ZoneId.of("Asia/Seoul")), "OK"));
     }
 
+
+    @Operation(summary = "매장 정보 조회", description = "[매장 정보 관리 Tab] 매장 전체 정보를 조회한다.")
+    @GetMapping("/store/info")
+    public ResponseEntity<?> getStorePrepayDetail(Authentication authentication) {
+        StoreInfoResponse storeInfo = storeQueryService.getStoreInfo(AuthenticationParser.parseUserId(authentication));
+
+        return ResponseEntity.ok(new BaseResponse<>(storeInfo, LocalDateTime.now(), "OK"));
+    }
+
+    // Todo: 패키지에 맞게 api 옮기기
     @Operation(summary = "결제 내역 조회", description = "가게에서 일어난 결제 내역을 조회합니다.")
     @GetMapping("/payment-history")
     public ResponseCustom<?> getPaymentHistory(Authentication authentication) {
