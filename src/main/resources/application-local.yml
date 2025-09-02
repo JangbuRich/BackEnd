@@ -1,0 +1,52 @@
+spring:
+  # db 설정
+  datasource:
+    url: jdbc:mysql://localhost:3306/jangburich?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+
+    hikari:
+      maximum-pool-size: 10          # connection pool
+      minimum-idle: 2
+      connection-timeout: 3000      # 30초
+      idle-timeout: 60000           # 10분
+      max-lifetime: 180000          # 30분
+      validation-timeout: 3000       # 5초
+      connection-test-query: "SELECT 1"
+      test-while-idle: true
+      test-on-borrow: true
+
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret:
+            client-authentication-method: client_secret_post
+            redirect-uri: http://127.0.0.1:8080/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.springframework.cache: trace
+
+kakaopay:
+  secretKey: ${KAKAOPAY_SECRET_KEY}
+  cid: TC0ONETIME
+  ready-url: http://127.0.0.1:8080/payments/ready
+  approve-url: http://127.0.0.1:8080/payments/success
+  cancel-url: http://127.0.0.1:8080/payments/cancel
+  fail-url: http://127.0.0.1:8080/payments/fail
