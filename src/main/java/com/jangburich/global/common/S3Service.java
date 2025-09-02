@@ -1,4 +1,4 @@
-package com.jangburich.config.s3;
+package com.jangburich.global.common;
 
 import java.io.IOException;
 import java.util.UUID;
