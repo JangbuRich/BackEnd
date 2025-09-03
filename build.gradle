@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com'
-version = '1.0.0'
+version = '1.0.1'
 
 java {
     toolchain {
@@ -36,6 +36,9 @@ dependencies {
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // environment variables
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
     //query dsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

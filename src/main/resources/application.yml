@@ -1,7 +1,8 @@
+# server(tomcat) 설정
 server:
   port: 8080
 
-
+# spring 설정
 spring:
   jackson:
     time-zone: Asia/Seoul
@@ -24,14 +25,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  # JWT 설정
-  jwt:
-    secret: ${JWT_SECRET}
-    access:
-      expiration: 900000
-    refresh:
-      expiration: 604800000
 
   #redis
   data:
