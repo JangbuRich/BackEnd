@@ -5,6 +5,12 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Environment Variables ###
+.env
+.env.local
+.env.test
+.env.prod
+
 ### STS ###
 .apt_generated
 .classpath
@@ -35,5 +41,4 @@ out/
 
 ### VS Code ###
 .vscode/
-src/main/resources/application-local.yml
-src/main/resources/application.yml
+src/main/resources/application-test.yml

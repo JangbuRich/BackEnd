@@ -1,4 +1,4 @@
-package com.jangburich.config.s3;
+package com.jangburich.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
@@ -21,8 +21,7 @@ public class MultipartConfig {
 
 	@Bean
 	public MultipartResolver multipartResolver() {
-		StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
-		return multipartResolver;
+        return new StandardServletMultipartResolver();
 	}
 
 	@Bean

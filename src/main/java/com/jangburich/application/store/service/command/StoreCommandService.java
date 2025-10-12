@@ -16,7 +16,7 @@ import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponse
 import com.jangburich.infrastructure.repository.StoreRepository;
 import com.jangburich.application.store.provider.RandomNumberProvider;
 import com.jangburich.domain.user.domain.User;
-import com.jangburich.config.s3.S3Service;
+import com.jangburich.global.common.S3Service;
 import com.jangburich.global.error.DefaultNullPointerException;
 import com.jangburich.global.payload.ErrorCode;
 import com.jangburich.utils.DayOfWeekConverter;

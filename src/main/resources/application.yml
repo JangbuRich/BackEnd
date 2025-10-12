@@ -1,0 +1,87 @@
+# server(tomcat) 설정
+server:
+  port: 8080
+
+# spring 설정
+spring:
+  jackson:
+    time-zone: Asia/Seoul
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  # sql
+  sql:
+    init:
+      platform: mysql
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  #redis
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+
+# S3 storage
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3: #버킷이름
+      bucket: goormdari
+    region: #S3 지역
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+
+# app(ios, aos)
+app:
+  auth:
+    token-secret: ${APP_TOKEN_SECRET}
+    access-token-expiration-msec: 36000000000
+    refresh-token-expiration-msec: 1209600000
+
+# swagger
+springdoc:
+  swagger-ui:
+    path: swagger
+    try-it-out-enabled: true
+    filter: true
+    operations-sorter: method
+    display-request-duration: true
+  override-with-generic-response: false
+
+oauth:
+  kakao:
+    public-key-info: https://kauth.kakao.com/.well-known/jwks.json
+  naver:
+    public-key-url: https://nid.naver.com/oauth2.0/certs
+
+test:
+  jwt:
+    permanentUserToken: 8OQGC7pUHqjUzh10BogSKnW81Ndd2Lx7
+    permanentOwnerToken: xZciw5vhiWoPoUsgHVYOx08pWfZXvJmd
+
+file:
+  multipart:
+    maxUploadSize: 10485760
+    maxUploadSizePerFile: 10485760
+
+# 공공 데이터 요청 Key
+jangburich:
+  public:
+    data:
+      # 유효 사업자 등록번호 조회
+      key: ${PUBLIC_DATA_KEY}

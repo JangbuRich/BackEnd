@@ -1,4 +1,4 @@
-package com.jangburich.config.security;
+package com.jangburich.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class SecurityConfig {
 						"/v3/api-docs/**", "/swagger-resources/**", "/payments/**")
 					.permitAll()
 					.anyRequest()
-					.authenticated());
+					.permitAll());
 
 		return http.build();
 	}
