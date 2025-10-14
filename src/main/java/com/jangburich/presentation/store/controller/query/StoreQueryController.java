@@ -38,14 +38,14 @@ public class StoreQueryController {
 
     @Operation(summary = "가게 전용 코드 조회", description = "가게 전용 코드를 조회한다.")
     @GetMapping("/unique-code")
-    public ResponseCustom<StoreHomeResponse.UniqueCode> getStoreUniqueCode(Authentication authentication) {
-        return ResponseCustom.OK(storeQueryService.getStoreUniqueCode(AuthenticationParser.parseUserId(authentication)));
+    public ResponseEntity<?> getStoreUniqueCode(Authentication authentication) {
+        return ResponseEntity.ok(new BaseResponse<>(storeQueryService.getStoreUniqueCode(AuthenticationParser.parseUserId(authentication)), LocalDateTime.now(), "OK"));
     }
 
     @Operation(summary = "나의 장부 조회", description = "오늘 기준 나의 장부를 조회한다.")
     @GetMapping
-    public ResponseCustom<StoreHomeResponse.AccountInfo> getStoreInfo(Authentication authentication) {
-        return ResponseCustom.OK(storeQueryService.getStoreAccountInfo(AuthenticationParser.parseUserId(authentication)));
+    public ResponseEntity<?> getStoreInfo(Authentication authentication) {
+        return ResponseEntity.ok(new BaseResponse<>(storeQueryService.getStoreAccountInfo(AuthenticationParser.parseUserId(authentication)), LocalDateTime.now(), "OK"));
     }
 
     @GetMapping("/category")

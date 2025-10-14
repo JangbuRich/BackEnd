@@ -30,8 +30,7 @@ public class StorePrepayTeamCommandController {
     @Operation(summary = "선결제 신청 그룹 승인", description = "해당 가게에 선결제 신청한 그룹을 승인한다.")
     @PostMapping("/approval")
     public ResponseEntity<?> storePrepayApproval(Authentication authentication, @Valid @RequestBody StorePrepayTeamRequest.ApprovalInfo approvalInfo) {
-        StorePrepayTeamResponse.approvalResponse approvalResponse = storePrepayTeamCommandService.approvePrepayTeam(
-            AuthenticationParser.parseUserId(authentication), approvalInfo.getTeamId());
+        StorePrepayTeamResponse.approvalResponse approvalResponse = storePrepayTeamCommandService.approvePrepayTeam(AuthenticationParser.parseUserId(authentication), approvalInfo.getTeamId());
 
         return ResponseEntity.ok(new BaseResponse<>(approvalResponse, LocalDateTime.now(), "OK"));
     }

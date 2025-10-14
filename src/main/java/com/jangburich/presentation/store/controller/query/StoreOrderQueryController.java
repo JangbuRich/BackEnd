@@ -29,16 +29,14 @@ public class StoreOrderQueryController {
 
     @Operation(summary = "오늘 주문 조회", description = "가게에 있는 오늘 주문을 조회합니다")
     @GetMapping("/orders/today")
-    public ResponseCustom<StoreHomeResponse.TodayOrder> getTodayOrders(Authentication authentication) {
-        return ResponseCustom.OK(storeOrderQueryService.getTodayOrders(
-            AuthenticationParser.parseUserId(authentication)));
+    public ResponseEntity<?> getTodayOrders(Authentication authentication) {
+        return ResponseEntity.ok(new BaseResponse<>(storeOrderQueryService.getTodayOrders(AuthenticationParser.parseUserId(authentication)), LocalDateTime.now(), "OK"));
     }
 
     @Operation(summary = "지난 주문 조회", description = "가게에 있는 지난 주문을 조회합니다")
     @GetMapping("/orders/last")
     public ResponseEntity<BaseResponse<StoreHomeResponse.LastOrder>> getLastOrders(Authentication authentication) {
-        StoreHomeResponse.LastOrder ordersLast = storeOrderQueryService.getOrdersLast(
-            AuthenticationParser.parseUserId(authentication));
+        StoreHomeResponse.LastOrder ordersLast = storeOrderQueryService.getOrdersLast(AuthenticationParser.parseUserId(authentication));
 
         return ResponseEntity.ok(new BaseResponse<>(ordersLast, LocalDateTime.now(), "OK"));
     }
@@ -46,8 +44,7 @@ public class StoreOrderQueryController {
     @Operation(summary = "주문 상세 조회", description = "가게에 있는 주문을 상세 조회합니다")
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<BaseResponse<OrderDetailResponse>> getOrderDetail(Authentication authentication, @RequestParam Long orderId) {
-        OrderDetailResponse orderDetails = storeOrderQueryService.getOrderDetails(
-            AuthenticationParser.parseUserId(authentication), orderId);
+        OrderDetailResponse orderDetails = storeOrderQueryService.getOrderDetails(AuthenticationParser.parseUserId(authentication), orderId);
 
         return ResponseEntity.ok(new BaseResponse<>(orderDetails, LocalDateTime.now(), "OK"));
     }

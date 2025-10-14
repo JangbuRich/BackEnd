@@ -4,11 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.jangburich.global.payload.BaseResponse;
-import com.jangburich.presentation.store.dtos.response.store.StoreInfoResponse;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import com.jangburich.global.payload.BaseResponse;
 import com.jangburich.global.payload.CommonApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +19,6 @@ import com.jangburich.presentation.store.dtos.request.StoreCreateRequest;
 import com.jangburich.presentation.store.dtos.response.store.StoreCreateResponseDto;
 import com.jangburich.presentation.store.dtos.request.StoreUpdateRequest;
 import com.jangburich.application.store.service.command.StoreCommandService;
-import com.jangburich.global.payload.Message;
 import com.jangburich.global.payload.ResponseCustom;
 import com.jangburich.utils.parser.AuthenticationParser;
 
@@ -42,11 +37,11 @@ public class StoreCommandController {
 
     @Operation(summary = "가게 등록", description = "신규 파트너 가게를 등록합니다.")
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseCustom<StoreCreateResponseDto> createStore(Authentication authentication, @Parameter(name = "image", description = "업로드 사진 데이터") @RequestPart(value = "image") MultipartFile image, @RequestPart(value = "store") StoreCreateRequest storeCreateRequest, @RequestPart(value = "menuImages", required = false) List<MultipartFile> menuImages) {
+    public ResponseEntity<?> createStore(Authentication authentication, @Parameter(name = "image", description = "업로드 사진 데이터") @RequestPart(value = "image") MultipartFile image, @RequestPart(value = "store") StoreCreateRequest storeCreateRequest, @RequestPart(value = "menuImages", required = false) List<MultipartFile> menuImages) {
 
         StoreCreateResponseDto responseDto = storeCommandService.createStore(AuthenticationParser.parseUserId(authentication), storeCreateRequest, image, menuImages);
 
-        return ResponseCustom.OK(responseDto);
+        return ResponseEntity.ok(new BaseResponse<>(responseDto, LocalDateTime.now(), "OK"));
     }
 
     @Operation(summary = "매장 정보 수정", description = "[매장 정보 관리 Tab] 매장 정보를 수정합니다.")

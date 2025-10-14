@@ -27,19 +27,14 @@ public class PrepayQueryController {
 
     @Operation(summary = "선결제 정보 조회", description = "선결제 진행하기 위한 정보를 조회합니다.")
     @GetMapping
-    public ResponseCustom<?> getPrepayInfo (Authentication authentication,
-        @RequestParam(value = "storeId") Long storeId,
-        @RequestParam(value = "teamId") Long teamId
-    ) {
-        return ResponseCustom.OK(
-            prepayQueryService.getPrepayInfo(AuthenticationParser.parseUserId(authentication), storeId, teamId));
+    public ResponseEntity<?> getPrepayInfo(Authentication authentication, @RequestParam(value = "storeId") Long storeId, @RequestParam(value = "teamId") Long teamId) {
+        return ResponseEntity.ok(new BaseResponse<>(prepayQueryService.getPrepayInfo(AuthenticationParser.parseUserId(authentication), storeId, teamId), LocalDateTime.now(), "OK"));
     }
 
     @Operation(summary = "가게 선결제 내역 조회", description = "해당 가게에 선결제된 결제 정보를 조회한다.")
     @GetMapping("/store")
-    public ResponseEntity<?> getStorePrepay (Authentication authentication) {
-        List<PrepayResponse.StorePrepayInfo> storePrepayInfo = prepayQueryService.getStorePrepayInfo(
-            AuthenticationParser.parseUserId(authentication));
+    public ResponseEntity<?> getStorePrepay(Authentication authentication) {
+        List<PrepayResponse.StorePrepayInfo> storePrepayInfo = prepayQueryService.getStorePrepayInfo(AuthenticationParser.parseUserId(authentication));
 
         return ResponseEntity.ok(new BaseResponse<>(storePrepayInfo, LocalDateTime.now(), "OK"));
     }

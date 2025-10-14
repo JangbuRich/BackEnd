@@ -31,15 +31,13 @@ public class StoreTeamQueryController {
 
     @Operation(summary = "결제 그룹 조회", description = "장부 결제 그룹을 조회합니다.")
     @GetMapping("/payment-group")
-    public ResponseCustom<List<StoreHomeResponse.TodayPaymentTeam>> getPaymentGroup(Authentication authentication) {
-        return ResponseCustom.OK(
-                storeTeamQueryService.getPaymentGroup(AuthenticationParser.parseUserId(authentication)));
+    public ResponseEntity<?> getPaymentGroup(Authentication authentication) {
+        return ResponseEntity.ok(new BaseResponse<>(storeTeamQueryService.getPaymentGroup(AuthenticationParser.parseUserId(authentication)), LocalDateTime.now(), "OK"));
     }
 
     @Operation(summary = "가게 선결제 내역 조회", description = "해당 가게에 선결제된 결제 정보를 조회한다.(장부관리 -> 전체결제 그룹 조회 후 -> 그룹 클릭시")
     @GetMapping("/store/{teamId}")
-    public ResponseEntity<?> getStorePrepayDetail(Authentication authentication,
-                                                  @NotNull(message = "teamId must not be empty") @PathVariable Long teamId) {
+    public ResponseEntity<?> getStorePrepayDetail(Authentication authentication, @NotNull(message = "teamId must not be empty") @PathVariable Long teamId) {
         PaymentGroupDetailResponse paymentGroupDetail = storeTeamQueryService.getPaymentGroupDetail(AuthenticationParser.parseUserId(authentication), teamId);
 
         return ResponseEntity.ok(new BaseResponse<>(paymentGroupDetail, LocalDateTime.now(), "OK"));

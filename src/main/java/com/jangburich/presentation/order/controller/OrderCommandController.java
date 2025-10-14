@@ -28,35 +28,20 @@ public class OrderCommandController {
 
     @PostMapping
     @CommonApiResponse
-    @Operation(summary = "Issue Voucher", description = "Issue a voucher"
-    , responses = {
-            @ApiResponse(responseCode = "201", description = "생성 성공",
-            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    public ResponseEntity<Void> order(
-            Authentication authentication,
-            @RequestBody OrderRequest orderRequest
-    ) {
-        long orderId= orderCommandService.order(AuthenticationParser.parseUserId(authentication), orderRequest);
+    @Operation(summary = "Issue Voucher", description = "Issue a voucher", responses = {@ApiResponse(responseCode = "201", description = "생성 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    public ResponseEntity<Void> order(Authentication authentication, @RequestBody OrderRequest orderRequest) {
+        long orderId = orderCommandService.order(AuthenticationParser.parseUserId(authentication), orderRequest);
 
-        URI location= URI.create("/order/"+orderId);
+        URI location = URI.create("/order/" + orderId);
 
         return ResponseEntity.created(location).build();
     }
 
     @PostMapping("/{orderId}")
     @CommonApiResponse
-    @Operation(summary = "User Voucher", description = "Use issued voucher"
-        , responses = {
-            @ApiResponse(responseCode="204", description = "No Content",
-            content = @Content(schema = @Schema(implementation = BaseResponse.class)))
-    })
-    public ResponseEntity<Void> useMealTicket(
-            Authentication authentication,
-            @PathVariable Long orderId,
-            @RequestBody UseTicketRequest useTicketRequest
-    ) {
-        orderCommandService.useTicket(AuthenticationParser.parseUserId(authentication),orderId, useTicketRequest);
+    @Operation(summary = "User Voucher", description = "Use issued voucher", responses = {@ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema(implementation = BaseResponse.class)))})
+    public ResponseEntity<Void> useMealTicket(Authentication authentication, @PathVariable Long orderId, @RequestBody UseTicketRequest useTicketRequest) {
+        orderCommandService.useTicket(AuthenticationParser.parseUserId(authentication), orderId, useTicketRequest);
 
         return ResponseEntity.noContent().build();
     }
